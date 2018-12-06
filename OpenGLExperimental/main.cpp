@@ -49,13 +49,13 @@ int main(int argc, char **argv) {
 	mainProgram.Init(argc,argv);
 	
 	Window window;
-	unsigned int displayMode = GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA;
+	unsigned int displayMode = GLUT_RGBA | GLUT_SINGLE | GLUT_DOUBLE;
 	window.Init(displayMode,vec2(300,300),vec2(500,500));
 	window.Show(WINDOWNAME);
 
-	string name = "Furkan";
-	Object obj(name);
-	//init();
+	/*string name = "Furkan";
+	Object obj(name);*/
+	init();
 
 	Renderer::Display(Render);
 
