@@ -1,6 +1,5 @@
 #pragma once
-#include "Angel.h"
-#include <GL/glut.h>
+#include <Angel_commons/Angel.h>
 
 
 class Transform

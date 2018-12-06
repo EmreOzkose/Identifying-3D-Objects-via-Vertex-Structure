@@ -1,5 +1,5 @@
 #pragma once
-#include <GL/glut.h>
+#include <Angel_commons/Angel.h>
 
 
 class Window

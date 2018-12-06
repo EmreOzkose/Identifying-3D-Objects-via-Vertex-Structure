@@ -1,5 +1,4 @@
-#include "Angel.h"
-#include <GL/glut.h>
+#include <Angel_commons/Angel.h>
 #include "Window.h"
 
 

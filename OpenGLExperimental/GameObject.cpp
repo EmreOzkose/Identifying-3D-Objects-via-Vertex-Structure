@@ -1,6 +1,4 @@
-#include "Angel.h"
-#include <GL/glut.h>
-
+#include <Angel_commons/Angel.h>
 
 
 /*void Window::Init(unsigned int mode, vec2 windowPosition, vec2 windowSize)

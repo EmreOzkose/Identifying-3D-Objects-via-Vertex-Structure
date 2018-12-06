@@ -1,5 +1,4 @@
 #pragma once
-#include <GL/glut.h>
 
 
 class Program
