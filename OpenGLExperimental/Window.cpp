@@ -4,7 +4,6 @@
 
 void Window::Init(unsigned int mode,vec2 windowPosition,vec2 windowSize)
 {
-	//glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitDisplayMode(mode);
 	glutInitWindowPosition(windowPosition.x, windowPosition.y);
 	glutInitWindowSize(windowSize.x, windowSize.y);

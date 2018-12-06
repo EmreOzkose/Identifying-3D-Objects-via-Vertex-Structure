@@ -1,8 +1,12 @@
 #include <Angel_commons/Angel.h>
+#include <string>
 #include "Program.h"
 #include "Window.h"
 #include "Renderer.h"
 #include "Vector3.h"
+#include "Object.h"
+
+
 #define WINDOWNAME "PROJECT"
 
 vec2 vertices[] = { vec2(.75f,0),
@@ -35,8 +39,6 @@ void Render(void) {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
-	
-
 	glutSwapBuffers();
 
 }
@@ -51,8 +53,8 @@ int main(int argc, char **argv) {
 	window.Init(displayMode,vec2(300,300),vec2(500,500));
 	window.Show(WINDOWNAME);
 
-	vec3 r = Vector3::FORWARD;
-	std::cout << r;
+	string name = "Furkan";
+	Object obj(name);
 	//init();
 
 	Renderer::Display(Render);
