@@ -48,9 +48,6 @@
     <ClCompile Include="Object.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files\Classes</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\Desktop\OpenGLStuff\Angel_commons\Angel.h">
@@ -72,9 +69,6 @@
       <Filter>Source Files\Headers</Filter>
     </ClInclude>
     <ClInclude Include="Object.h">
-      <Filter>Source Files\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
       <Filter>Source Files\Headers</Filter>
     </ClInclude>
   </ItemGroup>
