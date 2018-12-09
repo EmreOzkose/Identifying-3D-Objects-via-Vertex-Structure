@@ -22,6 +22,15 @@
     <Filter Include="Source Files\Shaders">
       <UniqueIdentifier>{1da18b04-23c0-4a65-890d-b2af0d9a9b7d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Objects">
+      <UniqueIdentifier>{4b33ed18-ce1f-424d-ac29-477196214f79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Objects\Headers">
+      <UniqueIdentifier>{562b324b-00f4-4afa-aa4a-3b367694294a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Objects\Classes">
+      <UniqueIdentifier>{1c1920cf-0991-4324-8d22-93f3197ee0d6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -39,17 +48,17 @@
     <ClCompile Include="Window.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
-    <ClCompile Include="Transform.cpp">
-      <Filter>Source Files\Classes</Filter>
-    </ClCompile>
     <ClCompile Include="Vector3.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
     <ClCompile Include="Object.cpp">
-      <Filter>Source Files\Classes</Filter>
+      <Filter>Source Files\Objects\Classes</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
-      <Filter>Source Files\Classes</Filter>
+      <Filter>Source Files\Objects\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Source Files\Objects\Classes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -65,17 +74,17 @@
     <ClInclude Include="Window.h">
       <Filter>Source Files\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>Source Files\Headers</Filter>
-    </ClInclude>
     <ClInclude Include="Vector3.h">
       <Filter>Source Files\Headers</Filter>
     </ClInclude>
     <ClInclude Include="Object.h">
-      <Filter>Source Files\Headers</Filter>
+      <Filter>Source Files\Objects\Headers</Filter>
     </ClInclude>
     <ClInclude Include="Mesh.h">
-      <Filter>Source Files\Headers</Filter>
+      <Filter>Source Files\Objects\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Source Files\Objects\Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,3 @@
-#include <Angel_commons/Angel.h>
 #include "Transform.h"
 
 
@@ -18,12 +17,12 @@ void Transform::Scale()
 {
 	std::cout << position;
 }
-void Update() {
+void Transform::Update() {
 }
 
-vec3 getPosition() {
+vec3 Transform::getPosition() {
 }
-vec3 getRotation() {
+vec3 Transform::getRotation() {
 }
-vec3 getScale() {
+vec3 Transform::getScale() {
 }
