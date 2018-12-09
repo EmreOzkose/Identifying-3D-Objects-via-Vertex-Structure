@@ -1,6 +1,5 @@
 #pragma once
 #include <Angel_commons/Angel.h>
-#include "Mesh.h"
 
 class Transform
 {
@@ -10,7 +9,7 @@ public:
 	{
 		Debug();
 	};
-	Mesh mesh;
+	
 	void Translate();
 	void Scale();
 	void Rotate();

@@ -1,20 +1,11 @@
-/*
-FPS control demo in GLUT by Nghia Ho
 
-SPACEBAR - toggle FPS control
-W,A,S,D - to move
-mouse - look around, inverted mouse
-left/right mouse - fly up/down
-ESC - quit
-
-*/
 
 #include <Angel_commons/Angel.h>
 #define width 900
 #define height 900
 #include "Program.h"
-#include "Window.h"
-#include "Renderer.h"
+
+
 #define WINDOWNAME "Assignment-2"
 using namespace std;
 vec3 vertices[] = { vec3(1,1,-5),vec3(0,1,-5),vec3(.5f,4,-5)
@@ -61,6 +52,15 @@ int main(int argc, char **argv) {
 	window.Init(displayMode, vec2(200, 200), vec2(width, height));
 	window.Show(WINDOWNAME);
 	
+
+	Camera MainCamera;
+	std::cout << MainCamera.GetName();
+	//std::cout<< mainCamera.GetName();
+
+
+
+
+
 	glutIgnoreKeyRepeat(1);
 
 	glutDisplayFunc(Display);
@@ -72,7 +72,6 @@ int main(int argc, char **argv) {
 	glutKeyboardFunc(Keyboard);
 	glutKeyboardUpFunc(KeyboardUp);
 	glutIdleFunc(Idle);
-
 	glutTimerFunc(1, Timer, 0);
 	glutMainLoop();
 

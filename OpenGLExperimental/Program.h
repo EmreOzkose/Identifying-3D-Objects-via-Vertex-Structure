@@ -1,6 +1,7 @@
 #pragma once
-
-
+#include "Camera.h"
+#include "Window.h"
+#include "Renderer.h"
 class Program
 {
 public:
