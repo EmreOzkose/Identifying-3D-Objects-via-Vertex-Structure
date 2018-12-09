@@ -1,16 +1,17 @@
 #pragma once
 #include "Transform.h"
+#include "Mesh.h"
 #include <string>
 using namespace std;
 class Object
 {
 public:
 
-	/*char* GetName();
-	void SetName(char* newName);
-	*/
+	string GetName();
+	void SetName(string newName);
+	
 	Transform transform;
-
+	Mesh mesh;
 	Object(string Name)
 	{
 		name = Name;

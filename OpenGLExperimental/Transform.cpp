@@ -18,3 +18,12 @@ void Transform::Scale()
 {
 	std::cout << position;
 }
+void Update() {
+}
+
+vec3 getPosition() {
+}
+vec3 getRotation() {
+}
+vec3 getScale() {
+}
