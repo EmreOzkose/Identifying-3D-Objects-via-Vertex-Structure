@@ -1,13 +1,15 @@
 
 #include "Program.h"
 #include <Angel_commons/Angel.h>
+#include <list>
 #define width 900
 #define height 900
 #define WINDOWNAME "Assignment-2"
 
-
 Object SelectedObject;
-
+InputManager inputManager;
+//add delta time
+bool keyReleased,keyPressed;
 
 /*vec3 vertices[] = { vec3(1,1,-5),vec3(0,1,-5),vec3(.5f,4,-5)
 
@@ -56,8 +58,12 @@ int main(int argc, char **argv) {
 	Camera MainCamera;
 	MainCamera.transform.Debug();
 	SelectedObject = MainCamera;
-	std::cout<<"Selected Object :"<<SelectedObject.GetName();
+	std::cout<<"Selected Object :"<<SelectedObject.GetName()<<"\n";
 
+	std::string name = "Car1";
+	Object car1 = Object(&name[0u]);
+	std::cout << car1.GetName() << "\n";
+	
 
 	glutIgnoreKeyRepeat(1);
 	glutDisplayFunc(Display);
@@ -117,12 +123,23 @@ void Reshape(int w, int h) {
 
 void Keyboard(unsigned char key, int x, int y)
 {
-	
+	switch (key)
+	{
+		case 'w':
+			break;
+		default:
+			break;
+			keyReleased = false;
+
+	}
+	keyReleased = false;
+	keyPressed = true;
 }
 
 void KeyboardUp(unsigned char key, int x, int y)
 {
-	
+	keyReleased = true;
+	keyPressed = false;
 }
 
 void Timer(int value)
@@ -132,7 +149,8 @@ void Timer(int value)
 
 void Idle()
 {
-	
+	if(keyPressed&&!keyReleased)
+		SelectedObject.transform.Translate(Vector3::FORWARD, 0.015);
 }
 
 void Mouse(int button, int state, int x, int y)

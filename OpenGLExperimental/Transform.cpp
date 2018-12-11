@@ -13,8 +13,10 @@ void Transform::Debug()
 	std::cout << "Scale :";
 	std::cout << getScale() << "\n";
  }
-void Transform::Translate()
+void Transform::Translate(vec3 translationvector,float deltaTime)
 {
+	position += translationvector* deltaTime;
+	std::cout << position << "\n";
 }
 void Transform::Rotate()
 {
@@ -22,8 +24,7 @@ void Transform::Rotate()
 void Transform::Scale()
 {
 }
-void Transform::Update() {
-}
+
 
 vec3 Transform::getPosition() {
 	return position;

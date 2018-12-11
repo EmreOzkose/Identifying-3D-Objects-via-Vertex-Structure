@@ -13,11 +13,12 @@ public:
 	{
 		
 	};
-	void Translate();
+	void Translate(vec3 translationvector, float deltaTime);
 	void Scale();
 	void Rotate();
-	void Update();
+
 	void Debug();
+
 	vec3 getPosition();
 	vec3 getRotation();
 	vec3 getScale();
