@@ -9,6 +9,7 @@ public:
 	Object(char* newName)
 	{
 		SetName(newName);
+		transform.name = newName;
 	}
 	
 private:

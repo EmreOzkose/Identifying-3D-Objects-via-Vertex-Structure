@@ -5,11 +5,14 @@ class Transform
 {
 public:
 
+	Transform(char* name)
+	{
+		this->name = name;
+	};
 	Transform()
 	{
-		Debug();
+		
 	};
-	
 	void Translate();
 	void Scale();
 	void Rotate();
@@ -18,9 +21,10 @@ public:
 	vec3 getPosition();
 	vec3 getRotation();
 	vec3 getScale();
+	char* name;
 private:
 	vec3 position;
 	vec3 rotation;
 	vec3 scale;
-
+	
 };

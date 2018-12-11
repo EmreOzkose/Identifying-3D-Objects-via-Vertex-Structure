@@ -29,7 +29,6 @@ void init()
 	GLuint vPosition = glGetAttribLocation(program, "vPosition");
 	glEnableVertexAttribArray(vPosition);
 	glVertexAttribPointer(vPosition, 2, GL_FLOAT, GL_FALSE, 0, 0);
-	// Paint the background black
 	glClearColor(1.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
 }
 void Display();
@@ -54,10 +53,7 @@ int main(int argc, char **argv) {
 	
 
 	Camera MainCamera;
-	std::cout << MainCamera.GetName();
-	//std::cout<< mainCamera.GetName();
-
-
+	MainCamera.transform.Debug();
 
 
 
