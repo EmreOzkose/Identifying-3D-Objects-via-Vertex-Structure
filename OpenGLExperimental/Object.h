@@ -11,7 +11,9 @@ public:
 		SetName(newName);
 		transform.name = newName;
 	}
-	
+	Object()
+	{
+	}
 private:
 	char* name;
 };

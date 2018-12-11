@@ -1,14 +1,15 @@
 
-
+#include "Program.h"
 #include <Angel_commons/Angel.h>
 #define width 900
 #define height 900
-#include "Program.h"
-
-
 #define WINDOWNAME "Assignment-2"
-using namespace std;
-vec3 vertices[] = { vec3(1,1,-5),vec3(0,1,-5),vec3(.5f,4,-5)
+
+
+Object SelectedObject;
+
+
+/*vec3 vertices[] = { vec3(1,1,-5),vec3(0,1,-5),vec3(.5f,4,-5)
 
 };
 void init()
@@ -30,7 +31,7 @@ void init()
 	glEnableVertexAttribArray(vPosition);
 	glVertexAttribPointer(vPosition, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	glClearColor(1.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
-}
+}*/
 void Display();
 void Reshape(int w, int h);
 void Keyboard(unsigned char key, int x, int y);
@@ -54,11 +55,11 @@ int main(int argc, char **argv) {
 
 	Camera MainCamera;
 	MainCamera.transform.Debug();
-
+	SelectedObject = MainCamera;
+	std::cout<<"Selected Object :"<<SelectedObject.GetName();
 
 
 	glutIgnoreKeyRepeat(1);
-
 	glutDisplayFunc(Display);
 	glutIdleFunc(Display);
 	glutReshapeFunc(Reshape);
