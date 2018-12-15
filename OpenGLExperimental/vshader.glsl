@@ -2,8 +2,18 @@
 
 in vec4 vPosition;
 
-void
-main()
+
+uniform mat4 MVP;
+
+out  vec4 vColor;
+
+
+
+void main()
 {
-    gl_Position = vPosition;
+
+
+
+  gl_Position = MVP*vPosition;
+  vColor=gl_Position;
 }

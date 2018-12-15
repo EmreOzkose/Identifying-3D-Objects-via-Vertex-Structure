@@ -7,11 +7,11 @@ void Transform::Debug()
 	std::cout << "Transform : ";
 	std::cout << name<<"\n";
 	std::cout << "Position :";
-	std::cout << getPosition() << "\n";
+	std::cout << position << "\n";
 	std::cout << "Rotation :";
-	std::cout << getRotation() << "\n";
+	std::cout << rotation << "\n";
 	std::cout << "Scale :";
-	std::cout << getScale() << "\n";
+	std::cout << scale << "\n";
  }
 void Transform::Translate(vec3 translationvector,float deltaTime)
 {
@@ -26,12 +26,3 @@ void Transform::Scale()
 }
 
 
-vec3 Transform::getPosition() {
-	return position;
-}
-vec3 Transform::getRotation() {
-	return rotation;
-}
-vec3 Transform::getScale() {
-	return scale;
-}
