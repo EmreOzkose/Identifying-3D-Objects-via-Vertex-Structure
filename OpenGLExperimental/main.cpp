@@ -12,10 +12,10 @@ Camera MainCamera;
 GLuint  mvpID;
 float theta;
 mat4 ProjectionMatrix;
-
+vec3 pos = vec3(0, 0, -10),at;
 //add delta time
-vec3 vertices[6] = { vec3(-2, 2, 0), vec3(2, 2, 0), vec3(2, -2, 0),
-					vec3( 0 ,-2, 2), vec3(0,2, 2), vec3(0,2, -2) };
+vec3 vertices[6] = { vec3(-1, 1, 0), vec3(1, 1, 0), vec3(1, -1, 0),
+					vec3( 0 ,-1, 1), vec3(0,1, 1), vec3(0,1, -1) };
 
 
 
@@ -125,8 +125,7 @@ void Display(void)
 	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //clear the color buffer and the depth buffer
 
-	mat4 View = MainCamera.ViewMatrix();
-	
+	mat4 View = LookAt(pos,vec3(0,0,5),vec3(0,1,0));
 
 	float angles = theta/PI;
 	float c = cos(angles);
@@ -136,19 +135,19 @@ void Display(void)
 		0.0, c, s, 0.0,
 		0.0, -s, c, 0,
 		0.0, 0.0, 0.0, 1.0);
-	mat4 Translation = mat4(1.0, 0.0, 0.0, 0.0,
-		0.0 , 1.0, 0.0, 0.0,
-		0.0 , 0.0, 1.0, 0.0,
+	mat4 Translation = mat4(1.0, 0.0, 0.0, pos.x,
+		0.0 , 1.0, 0.0, pos.y,
+		0.0 , 0.0, 1.0, pos.z,
 		0.0 , 0.0, 0.0, 1.0);
 	mat4 Model = Translation* Rotation;
-	mat4 MVP = ProjectionMatrix * View * Model;
-	
+	mat4 MVP = ProjectionMatrix * View*Model;
 	MainCamera.Refresh();
+	
 
 	glUniformMatrix4fv(mvpID, 1, GL_FALSE, &MVP[0][0]);
 	
-	glDrawArrays(GL_LINE_LOOP, 0, 3);
-	glDrawArrays(GL_LINE_LOOP, 3, 6);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
+	//glDrawArrays(GL_LINE_LOOP, 3, 6);
 	//Grid();
 	glutSwapBuffers();
 }
@@ -162,25 +161,22 @@ void Reshape(int w, int h) {
 
 void Keyboard(unsigned char key, int x, int y)
 {
+	std::cout << key;
 	if (key == 'q') {
-		if (theta >= 360)
-			theta = 0;
-		theta -= 0.055f;
+		at.x += .1f;
 	}
 	if (key == 'e') {
-		if (theta >= 360)
-			theta = 0;
-		theta += 0.055f;
+		at.y += .1f;
 	}
 	
-	if (key =='w')
-		SelectedObject.transform.Translate(Vector3::FORWARD, 0.015);
+	if (key == 'w')
+		pos.z += .1f;
 	if (key == 'd')
-		SelectedObject.transform.Translate(Vector3::RIGHT, 0.015);
+		pos.x += .1f;
 	if (key == 'a')
-		SelectedObject.transform.Translate(-Vector3::RIGHT, 0.015);
+		pos.x -= .1f;
 	if (key == 's')
-		SelectedObject.transform.Translate(-Vector3::FORWARD, 0.015);
+		pos.z -= .1f;
 	/*switch (key)
 	{
 		case 'w':

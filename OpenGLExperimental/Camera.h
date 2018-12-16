@@ -5,7 +5,7 @@ class Camera :public Object
 {
 public:
 	Camera() : Object(&str[0u]) {
-		transform.position = vec3(0,0,-20);
+		transform.position = vec3(0,0,-10);
 	}
 	void Refresh();
 	mat4 ViewMatrix();
