@@ -17,11 +17,11 @@ public:
 	void Scale();
 	void Rotate();
 	void Debug();
-	vec3 position = vec3(0, 0, 0);
+	vec3 position;
 	vec3 rotation;
 	vec3 scale;
 	char* name;
-	vec4 forward = position+vec3(0,0,1);
+	vec4 forward;
 private:
 	
 	
