@@ -127,9 +127,9 @@ void Display(void)
 
 	mat4 View = LookAt(pos,vec3(0,0,5),vec3(0,1,0));
 
-	float angles = theta/PI;
-	float c = cos(angles);
-	float s = sin(angles);
+	float angles = theta*180;
+	float c = cos(theta);
+	float s = sin(theta);
 	
 	mat4 Rotation = mat4(1.0, 0.0, 0.0, 0.0,
 		0.0, c, s, 0.0,
@@ -140,25 +140,25 @@ void Display(void)
 		0.0 , 0.0, 1.0, pos.z,
 		0.0 , 0.0, 0.0, 1.0);
 	mat4 Model = Translation* Rotation;
-	mat4 MVP = ProjectionMatrix * View*Model;
-	MainCamera.Refresh();
+	mat4 MVP = ProjectionMatrix * View;
+	
 	
 
 	glUniformMatrix4fv(mvpID, 1, GL_FALSE, &MVP[0][0]);
 	
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
-	//glDrawArrays(GL_LINE_LOOP, 3, 6);
-	//Grid();
+	glDrawArrays(GL_LINE_LOOP, 3, 6);
+	Grid();
 	glutSwapBuffers();
 }
 void Reshape(int w, int h) {
 		if (h == 0) h = 1; // Prevent a divide by zero
 		float aspect = (float)w / h;
 		MainCamera.aspect = aspect;
+		ProjectionMatrix = MainCamera.ProjectionMatrix();
 		glViewport(0,0,w,h);
 
 }
-
 void Keyboard(unsigned char key, int x, int y)
 {
 	std::cout << key;
@@ -170,13 +170,13 @@ void Keyboard(unsigned char key, int x, int y)
 	}
 	
 	if (key == 'w')
-		pos.z += .1f;
+		pos.z += 1;
 	if (key == 'd')
 		pos.x += .1f;
 	if (key == 'a')
 		pos.x -= .1f;
 	if (key == 's')
-		pos.z -= .1f;
+		pos.z -= 1;
 	/*switch (key)
 	{
 		case 'w':
