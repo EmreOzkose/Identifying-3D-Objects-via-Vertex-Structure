@@ -13,92 +13,10 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\Headers">
-      <UniqueIdentifier>{ed6e5144-e734-446a-9f29-0a1e45d42237}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Classes">
-      <UniqueIdentifier>{08881004-93ba-4deb-b04d-99d347538460}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Shaders">
-      <UniqueIdentifier>{1da18b04-23c0-4a65-890d-b2af0d9a9b7d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Objects">
-      <UniqueIdentifier>{4b33ed18-ce1f-424d-ac29-477196214f79}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Objects\Headers">
-      <UniqueIdentifier>{562b324b-00f4-4afa-aa4a-3b367694294a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Objects\Classes">
-      <UniqueIdentifier>{1c1920cf-0991-4324-8d22-93f3197ee0d6}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Desktop\OpenGLStuff\Angel_commons\InitShader.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Program.cpp">
-      <Filter>Source Files\Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer.cpp">
-      <Filter>Source Files\Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="Window.cpp">
-      <Filter>Source Files\Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="Vector3.cpp">
-      <Filter>Source Files\Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="Object.cpp">
-      <Filter>Source Files\Objects\Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="Transform.cpp">
-      <Filter>Source Files\Objects\Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files\Objects\Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="InputManager.cpp">
-      <Filter>Source Files\Classes</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\..\..\Desktop\OpenGLStuff\Angel_commons\Angel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Program.h">
-      <Filter>Source Files\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer.h">
-      <Filter>Source Files\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Window.h">
-      <Filter>Source Files\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector3.h">
-      <Filter>Source Files\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Object.h">
-      <Filter>Source Files\Objects\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>Source Files\Objects\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Source Files\Objects\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="InputManager.h">
-      <Filter>Source Files\Headers</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="fshader.glsl">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="vshader.glsl">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
   </ItemGroup>
 </Project>
