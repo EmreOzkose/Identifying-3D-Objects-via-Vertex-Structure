@@ -1,0 +1,19 @@
+#version 150
+
+in vec4 vPosition;
+
+
+uniform mat4 MVP;
+
+out  vec4 vColor;
+
+
+
+void main()
+{
+
+
+
+  gl_Position = MVP*vPosition;
+  vColor=gl_Position;
+}
