@@ -3,6 +3,8 @@ class InputManager
 {
 public:
 	unsigned char forward = 'w';
-	//buraya keyler atanýcak mesela forward falan fýlan vs.
+	unsigned char exit = 27;
+	void Process(unsigned char key);
+
 };
 

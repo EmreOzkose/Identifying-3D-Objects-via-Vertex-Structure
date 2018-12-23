@@ -4,13 +4,14 @@
 #define height 900
 #define WINDOWNAME "Assignment-2"
 #define PI 3.14
+
+
 Object SelectedObject;
 InputManager inputManager;
 Camera MainCamera;
 int mainWindow;
 GLuint  mvpID;
 float theta;
-vec3 pos = vec3(0, 0, -10),at;
 //add delta time
 
 
@@ -56,8 +57,10 @@ int main(int argc, char **argv) {
 	mainScene.Init(argc,argv);
 	unsigned int Mode= GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH;
 	mainWindow=mainScene.SetupWindow(Mode,vec2(0,0),vec2(width,height), WINDOWNAME);
-	glClearColor(1, 1, 0, 1);
 
+	inputManager = InputManager();
+
+	
 
 	MainCamera.transform.Debug();
 	SelectedObject = MainCamera;
@@ -86,7 +89,7 @@ int main(int argc, char **argv) {
 
 void Grid()
 {
-	glColor3f(1, 1, 1);
+	glColor3f(0, 1, 1);
 
 	for (int i = -50; i < 50; i++) {
 		glBegin(GL_TRIANGLE_STRIP);
@@ -108,7 +111,7 @@ void Display(void)
  {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //clear the color buffer and the depth buffer
 
-	mat4 View = LookAt(pos,at,vec3(0,1,0));
+	mat4 View = LookAt(vec3(0),vec3(0,0,5),vec3(0,1,0));
 
 	float angles = theta*180;
 	float c = cos(theta);
@@ -118,13 +121,12 @@ void Display(void)
 		0.0, c, s, 0.0,
 		0.0, -s, c, 0,
 		0.0, 0.0, 0.0, 1.0);
-	mat4 Translation = mat4(1.0, 0.0, 0.0, pos.x,
-		0.0 , 1.0, 0.0, pos.y,
-		0.0 , 0.0, 1.0, pos.z,
+	mat4 Translation = mat4(1.0, 0.0, 0.0, 0,
+		0.0 , 1.0, 0.0, 0,
+		0.0 , 0.0, 1.0, 0,
 		0.0 , 0.0, 0.0, 1.0);
 	mat4 Model = Translation* Rotation;
 	mat4 MVP = ProjectionMatrix * View*Rotation;
-	
 	glUniformMatrix4fv(mvpID, 1, GL_FALSE, &MVP[0][0]);
 	glutSwapBuffers();
 }
@@ -137,23 +139,7 @@ void Reshape(int w, int h) {
 }
 void Keyboard(unsigned char key, int x, int y)
 {
-	std::cout << pos<<"\n";
-	if (key == 'q') {
-		theta -= .1f;
-	}
-	if (key == 'e') {
-		theta += .1f;
-	}
-	at = sin(theta);
-	if (key == 'w')
-		pos.z += 1;
-	if (key == 'd')
-		pos.y += 1;
-	if (key == 'a')
-		pos.y -= 1;
-	if (key == 's')
-		pos.z -= 1;
-	
+	inputManager.Process(key);
 	glutPostRedisplay();
 }
 
