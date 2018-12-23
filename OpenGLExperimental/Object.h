@@ -12,7 +12,7 @@ public:
 	void load_obj(string path);
 	void Draw();
 	void SetupMesh();
-
+	GLuint UseShader(const char* vertexShaderPath, const char* fragmentShaderPath, const char* posAttribute);
 
 	GLuint VAO, VBO, EBO;
 	Transform transform;

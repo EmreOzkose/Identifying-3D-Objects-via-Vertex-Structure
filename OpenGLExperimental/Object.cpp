@@ -99,4 +99,12 @@ void Object::SetupMesh()
 
 
 }
-
+GLuint Object::UseShader(const char* vertexShaderPath, const char* fragmentShaderPath, const char* posAttribute)
+{
+	GLuint	program = InitShader(vertexShaderPath, fragmentShaderPath);
+	glUseProgram(program);
+	GLuint vPosition = glGetAttribLocation(program, posAttribute);
+	glEnableVertexAttribArray(vPosition);
+	glVertexAttribPointer(vPosition, 4, GL_FLOAT, GL_FALSE, 0, 0);
+	return program;
+}

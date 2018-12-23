@@ -1,4 +1,4 @@
-#version 150
+#version 330 core
 
 in vec4 vPosition;
 
@@ -14,6 +14,6 @@ void main()
 
 
 
-  gl_Position = MVP*vPosition;
+  gl_Position = vPosition;
   vColor=gl_Position;
 }

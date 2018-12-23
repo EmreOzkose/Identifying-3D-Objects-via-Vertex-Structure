@@ -69,9 +69,14 @@ int main(int argc, char **argv) {
 	string name = "ejderya";
 	string path = "Models/dragon_10k.obj";
 	//objetin icine file exception ekle.
-	Object car1 = Object(name, path);
-	car1.SetupMesh();
-	SelectedObject = &car1;
+	Object objyn = Object(name, path);
+	objyn.SetupMesh();
+	SelectedObject = &objyn;
+	printf("%d", SelectedObject->vertices.size());
+
+	GLuint shader = SelectedObject->UseShader("vshader.glsl", "fshader.glsl", "vPosition");
+	mvpID = glGetUniformLocation(shader, "MVP");
+
 /*	std::string name = "Car1";
 	Object car1 = Object(&name[0u]);
 	std::cout << car1.GetName() << "\n";*/
@@ -125,7 +130,7 @@ void Display(void)
 	mat4 MVP = ProjectionMatrix * View;
 	glLoadIdentity();
 	SelectedObject->Draw();
-	glUniformMatrix4fv(mvpID, 1, GL_FALSE, &MVP[0][0]);
+	//glUniformMatrix4fv(mvpID, 1, GL_FALSE, &MVP[0][0]);
 	glutSwapBuffers();
 }
 void Reshape(int w, int h) {
