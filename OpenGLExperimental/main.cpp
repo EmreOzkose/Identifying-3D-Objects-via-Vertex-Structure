@@ -13,14 +13,13 @@
 
 	/*-----------------GLOBAL VARIABLES----------------*/
 
-	Object SelectedObject;
+	Object* SelectedObject;
 	InputManager inputManager;
 	Camera MainCamera;
 	int mainWindow;
 	GLuint  mvpID;
 	float theta;
 	/*-----------------GLOBAL VARIABLES----------------*/
-
 
 
 
@@ -33,6 +32,7 @@
 	void Mouse(int x, int y);
 	void Timer(int value);
 	void Idle();
+	void setLocations();
 	/*-----------------DEFINITIONS----------------*/
 
 
@@ -57,16 +57,22 @@ int main(int argc, char **argv) {
 
 
 
-
+	//need to add shader use
 	inputManager = InputManager();
 
 	MainCamera.transform.Debug();
-	SelectedObject = MainCamera;
-	std::cout<<"Selected Object :"<<SelectedObject.GetName()<<"\n";
+	SelectedObject = &MainCamera;
+	//std::cout<<"Selected Object :"<<SelectedObject.GetName()<<"\n";
 
-	std::string name = "Car1";
+	string name = "ejderya";
+	string path = "Models/dragon_10k.obj";
+	//objetin icine file exception ekle.
+	Object car1 = Object(name, path);
+	car1.SetupMesh();
+	SelectedObject = &car1;
+/*	std::string name = "Car1";
 	Object car1 = Object(&name[0u]);
-	std::cout << car1.GetName() << "\n";
+	std::cout << car1.GetName() << "\n";*/
 
 
 
@@ -98,7 +104,7 @@ void Display(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //clear the color buffer and the depth buffer
 
-	mat4 View = LookAt(vec3(0), vec3(0, 0, 5), vec3(0, 1, 0));
+	mat4 View = LookAt(vec3(0,0,-10), vec3(0, 0, 0), vec3(0, 1, 0));
 
 	float angles = theta * 180;
 	float c = cos(theta);
@@ -113,7 +119,9 @@ void Display(void)
 		0.0, 0.0, 1.0, 0,
 		0.0, 0.0, 0.0, 1.0);
 	mat4 Model = Translation * Rotation;
-	mat4 MVP = ProjectionMatrix * View*Rotation;
+	mat4 MVP = ProjectionMatrix * View;
+	glLoadIdentity();
+	SelectedObject->Draw();
 	glUniformMatrix4fv(mvpID, 1, GL_FALSE, &MVP[0][0]);
 	glutSwapBuffers();
 }

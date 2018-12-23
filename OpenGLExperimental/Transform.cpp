@@ -4,14 +4,15 @@
 
 void Transform::Debug()
 {
-	std::cout << "Transform : ";
+	//hatalý
+	/*std::cout << "Transform : ";
 	std::cout << name<<"\n";
 	std::cout << "Position :";
 	std::cout << position << "\n";
 	std::cout << "Rotation :";
 	std::cout << rotation << "\n";
 	std::cout << "Scale :";
-	std::cout << scale << "\n";
+	std::cout << scale << "\n";*/
  }
 void Transform::Translate(vec3 translationvector,float deltaTime)
 {

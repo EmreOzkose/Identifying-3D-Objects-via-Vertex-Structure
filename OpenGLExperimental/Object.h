@@ -1,26 +1,43 @@
 #pragma once
 #include "Transform.h"
+#include <iostream>
+#include <vector>
+using namespace std;
 class Object
 {
 public:
 	//functions
-	char* GetName();
-	void SetName(char* newName);
-	void Update();
-	//components
+	string GetName();
+	void SetName(string newName);
+	void load_obj(string path);
+	void Draw();
+	void SetupMesh();
+
+
+	GLuint VAO, VBO, EBO;
 	Transform transform;
 
+	vector<vec4> vertices;
+	vector<vec4> normals;
+	vector<vec4> textureCoordinate;
+	vector<GLuint> indices;
 
 	//constructors
-	Object(char* newName)
+	Object(string objectName, string modelPath)
 	{
-		SetName(newName);
-		transform.name = newName;
+		SetName(objectName);
+		transform.name = objectName;
+		load_obj(modelPath);
+	}
+	Object(string objectName)
+	{
+		SetName(objectName);
+		transform.name = objectName;
 	}
 	Object()
 	{
 
 	}
 private:
-	char* name;
+	string name;
 };

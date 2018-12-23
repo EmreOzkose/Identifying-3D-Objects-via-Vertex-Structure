@@ -1,13 +1,14 @@
 #pragma once
 #include <Angel_commons/Angel.h>
 
+using namespace std;
 class Transform
 {
 public:
 
-	Transform(char* name)
+	Transform(string Nname)
 	{
-		this->name = name;
+		name = Nname;
 	};
 	Transform()
 	{
@@ -20,7 +21,7 @@ public:
 	vec3 position = vec3(0, 0, 0);
 	vec3 rotation;
 	vec3 scale;
-	char* name;
+	string name;
 	vec4 forward = position+vec3(0,0,1);
 private:
 	
