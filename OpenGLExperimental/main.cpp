@@ -1,7 +1,5 @@
 
-#include "Program.h"
-#include <Angel_commons/Angel.h>
-#include <list>
+#include "Scene.h"
 #define width 900
 #define height 900
 #define WINDOWNAME "Assignment-2"
@@ -9,16 +7,14 @@
 Object SelectedObject;
 InputManager inputManager;
 Camera MainCamera;
+int mainWindow;
 GLuint  mvpID;
 float theta;
-mat4 ProjectionMatrix;
 vec3 pos = vec3(0, 0, -10),at;
 //add delta time
-vec3 vertices[6] = { vec3(-1, 1, 0), vec3(1, 1, 0), vec3(1, -1, 0),
-					vec3( 0 ,-1, 1), vec3(0,1, 1), vec3(0,1, -1) };
 
 
-
+/*
 void init()
 {
 	GLuint vao;
@@ -40,7 +36,7 @@ void init()
 	glEnableVertexAttribArray(vPosition);
 	glVertexAttribPointer(vPosition, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	glClearColor(1.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
-}
+}*/
 void Display();
 void Reshape(int w, int h);
 void Keyboard(unsigned char key, int x, int y);
@@ -49,30 +45,18 @@ void MouseMotion(int x, int y);
 void Mouse(int x, int y);
 void Timer(int value);
 void Idle();
-void init();
+//void init();
 void Grid();
 
 
 int main(int argc, char **argv) {
 	
-	Program mainProgram;
-	mainProgram.Init(argc, argv);
-	Window window;
-	unsigned int displayMode = GLUT_DOUBLE | GLUT_DEPTH ;
-	window.Init(displayMode, vec2(200, 200), vec2(width, height));
-	window.Show(WINDOWNAME);
-	init();
-
-
-
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_DEPTH);
-	glEnable(GL_LIGHTING); //turns on lighting
-	glEnable(GL_NORMALIZE); //enable automatic normalization
-	glClearDepth(1.0); //specify depth for clear buffer. [0,1]
-	glDepthFunc(GL_LEQUAL); //remove anything equal or farther away
-	glCullFace(GL_BACK);//remove the back of objects
-	glEnable(GL_CULL_FACE); //enable culling. make it faster.
+	
+	Scene mainScene = Scene();
+	mainScene.Init(argc,argv);
+	unsigned int Mode= GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH;
+	mainWindow=mainScene.SetupWindow(Mode,vec2(0,0),vec2(width,height), WINDOWNAME);
+	glClearColor(1, 1, 0, 1);
 
 
 	MainCamera.transform.Debug();
@@ -105,14 +89,14 @@ void Grid()
 	glColor3f(1, 1, 1);
 
 	for (int i = -50; i < 50; i++) {
-		glBegin(GL_LINES);
+		glBegin(GL_TRIANGLE_STRIP);
 		glVertex3f(i, 0, -50);
 		glVertex3f(i, 0, 50);
 		glEnd();
 	}
 
 	for (int i = -50; i < 50; i++) {
-		glBegin(GL_LINES);
+		glBegin(GL_TRIANGLE_STRIP);
 		glVertex3f(-50, 0, i);
 		glVertex3f(50, 0, i);
 		glEnd();
@@ -122,15 +106,14 @@ void Grid()
 
 void Display(void)
  {
-	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //clear the color buffer and the depth buffer
 
-	mat4 View = LookAt(pos,vec3(0,0,5),vec3(0,1,0));
+	mat4 View = LookAt(pos,at,vec3(0,1,0));
 
 	float angles = theta*180;
 	float c = cos(theta);
 	float s = sin(theta);
-	
+	mat4 ProjectionMatrix = MainCamera.ProjectionMatrix();
 	mat4 Rotation = mat4(1.0, 0.0, 0.0, 0.0,
 		0.0, c, s, 0.0,
 		0.0, -s, c, 0,
@@ -140,53 +123,38 @@ void Display(void)
 		0.0 , 0.0, 1.0, pos.z,
 		0.0 , 0.0, 0.0, 1.0);
 	mat4 Model = Translation* Rotation;
-	mat4 MVP = ProjectionMatrix * View;
+	mat4 MVP = ProjectionMatrix * View*Rotation;
 	
-	
-
 	glUniformMatrix4fv(mvpID, 1, GL_FALSE, &MVP[0][0]);
-	
-	glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
-	glDrawArrays(GL_LINE_LOOP, 3, 6);
-	Grid();
 	glutSwapBuffers();
 }
 void Reshape(int w, int h) {
 		if (h == 0) h = 1; // Prevent a divide by zero
 		float aspect = (float)w / h;
 		MainCamera.aspect = aspect;
-		ProjectionMatrix = MainCamera.ProjectionMatrix();
 		glViewport(0,0,w,h);
 
 }
 void Keyboard(unsigned char key, int x, int y)
 {
-	std::cout << key;
+	std::cout << pos<<"\n";
 	if (key == 'q') {
-		at.x += .1f;
+		theta -= .1f;
 	}
 	if (key == 'e') {
-		at.y += .1f;
+		theta += .1f;
 	}
-	
+	at = sin(theta);
 	if (key == 'w')
 		pos.z += 1;
 	if (key == 'd')
-		pos.x += .1f;
+		pos.y += 1;
 	if (key == 'a')
-		pos.x -= .1f;
+		pos.y -= 1;
 	if (key == 's')
 		pos.z -= 1;
-	/*switch (key)
-	{
-		case 'w':
-			SelectedObject.transform.Translate(Vector3::FORWARD, 0.015);
-			break;
-		default:
-
-			break;
-
-	}*/
+	
+	glutPostRedisplay();
 }
 
 void KeyboardUp(unsigned char key, int x, int y)
@@ -201,8 +169,6 @@ void Timer(int value)
 void Idle()
 {
 	
-	MainCamera.Refresh();
-	glutPostRedisplay();
 }
 
 void Mouse(int x, int y)

@@ -39,9 +39,6 @@
     <ClCompile Include="..\..\..\..\Desktop\OpenGLStuff\Angel_commons\InitShader.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="Program.cpp">
-      <Filter>Source Files\Classes</Filter>
-    </ClCompile>
     <ClCompile Include="Renderer.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
@@ -63,13 +60,13 @@
     <ClCompile Include="InputManager.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source Files\Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\Desktop\OpenGLStuff\Angel_commons\Angel.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Program.h">
-      <Filter>Source Files\Headers</Filter>
     </ClInclude>
     <ClInclude Include="Renderer.h">
       <Filter>Source Files\Headers</Filter>
@@ -90,6 +87,9 @@
       <Filter>Source Files\Objects\Headers</Filter>
     </ClInclude>
     <ClInclude Include="InputManager.h">
+      <Filter>Source Files\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
       <Filter>Source Files\Headers</Filter>
     </ClInclude>
   </ItemGroup>
