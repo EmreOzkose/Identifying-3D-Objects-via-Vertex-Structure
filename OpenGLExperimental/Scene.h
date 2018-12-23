@@ -4,6 +4,7 @@
 #include "Object.h"
 #include "InputManager.h"
 #include "Camera.h"
+#include <glui.h>
 class Scene {
 
 public:
@@ -18,5 +19,6 @@ public:
 	};
 	void Init(int argc, char **argv);
 	int SetupWindow(unsigned int mode, vec2 windowPosition, vec2 windowSize, const char* name);
+	void SetupConsole(GLUI* glui_v_subwindow, int main_window);
 
 };

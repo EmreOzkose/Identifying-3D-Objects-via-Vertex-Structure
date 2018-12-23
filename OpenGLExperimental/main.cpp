@@ -17,6 +17,7 @@
 	InputManager inputManager;
 	Camera MainCamera;
 	int mainWindow;
+	GLUI* guiWindow;
 	GLuint  mvpID;
 	float theta;
 	/*-----------------GLOBAL VARIABLES----------------*/
@@ -32,7 +33,7 @@
 	void Mouse(int x, int y);
 	void Timer(int value);
 	void Idle();
-	void setLocations();
+	
 	/*-----------------DEFINITIONS----------------*/
 
 
@@ -49,6 +50,7 @@ int main(int argc, char **argv) {
 	mainScene.Init(argc,argv);
 	unsigned int Mode= GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH;
 	mainWindow=mainScene.SetupWindow(Mode,vec2(0,0),vec2(width,height), window_name);
+	mainScene.SetupConsole(guiWindow,mainWindow);
 
 	/*-----------------SETUP SCENE----------------*/
 
@@ -91,7 +93,8 @@ int main(int argc, char **argv) {
 	//glutMotionFunc(MouseMotion);
 	glutKeyboardFunc(Keyboard);
 	//glutKeyboardUpFunc(KeyboardUp);
-	glutIdleFunc(Idle);
+	//glutIdleFunc(Idle);
+	GLUI_Master.set_glutIdleFunc(Idle);
     //	glutTimerFunc(1, Timer, 0);
 	glutMainLoop();
 
@@ -129,7 +132,7 @@ void Reshape(int w, int h) {
 	if (h == 0) h = 1; // Prevent a divide by zero
 	float aspect = (float)w / h;
 	MainCamera.aspect = aspect;
-	glViewport(0, 0, w, h);
+	GLUI_Master.auto_set_viewport();
 
 }
 void Keyboard(unsigned char key, int x, int y)
