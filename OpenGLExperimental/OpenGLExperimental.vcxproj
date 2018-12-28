@@ -157,12 +157,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\Desktop\OpenGLStuff\Angel_commons\Angel.h" />
-    <ClInclude Include="..\..\MatAPI\MatAPI\model.h" />
-    <ClInclude Include="..\..\MatAPI\MatAPI\read.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="model.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="read.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
