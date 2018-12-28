@@ -12,6 +12,7 @@ void Window::Init(unsigned int mode,vec2 windowPosition,vec2 windowSize)
 int Window::Show(const char* windowName)
 {
 	int win=glutCreateWindow(windowName);
+	glutInitContextVersion(3,1);
 	glewExperimental = GL_TRUE;
 	glewInit();
 	return win;

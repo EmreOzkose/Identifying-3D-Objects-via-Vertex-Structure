@@ -8,15 +8,16 @@ class GameObject :public Object {
 	void Draw();
 	void SetupMesh();
 	void Deform(vec3 ScaleModifier);
+	void Bind();
+	void PrintRandomVertex();
+	//remove useshader func and add a shader class
 	GLuint UseShader(const char* vertexShaderPath, const char* fragmentShaderPath, const char* posAttribute);
-
+	
 	GLuint VAO, VBO, EBO;
-
 
 	vector<vec4> vertices;
 	vector<vec3> normals;
 	vector<vec2> textureCoordinate;
-
 
 	vector<GLuint> VertexIndices;
 	vector<GLuint> NormalIndices;

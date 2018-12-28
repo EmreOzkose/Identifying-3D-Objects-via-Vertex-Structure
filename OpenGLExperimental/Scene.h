@@ -5,6 +5,7 @@
 #include "GameObject.h"
 #include "InputManager.h"
 #include "Camera.h"
+#include "Shader.h"
 #include <glui.h>
 class Scene {
 

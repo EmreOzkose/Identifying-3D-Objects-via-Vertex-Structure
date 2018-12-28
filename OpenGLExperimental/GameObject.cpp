@@ -146,7 +146,23 @@ GLuint GameObject::UseShader(const char* vertexShaderPath, const char* fragmentS
 void GameObject::Deform(vec3 ScaleModifier) {
 	//vertices
 	//subdata
-}vector<string> split(string strToSplit, char delimeter)
+}
+void GameObject::Bind()
+{
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+/*	GLuint attr = glGetAttribLocation(program, mainAttr);
+	glEnableVertexAttribArray(attr);
+	glVertexAttribPointer(attr, 4, GL_FLOAT, GL_FALSE, 0, 0);
+	glBindAttribLocation(program, attr, "vPosition");*/
+}
+void GameObject::PrintRandomVertex()
+{
+	int a = rand() % vertices.size();
+	cout << "Random Vertex: " << vertices.at(a) << "\n";
+}
+vector<string> split(string strToSplit, char delimeter)
 {
 	stringstream ss(strToSplit);
 	string item;
