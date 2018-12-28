@@ -2,6 +2,7 @@
 #include <Angel_commons/Angel.h>
 #include "Window.h"
 #include "Object.h"
+#include "GameObject.h"
 #include "InputManager.h"
 #include "Camera.h"
 #include <glui.h>

@@ -13,7 +13,7 @@
 
 	/*-----------------GLOBAL VARIABLES----------------*/
 
-	Object* SelectedObject;
+	GameObject* SelectedObject;
 	InputManager inputManager;
 	Camera MainCamera;
 	int mainWindow;
@@ -63,13 +63,13 @@ int main(int argc, char **argv) {
 	inputManager = InputManager();
 
 	MainCamera.transform.Debug();
-	SelectedObject = &MainCamera;
+	//SelectedObject = &MainCamera;
 	//std::cout<<"Selected Object :"<<SelectedObject.GetName()<<"\n";
 
 	string name = "ejderya";
 	string path = "Models/Cube.obj";
 	//objetin icine file exception ekle.
-	Object objyn = Object(name, path);
+	GameObject objyn = GameObject(name, path,false);
 	objyn.SetupMesh();
 	SelectedObject = &objyn;
 	printf("Vertex Size: [%d]\n", SelectedObject->vertices.size());
