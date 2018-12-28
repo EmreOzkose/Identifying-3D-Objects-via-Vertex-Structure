@@ -6,7 +6,7 @@
 	#include "Scene.h"
 	#define width 900
 	#define height 900
-	#define window_name "412 Project"
+	#define window_name "Assignment-2"
 	#define PI 3.14159265359
 	/*-----------------DEPENDENCIES AND MACROS----------------*/
 
