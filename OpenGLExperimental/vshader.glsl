@@ -14,6 +14,6 @@ void main()
 
 
 
-  gl_Position = vPosition;
+  gl_Position = MVP*vPosition;
   vColor=gl_Position;
 }

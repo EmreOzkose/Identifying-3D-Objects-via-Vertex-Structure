@@ -67,12 +67,14 @@ int main(int argc, char **argv) {
 	//std::cout<<"Selected Object :"<<SelectedObject.GetName()<<"\n";
 
 	string name = "ejderya";
-	string path = "Models/dragon_10k.obj";
+	string path = "Models/Cube.obj";
 	//objetin icine file exception ekle.
 	Object objyn = Object(name, path);
 	objyn.SetupMesh();
 	SelectedObject = &objyn;
-	printf("%d", SelectedObject->vertices.size());
+	printf("Vertex Size: [%d]\n", SelectedObject->vertices.size());
+	printf("Normal Size: [%d]\n", SelectedObject->normals.size());
+	printf("Texture coord Size: [%d]\n", SelectedObject->textureCoordinate.size());
 
 	GLuint shader = SelectedObject->UseShader("vshader.glsl", "fshader.glsl", "vPosition");
 	mvpID = glGetUniformLocation(shader, "MVP");
@@ -124,13 +126,16 @@ void Display(void)
 		0.0, 0.0, 0.0, 1.0);
 	mat4 Translation = mat4(1.0, 0.0, 0.0, 0,
 		0.0, 1.0, 0.0, 0,
-		0.0, 0.0, 1.0, 0,
+		0.0, 0.0, 1.0, 10,
 		0.0, 0.0, 0.0, 1.0);
 	mat4 Model = Translation * Rotation;
 	mat4 MVP = ProjectionMatrix * View;
-	glLoadIdentity();
+	
+
+
+
 	SelectedObject->Draw();
-	//glUniformMatrix4fv(mvpID, 1, GL_FALSE, &MVP[0][0]);
+	glUniformMatrix4fv(mvpID, 1, GL_TRUE, &MVP[0][0]);
 	glutSwapBuffers();
 }
 void Reshape(int w, int h) {
