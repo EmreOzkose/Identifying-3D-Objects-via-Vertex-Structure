@@ -9,7 +9,7 @@ import torch.optim as optim
 from sklearn.model_selection import train_test_split
 
 from model import V2L
-from utils import read_vertices
+from utils import read_vertices, save_to_mat
 
 
 # Read Data
@@ -20,7 +20,7 @@ data = [torch.from_numpy(X_train), torch.from_numpy(y_train).type(torch.LongTens
 val_data = [torch.from_numpy(X_test), torch.from_numpy(y_test).type(torch.LongTensor)]
 
 # Learning Paramter Stuff
-lr = 0.001
+lr = 0.01
 epochs = 20
 
 # Initialize the model
@@ -36,13 +36,14 @@ for epoch in range(epochs):  # loop over the dataset multiple times
     for i, da in enumerate(['d']): # enumerate(trainloader, 0):
         # get the inputs
         inputs, labels = data
-
+        print(labels.size())
 
         # zero the parameter gradients
         optimizer.zero_grad()
-
+        print(inputs.shape)
         # forward + backward + optimize
         outputs = model(inputs)
+
         loss = criterion(outputs, labels)
         loss.backward()
         optimizer.step()
@@ -53,7 +54,6 @@ print('Finished Training')
 
 # Test the model
 images, labels = val_data
-
 correct = 0
 total = 0
 with torch.no_grad():
@@ -67,3 +67,6 @@ print('Accuracy of the network on the %d test images: %d %%' % (total ,
     100 * correct / total))
 
 # TODO: Print accuracy for each class
+
+# save model to use in Visual Studio
+save_to_mat(model)
