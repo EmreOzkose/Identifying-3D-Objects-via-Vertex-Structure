@@ -31,6 +31,9 @@
     <Filter Include="Source Files\Objects\Classes">
       <UniqueIdentifier>{1c1920cf-0991-4324-8d22-93f3197ee0d6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Nn Module">
+      <UniqueIdentifier>{666d5265-a644-41a0-bb0d-c104bf233665}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -103,6 +106,12 @@
     </ClInclude>
     <ClInclude Include="Shader.h">
       <Filter>Source Files\Objects\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MatAPI\MatAPI\model.h">
+      <Filter>Source Files\Nn Module</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MatAPI\MatAPI\read.h">
+      <Filter>Source Files\Nn Module</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
