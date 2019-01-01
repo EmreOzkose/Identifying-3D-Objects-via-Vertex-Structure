@@ -107,10 +107,10 @@
     <ClInclude Include="Shader.h">
       <Filter>Source Files\Objects\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="model.h">
+    <ClInclude Include="..\..\MatAPI\MatAPI\model.h">
       <Filter>Source Files\Nn Module</Filter>
     </ClInclude>
-    <ClInclude Include="read.h">
+    <ClInclude Include="..\..\MatAPI\MatAPI\read.h">
       <Filter>Source Files\Nn Module</Filter>
     </ClInclude>
   </ItemGroup>
