@@ -29,14 +29,11 @@ public:
 		return : probabilities | size: output_dim x 1
 		output type: float[]
 	*/
-	float* forward(vector<vector<float>> input[num_of_vertex]) {
+	float* forward(std::vector<float> input[num_of_vertex]) {
 
-		// First flatten the given vertex array (pytorch: view(.., -1))
-		vector<float> *flattened = flatten(*input);
+		std::vector<float> flattened = flatten(input);
 
-		// Start forward pass
-		vector<float> *h = ReLu(flattened, num_of_vertex * 3);
-
+		cout << flattened.size() << endl;
 
 
 		float *probs = new float[output_dim];;
@@ -52,7 +49,7 @@ public:
 		input : vec4 vector
 		return : float version of input
 	*/
-	void vec2float(vector<vector<float>> input) {
+	void vec2float(std::vector<float> input) {
 
 	}
 
@@ -61,24 +58,17 @@ public:
 		input  : vector of size (mxn)
 		return : flatten object, vector of size (1xm*n)
 	*/
-	vector<float> *flatten(vector<vector<float>> input) {
+	std::vector<float> flatten(std::vector<float> input[num_of_vertex]) {
 
-		vector<float> *flatten = new vector<float>;
-
+		std::vector<float> flatten = {};
 		for (int i = 0; i < num_of_vertex; i++) {
 			for (int j = 0; j < 3; j++) {
-				flatten->push_back(input.at(i).at(j));
+				cout << input[i].size() << endl;
+				//cout << input[i].at(j) << endl;
+				//flatten.push_back(input[i].at(j));
 			}
 		}
 		return flatten;
-	}
-
-	vector<float> *ReLu(vector<float> *x, int dim) {
-
-		for (int i = 0; i < dim; i++)
-			if (x->at(i) < 0.0)
-				x->at(i) = 0.0;
-		return x;
 	}
 
 };
