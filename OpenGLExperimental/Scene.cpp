@@ -4,6 +4,11 @@ void Scene::Init(int argc, char ** argv)
 {
 	glutInit(&argc,argv);
 	glEnable(GL_CULL_FACE); //enable culling. make it faster.
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_LINE_SMOOTH);
+	glEnable(GL_POLYGON_SMOOTH);
+	glDepthMask(GL_FALSE);
+	glDepthFunc(GL_ALWAYS);
 }
 
 int Scene::SetupWindow(unsigned int mode, vec2 windowPosition, vec2 windowSize, const char * name)

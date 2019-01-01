@@ -67,12 +67,12 @@ int main(int argc, char **argv) {
 	//std::cout<<"Selected Object :"<<SelectedObject.GetName()<<"\n";
 
 	string name = "ejderya";
-	string path = "Models/Cube.obj";
+	string path = "Models/Player.obj";
 	//objetin icine file exception ekle.
 	GameObject objyn = GameObject(name, path,false);
 	objyn.SetupMesh();
 	SelectedObject = &objyn;
-	printf("Vertex Size: [%d]\n", SelectedObject->vertices.size());
+	printf("Vertex Size: [%d]\n", SelectedObject->BaseVertices.size());
 	printf("Normal Size: [%d]\n", SelectedObject->normals.size());
 	printf("Texture coord Size: [%d]\n", SelectedObject->textureCoordinate.size());
 
@@ -113,28 +113,28 @@ void Display(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //clear the color buffer and the depth buffer
 
-	mat4 View = LookAt(vec3(0,0,-10), vec3(0, 0, 0), vec3(0, 1, 0));
+	
 
 	float angles = theta * 180;
 	float c = cos(theta);
 	float s = sin(theta);
-	mat4 ProjectionMatrix = MainCamera.ProjectionMatrix();
+
+
 	mat4 Rotation = mat4(1.0, 0.0, 0.0, 0.0,
 		0.0, c, s, 0.0,
 		0.0, -s, c, 0,
 		0.0, 0.0, 0.0, 1.0);
-	mat4 Translation = mat4(1.0, 0.0, 0.0, 0,
-		0.0, 1.0, 0.0, 0,
-		0.0, 0.0, 1.0, 10,
-		0.0, 0.0, 0.0, 1.0);
-	mat4 Model = Translation * Rotation;
-	mat4 MVP = ProjectionMatrix * View;
-	
+	mat4 Model = Rotation;
 
 
+	MainCamera.Refresh();
+	mat4 View = MainCamera.ViewMatrix();
+	mat4 ProjectionMatrix = MainCamera.ProjectionMatrix();
+	mat4 MVP = ProjectionMatrix * View*SelectedObject->getModelMatrix();
 
-	SelectedObject->Draw();
 	glUniformMatrix4fv(mvpID, 1, GL_TRUE, &MVP[0][0]);
+	SelectedObject->Draw();
+	
 	glutSwapBuffers();
 }
 void Reshape(int w, int h) {
@@ -146,6 +146,27 @@ void Reshape(int w, int h) {
 }
 void Keyboard(unsigned char key, int x, int y)
 {
+	if (key == 'k')
+		SelectedObject->Deform(vec3(1, 2,1 ),1.0f,75);
+	if (key == 'm')
+		SelectedObject->ResetVertices();
+	if (key == 'x')
+	{
+		MainCamera.transform.position = SelectedObject->transform.position - 3 * vec3(0, -1, 1.5f);
+		MainCamera.at = SelectedObject->transform.position;
+	}
+		
+	if (key == 'y')
+		SelectedObject->transform.position.y += 1;
+	if (key == 'u')
+		SelectedObject->transform.position.y -= 1;
+
+	if (key == 'w')
+		MainCamera.transform.position.z += 1;
+	if (key == 's')
+		MainCamera.transform.position.z -= 1;
+	if (key == 'f')
+		MainCamera.transform.position.y += 1;
 	inputManager.Process(key);
 	glutPostRedisplay();
 }

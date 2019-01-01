@@ -5,6 +5,7 @@
 
 
 vector<string> split(string strToSplit, char delimeter);
+GLfloat LengthofVec(vec4 vect);
 void GameObject::load_obj(string path, bool includetexandnormals)
 {
 	string line, v, X, Y, Z;
@@ -26,7 +27,7 @@ void GameObject::load_obj(string path, bool includetexandnormals)
 			Y = splitted.at(2);
 			Z = splitted.at(3);
 			vec3 vertex = vec3(strtof((X).c_str(), 0), strtof((Y).c_str(), 0), strtof((Z).c_str(), 0));
-			std::cout << X << "\t" << Y << "\t" << Z << "\n";
+			//std::cout << X << "\t" << Y << "\t" << Z << "\n";
 			normals.push_back(vertex);
 		}
 
@@ -103,7 +104,7 @@ void GameObject::load_obj(string path, bool includetexandnormals)
 			Z = splitted.at(3);
 			//std::cout << "Size:" << X << "\t"<<Y<<"\t"<<Z<<"\n";
 			vertex = vec4(strtof((X).c_str(), 0), strtof((Y).c_str(), 0), strtof((Z).c_str(), 0), 1);
-			vertices.push_back(vertex);
+			BaseVertices.push_back(vertex);
 
 		}
 	}
@@ -125,7 +126,7 @@ void GameObject::SetupMesh()
 
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vec4), &vertices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, BaseVertices.size() * sizeof(vec4), &BaseVertices[0], GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, VertexIndices.size() * sizeof(GLuint), &VertexIndices[0], GL_STATIC_DRAW);
@@ -143,7 +144,34 @@ GLuint GameObject::UseShader(const char* vertexShaderPath, const char* fragmentS
 }
 
 
-void GameObject::Deform(vec3 ScaleModifier) {
+void GameObject::Deform(vec3 ScaleModifier,GLfloat deformModifier,GLfloat chance) {
+	GLfloat x, y, z;
+	vec4 deformedVertex;
+	vec4 normalizedVectorfromOrigin;
+	DeformedVertices.clear();
+	GLfloat randomize = float(rand() % 10) / 10,cont;
+	deformModifier *= randomize;
+
+	for (size_t i = 0; i < BaseVertices.size(); i++)
+	{
+		cont = rand() % 100;
+		if (cont < chance)
+			continue;
+		x = BaseVertices.at(i).x*ScaleModifier.x;
+		y = BaseVertices.at(i).y*ScaleModifier.y;
+		z = BaseVertices.at(i).z*ScaleModifier.z;
+		deformedVertex = vec4(x, y, z, BaseVertices[i].w);
+
+		normalizedVectorfromOrigin = BaseVertices[i] - pivot;
+		normalizedVectorfromOrigin *= deformModifier;
+		normalizedVectorfromOrigin /= LengthofVec(normalizedVectorfromOrigin);
+
+		deformedVertex += normalizedVectorfromOrigin;
+		DeformedVertices.push_back(deformedVertex);
+	}
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, DeformedVertices.size() * sizeof(vec4), &DeformedVertices[0], GL_STATIC_DRAW);
 	//vertices
 	//subdata
 }
@@ -159,8 +187,14 @@ void GameObject::Bind()
 }
 void GameObject::PrintRandomVertex()
 {
-	int a = rand() % vertices.size();
-	cout << "Random Vertex: " << vertices.at(a) << "\n";
+	int a = rand() % BaseVertices.size();
+	cout << "Random Vertex: " << BaseVertices.at(a) << "\n";
+}
+void GameObject::ResetVertices()
+{
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, BaseVertices.size() * sizeof(vec4), &BaseVertices[0], GL_STATIC_DRAW);
 }
 vector<string> split(string strToSplit, char delimeter)
 {
@@ -172,4 +206,8 @@ vector<string> split(string strToSplit, char delimeter)
 		splittedStrings.push_back(item);
 	}
 	return splittedStrings;
+}
+GLfloat LengthofVec(vec4 vect)
+{
+	return sqrt(pow(vect.x,2)+ pow(vect.y, 2)+ pow(vect.z, 2));
 }

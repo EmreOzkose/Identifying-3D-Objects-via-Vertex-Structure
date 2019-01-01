@@ -10,8 +10,13 @@ public:
 	void Refresh();
 	mat4 ViewMatrix();
 	mat4 ProjectionMatrix();
-	vec4 eye,at=vec4(0,0,0,0);
-	float FOV=75, CameraNear=0.01, CameraFar=100,aspect=1;
+	vec4 eye = transform.position ,at = vec4(0,0,0,0);
+
+
+	enum ProjectionMode { PerspectiveMode, OrthoghrapicMode };
+	ProjectionMode mode = ProjectionMode::PerspectiveMode;
+
+	float FOV=45, CameraNear=0.01, CameraFar=1000,aspect=1;
 private:
-	std::string str = "MainCamera";
+	string str = "MainCamera";
 };
