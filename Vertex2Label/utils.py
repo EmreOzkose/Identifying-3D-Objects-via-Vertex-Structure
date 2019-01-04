@@ -28,14 +28,9 @@ def read_vertices(path):
 
 def save_to_mat(model):
     fc1 = model.fc1.weight.data
-    fc1 = np.transpose(fc1.numpy())
-
     fc2 = model.fc2.weight.data
-    fc2 = np.transpose(fc2.numpy())
-
     fc3 = model.fc3.weight.data
-    fc3 = np.transpose(fc3.numpy())
 
-    np.savetxt('C:\\Users\\Emre\\source\\repos\\MatAPI\\MatAPI\\fc1.out', fc1, delimiter='\n')
-    np.savetxt('C:\\Users\\Emre\\source\\repos\\MatAPI\\MatAPI\\fc2.out', fc2, delimiter='\n')
-    np.savetxt('C:\\Users\\Emre\\source\\repos\\MatAPI\\MatAPI\\fc3.out', fc3, delimiter='\n')
+    np.savetxt('C:\\Users\\Emre\\source\\repos\\MatAPI\\MatAPI\\fc1.out', fc1.numpy(), delimiter='\n')
+    np.savetxt('C:\\Users\\Emre\\source\\repos\\MatAPI\\MatAPI\\fc2.out', fc2.numpy(), delimiter='\n')
+    np.savetxt('C:\\Users\\Emre\\source\\repos\\MatAPI\\MatAPI\\fc3.out', fc3.numpy(), delimiter='\n')
