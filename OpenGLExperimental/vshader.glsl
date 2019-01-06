@@ -1,7 +1,7 @@
 #version 330 core
 
 in vec4 vPosition;
-
+in vec3 vNormal;
 
 uniform mat4 MVP;
 

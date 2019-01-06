@@ -6,6 +6,7 @@
 
 vector<string> split(string strToSplit, char delimeter);
 GLfloat LengthofVec(vec4 vect);
+vec3 Direction(vec3 vect);
 void GameObject::load_obj(string path, bool includetexandnormals)
 {
 	string line, v, X, Y, Z;
@@ -27,8 +28,8 @@ void GameObject::load_obj(string path, bool includetexandnormals)
 			Y = splitted.at(2);
 			Z = splitted.at(3);
 			vec3 vertex = vec3(strtof((X).c_str(), 0), strtof((Y).c_str(), 0), strtof((Z).c_str(), 0));
-			//std::cout << X << "\t" << Y << "\t" << Z << "\n";
-			normals.push_back(vertex);
+			////std::cout << X << "\t" << Y << "\t" << Z << "\n";
+			Normals.push_back(vertex);
 		}
 
 		else if (line[0] == 'v'&&line[1] == 't')
@@ -56,6 +57,7 @@ void GameObject::load_obj(string path, bool includetexandnormals)
 				VertexIndices.push_back((a - 1));
 				VertexIndices.push_back((b - 1));
 				VertexIndices.push_back((c - 1));
+
 				continue;
 			}
 			vector<string> f1C = split(f1, '/');
@@ -88,6 +90,9 @@ void GameObject::load_obj(string path, bool includetexandnormals)
 			Y = f2C.at(2);
 			Z = f3C.at(2);
 			a = atoi(X.c_str()), b = atoi(Y.c_str()), c = atoi(Z.c_str());
+
+			//OrderedNormals.insert(vec3(1), 1);
+
 			NormalIndices.push_back((a - 1));
 			NormalIndices.push_back((b - 1));
 			NormalIndices.push_back((c - 1));
@@ -108,6 +113,11 @@ void GameObject::load_obj(string path, bool includetexandnormals)
 
 		}
 	}
+/*	for (size_t i = 0; i < NormalIndices.size(); i+=3)
+	{
+		vec3 n = (unOrderednormals.at(i) + unOrderednormals.at(i+1) + unOrderednormals.at(i+2))/3;
+		orderedNormals.push_back(n);
+	}*/
 
 }
 
@@ -125,48 +135,53 @@ void GameObject::SetupMesh()
 	glGenBuffers(1, &EBO);
 
 	glBindVertexArray(VAO);
+
+
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, BaseVertices.size() * sizeof(vec4), &BaseVertices[0], GL_STATIC_DRAW);
 
+
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, VertexIndices.size() * sizeof(GLuint), &VertexIndices[0], GL_STATIC_DRAW);
-
 
 }
 GLuint GameObject::UseShader(const char* vertexShaderPath, const char* fragmentShaderPath, const char* posAttribute)
 {
 	GLuint	program = InitShader(vertexShaderPath, fragmentShaderPath);
 	glUseProgram(program);
+
 	GLuint vPosition = glGetAttribLocation(program, posAttribute);
 	glEnableVertexAttribArray(vPosition);
-	glVertexAttribPointer(vPosition, 4, GL_FLOAT, GL_FALSE, 0, 0);
+	glVertexAttribPointer(vPosition, 4, GL_FLOAT, GL_FALSE, 0,0);
+
+
 	return program;
 }
 
 
-void GameObject::Deform(vec3 ScaleModifier,GLfloat deformModifier,GLfloat chance) {
-	GLfloat x, y, z;
-	vec4 deformedVertex;
-	vec4 normalizedVectorfromOrigin;
+void GameObject::Deform(vec3 ScaleModifier,GLfloat deformModifier) {
+	GLfloat x, y, z, randomize = float(rand() % 10) / 10, cont;
+	vec4 deformedVertex, normalizedVectorfromOrigin;
 	DeformedVertices.clear();
-	GLfloat randomize = float(rand() % 10) / 10,cont;
+
+
 	deformModifier *= randomize;
 
 	for (size_t i = 0; i < BaseVertices.size(); i++)
 	{
-		cont = rand() % 100;
-		if (cont < chance)
+		cont = rand() % 2;
+		if (cont == 0)
+		{
+			DeformedVertices.push_back(BaseVertices.at(i));
 			continue;
-		x = BaseVertices.at(i).x*ScaleModifier.x;
-		y = BaseVertices.at(i).y*ScaleModifier.y;
-		z = BaseVertices.at(i).z*ScaleModifier.z;
-		deformedVertex = vec4(x, y, z, BaseVertices[i].w);
-
-		normalizedVectorfromOrigin = BaseVertices[i] - pivot;
-		normalizedVectorfromOrigin *= deformModifier;
-		normalizedVectorfromOrigin /= LengthofVec(normalizedVectorfromOrigin);
-
-		deformedVertex += normalizedVectorfromOrigin;
+		}
+			
+		x = BaseVertices.at(i).x;
+		y = BaseVertices.at(i).y;
+		z = BaseVertices.at(i).z;
+	
+		deformedVertex = BaseVertices.at(i)* ScaleModifier+vec4(Direction(vec3(x, y, z)),0)/10;
+		//cout << deformedVertex << "\n";
 		DeformedVertices.push_back(deformedVertex);
 	}
 	glBindVertexArray(VAO);
@@ -175,15 +190,15 @@ void GameObject::Deform(vec3 ScaleModifier,GLfloat deformModifier,GLfloat chance
 	//vertices
 	//subdata
 }
-void GameObject::Bind()
+void GameObject::Bind(GLuint program)
 {
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-/*	GLuint attr = glGetAttribLocation(program, mainAttr);
+GLuint attr = glGetAttribLocation(program, "vPosition");
 	glEnableVertexAttribArray(attr);
 	glVertexAttribPointer(attr, 4, GL_FLOAT, GL_FALSE, 0, 0);
-	glBindAttribLocation(program, attr, "vPosition");*/
+	glBindAttribLocation(program, attr, "vPosition");
 }
 void GameObject::PrintRandomVertex()
 {
@@ -209,5 +224,10 @@ vector<string> split(string strToSplit, char delimeter)
 }
 GLfloat LengthofVec(vec4 vect)
 {
-	return sqrt(pow(vect.x,2)+ pow(vect.y, 2)+ pow(vect.z, 2));
+	return sqrt(pow(vect.x, 2) + pow(vect.y, 2) + pow(vect.z, 2));
+}
+vec3 Direction(vec3 vect)
+{
+	//cout << vect / LengthofVec(vect) << "\n";
+	return (vect/ LengthofVec(vect));
 }

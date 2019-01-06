@@ -39,3 +39,8 @@ void Scene::SetupConsole(GLUI* glui_v_subwindow,int main_window)
 	glui_v_subwindow->set_main_gfx_window(main_window);
 	GLUI_Master.sync_live_all(); 
 }
+
+Light Scene::CreateMainLight(vec4 color, vec4 ambient, GLfloat intensity, GLfloat ambientIntensity)
+{
+	return Light(color, ambient, intensity, ambientIntensity);
+}

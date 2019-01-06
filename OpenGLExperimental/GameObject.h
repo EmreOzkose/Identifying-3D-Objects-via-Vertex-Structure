@@ -7,8 +7,8 @@ class GameObject :public Object {
 	void load_obj(string path, bool includetexandnormals);
 	void Draw();
 	void SetupMesh();
-	void Deform(vec3 ScaleModifier, GLfloat deformModifier, GLfloat chance);
-	void Bind();
+	void Deform(vec3 ScaleModifier, GLfloat deformModifier);
+	void Bind(GLuint program);
 	void PrintRandomVertex();
 	void ResetVertices();
 	//remove useshader func and add a shader class
@@ -18,7 +18,7 @@ class GameObject :public Object {
 
 	vector<vec4> BaseVertices;
 	vector<vec4> DeformedVertices;
-	vector<vec3> normals;
+	vector<vec3> Normals;
 	vector<vec2> textureCoordinate;
 
 	vector<GLuint> VertexIndices;
@@ -34,5 +34,7 @@ class GameObject :public Object {
 	{
 		load_obj(modelPath, hastextureandnormals);
 	}
-
+	GameObject() : Object()
+	{
+	}
 };

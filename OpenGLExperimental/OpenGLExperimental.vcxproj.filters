@@ -69,6 +69,12 @@
     <ClCompile Include="Shader.cpp">
       <Filter>Source Files\Objects\Classes</Filter>
     </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Source Files\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Source Files\Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\Desktop\OpenGLStuff\Angel_commons\Angel.h">
@@ -103,6 +109,12 @@
     </ClInclude>
     <ClInclude Include="Shader.h">
       <Filter>Source Files\Objects\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Source Files\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Source Files\Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
