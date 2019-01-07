@@ -4,7 +4,7 @@
 class Camera :public Object
 {
 public:
-	Camera() : Object(&str[0u]) {
+	Camera() : Object() {
 		transform.position = vec3(0,0,-10);
 	}
 	void Refresh();

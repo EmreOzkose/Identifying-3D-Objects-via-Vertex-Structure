@@ -9,29 +9,31 @@ GLuint Shader::getShaderID()
 {
 	return sID;
 }
-void Shader::Load(const char * vertexPath, const char * fragmentPath, const char * mainAttr, GLuint vao)
+GLuint Shader::getModelViewID()
 {
-	GLuint program = InitShader(vertexPath, fragmentPath);
+	return ModelViewID;
+}
+GLuint Shader::getProjectionID()
+{
+	return ProjectionID;
+}
+void Shader::Load(string vertexPath, string fragmentPath)
+{
+	GLuint program = InitShader(vertexPath.c_str(), fragmentPath.c_str());
 	glUseProgram(program);
-	GLuint attr = glGetAttribLocation(program, mainAttr);
+	
+	GLuint attr = glGetAttribLocation(program, "vPosition");
 	glEnableVertexAttribArray(attr);
 	glVertexAttribPointer(attr, 4, GL_FLOAT, GL_FALSE, 0, 0);
 	glBindAttribLocation(program, attr, "vPosition");
+	ModelViewID=glGetUniformLocation(program,"ModelView");
+	ProjectionID = glGetUniformLocation(program, "Projection");
 	sID = program;
 }
 
-void Shader::Use(GLuint vao)
-{
-	//glBindVertexArray(vao);
-	glUseProgram(sID);
-
-
-}
 void Shader::Use()
 {
 	glUseProgram(sID);
-
-
 }
 
 

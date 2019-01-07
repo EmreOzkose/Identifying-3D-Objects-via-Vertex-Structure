@@ -7,6 +7,8 @@
 vector<string> split(string strToSplit, char delimeter);
 GLfloat LengthofVec(vec4 vect);
 vec3 Direction(vec3 vect);
+
+
 void GameObject::load_obj(string path, bool includetexandnormals)
 {
 	string line, v, X, Y, Z;
@@ -121,10 +123,17 @@ void GameObject::load_obj(string path, bool includetexandnormals)
 
 }
 
-void GameObject::Draw()
+void GameObject::Draw(mat4 view,mat4 proj)
 {
+	shader.Use();
+	Bind(shader.getShaderID());
+	
+	mat4 MV = view * getModelMatrix();
+	glUniformMatrix4fv(shader.getModelViewID(), 1, GL_TRUE, &MV[0][0]);
+	
+	mat4 P = proj;
+	glUniformMatrix4fv(shader.getProjectionID(), 1, GL_TRUE, &P[0][0]);
 
-	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, VertexIndices.size(), GL_UNSIGNED_INT, 0);
 }
 
@@ -145,18 +154,7 @@ void GameObject::SetupMesh()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, VertexIndices.size() * sizeof(GLuint), &VertexIndices[0], GL_STATIC_DRAW);
 
 }
-GLuint GameObject::UseShader(const char* vertexShaderPath, const char* fragmentShaderPath, const char* posAttribute)
-{
-	GLuint	program = InitShader(vertexShaderPath, fragmentShaderPath);
-	glUseProgram(program);
 
-	GLuint vPosition = glGetAttribLocation(program, posAttribute);
-	glEnableVertexAttribArray(vPosition);
-	glVertexAttribPointer(vPosition, 4, GL_FLOAT, GL_FALSE, 0,0);
-
-
-	return program;
-}
 
 
 void GameObject::Deform(vec3 ScaleModifier,GLfloat deformModifier) {
@@ -195,7 +193,11 @@ void GameObject::Bind(GLuint program)
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-GLuint attr = glGetAttribLocation(program, "vPosition");
+
+
+
+
+	GLuint attr = glGetAttribLocation(program, "vPosition");
 	glEnableVertexAttribArray(attr);
 	glVertexAttribPointer(attr, 4, GL_FLOAT, GL_FALSE, 0, 0);
 	glBindAttribLocation(program, attr, "vPosition");

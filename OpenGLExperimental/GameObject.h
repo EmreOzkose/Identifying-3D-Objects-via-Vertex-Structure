@@ -1,18 +1,18 @@
 #pragma once
 #include "Object.h"
+#include "Shader.h"
 using namespace std;
 class GameObject :public Object {
 
-	public:
+public:
 	void load_obj(string path, bool includetexandnormals);
-	void Draw();
+	void Draw(mat4 view, mat4 pro);
 	void SetupMesh();
 	void Deform(vec3 ScaleModifier, GLfloat deformModifier);
 	void Bind(GLuint program);
 	void PrintRandomVertex();
 	void ResetVertices();
 	//remove useshader func and add a shader class
-	GLuint UseShader(const char* vertexShaderPath, const char* fragmentShaderPath, const char* posAttribute);
 	GLuint VAO, VBO, EBO;
 
 	Shader shader;
@@ -32,11 +32,15 @@ class GameObject :public Object {
 
 
 	//constructors
-	GameObject(string name,string modelPath, bool hastextureandnormals): Object(name)
+	GameObject(string name,string modelPath, bool hastextureandnormals,string vShader,string fShader): Object(name)
 	{
 		load_obj(modelPath, hastextureandnormals);
-	}
-	GameObject() : Object()
+		shader =  Shader(vShader, fShader);
+	}GameObject(string name, string modelPath, bool hastextureandnormals, Shader shader) : Object(name)
+	{
+		load_obj(modelPath, hastextureandnormals);
+		this->shader = shader;
+	}GameObject() : Object()
 	{
 	}
 };

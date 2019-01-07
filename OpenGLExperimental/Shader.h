@@ -10,9 +10,18 @@ public:
 
 	GLuint getAttr(const char * name);
 	GLuint getShaderID();
-	void Load(const char * vertexPath, const char * fragmentPath, const char * mainAttr, GLuint vao);
-	void Use(GLuint vao);
+	GLuint getModelViewID();
+	GLuint getProjectionID();
+
+	void Load(string vertexPath, string fragmentPath);
 	void Use();
+
+	Shader(string vertexPath, string fragmentPath) {
+		Load(vertexPath, fragmentPath);
+	}Shader() {
+	}
+
+
 private:
-	GLuint sID;
+	GLuint sID,ProjectionID,ModelViewID;
 };
