@@ -13,8 +13,11 @@ class GameObject :public Object {
 	void ResetVertices();
 	//remove useshader func and add a shader class
 	GLuint UseShader(const char* vertexShaderPath, const char* fragmentShaderPath, const char* posAttribute);
-	
 	GLuint VAO, VBO, EBO;
+
+	Shader shader;
+
+
 
 	vector<vec4> BaseVertices;
 	vector<vec4> DeformedVertices;
@@ -25,7 +28,6 @@ class GameObject :public Object {
 	vector<GLuint> NormalIndices;
 	vector<GLuint> TextureIndices;
 
-	//buranýn degýsme olasýlýgý var
 	vec3 pivot = vec3(0,0,0);
 
 

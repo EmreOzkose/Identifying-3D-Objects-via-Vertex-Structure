@@ -1,10 +1,11 @@
 #pragma once
 #include "Camera.h"
 
-
+vec4 Lerp(vec4 from, vec4 to, GLfloat delta);
 void Camera::Refresh()
 {
-	eye = transform.position;
+	eye = Lerp(eye, transform.position,0.016f);
+	//eye = transform.position
 }
 
 mat4 Camera::ProjectionMatrix()
@@ -20,16 +21,9 @@ mat4 Camera::ViewMatrix()
 {
 	return LookAt(eye, at, vec3(0, 1, 0));
 }
-mat4 MatrixInterpolation(mat4 from,mat4 to,GLfloat delta)
+vec4 Lerp(vec4 from, vec4 to, GLfloat delta)
 {
-	mat4 returnMatrix;
-	for (size_t i = 0; i < 4; i++)
-	{
-		for (size_t j = 0; j < 4; j++)
-		{
+	return from * (1 - delta) + to * (delta);
 			//interpolation=start*(1-t)+end*(t);
-			returnMatrix[i][j] = from[i][j] * (1 - delta) + to[i][j] * delta;
-			return returnMatrix;
-		}
-	}
+
 }

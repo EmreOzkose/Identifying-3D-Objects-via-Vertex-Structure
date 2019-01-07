@@ -7,7 +7,7 @@
 	#define width 900
 	#define height 900
 	#define window_name "Assignment-2"
-	#define Object_SIZE 2	
+	#define Object_SIZE 3	
 	#define PI 3.14159265359
 	/*-----------------DEPENDENCIES AND MACROS----------------*/
 
@@ -15,7 +15,7 @@
 	/*-----------------GLOBAL VARIABLES----------------*/
 GLuint shader;
 	GameObject* SelectedObject;
-	GameObject ObjectsOnScene[2];
+	GameObject ObjectsOnScene[Object_SIZE];
 	InputManager inputManager;
 	Camera MainCamera;
 	Light* mainLight;
@@ -55,6 +55,7 @@ int main(int argc, char **argv) {
 	mainWindow=mainScene.SetupWindow(Mode,vec2(0,0),vec2(width,height), window_name);
 	mainScene.SetupConsole(guiWindow,mainWindow);
 	mainLight = &mainScene.CreateMainLight(vec3(1,1,1),vec3(0,0,1),2,0.4f);
+	
 	/*-----------------SETUP SCENE----------------*/
 
 
@@ -78,13 +79,18 @@ int main(int argc, char **argv) {
 	GameObject objyn2 = GameObject(name, path, false);
 	objyn2.SetupMesh();
 
+	GameObject objyn3 = GameObject(name, path, false);
+	objyn3.SetupMesh();
+
 	ObjectsOnScene[0]=objyn;
 	ObjectsOnScene[0].transform.position = vec3(-2, 0, 0);
 	ObjectsOnScene[1] = objyn2;
 	ObjectsOnScene[1].transform.position = vec3(2, 0, 0);
+	ObjectsOnScene[2] = objyn3;
+	ObjectsOnScene[2].transform.position = vec3(2, 0, 0);
 	
 	SelectedObject = &objyn2;
-	ExportVertices(ObjectsOnScene,500);
+	//ExportVertices(ObjectsOnScene,500);
 	printf("Vertex Size 0: [%d]\n", ObjectsOnScene[0].BaseVertices.size());
 	printf("Vertex Size 1: [%d]\n", ObjectsOnScene[1].BaseVertices.size());
 
@@ -124,9 +130,7 @@ int main(int argc, char **argv) {
 void Display(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //clear the color buffer and the depth buffer
-
 	
-
 	GLfloat angles = theta * GLfloat(PI/180);
 	GLfloat c = cos(angles);
 	GLfloat s = sin(angles);
@@ -213,6 +217,10 @@ void Keyboard(unsigned char key, int x, int y)
 		MainCamera.transform.position.x += 1;
 	if (key == 'a')
 		MainCamera.transform.position.x -= 1;
+	if (key == 'o')
+		MainCamera.transform.position.y += 1;
+	if (key == 'p')
+		MainCamera.transform.position.y -= 1;
 	inputManager.Process(key);
 	glutPostRedisplay();
 }
