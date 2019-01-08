@@ -11,7 +11,6 @@ public:
 	void SetName(string newName);
 	mat4 getModelMatrix();
 
-
 	Transform transform;
 
 	

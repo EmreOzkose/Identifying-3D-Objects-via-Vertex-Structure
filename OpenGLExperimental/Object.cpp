@@ -17,6 +17,8 @@ mat4 Object::getModelMatrix()
 				0,0,0,1);
 }
 
+
+
 string Object::GetName()
 {
 	return name;

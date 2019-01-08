@@ -9,6 +9,18 @@ void Scene::Init(int argc, char ** argv)
 	glEnable(GL_POLYGON_SMOOTH);
 	glDepthMask(GL_FALSE);
 	glDepthFunc(GL_ALWAYS);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA_SATURATE, GL_ONE);
+	glutSetOption(GLUT_MULTISAMPLE, 8);
+	glEnable(GL_MULTISAMPLE);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH);
+	glEnable(GL_LIGHTING); //turns on lighting
+	glEnable(GL_NORMALIZE); //enable automatic normalization
+	glClearDepth(1.0); //specify depth for clear buffer. [0,1]
+	glDepthFunc(GL_LEQUAL); //remove anything equal or farther away
+	glCullFace(GL_BACK);//remove the back of objects
+
 }
 
 int Scene::SetupWindow(unsigned int mode, vec2 windowPosition, vec2 windowSize, const char * name)

@@ -124,5 +124,17 @@
     <None Include="vshader.glsl">
       <Filter>Source Files\Shaders</Filter>
     </None>
+    <None Include="vshader2.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="fshader2.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="groundvertex.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="groundfragment.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

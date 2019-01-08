@@ -15,6 +15,7 @@ public:
 		
 	};
 	void Translate(vec3 translationvector, float deltaTime);
+	void Translate(vec3 vec);
 	void Scale();
 	void Rotate();
 	void Debug();

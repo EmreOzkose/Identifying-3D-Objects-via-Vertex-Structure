@@ -19,6 +19,10 @@ void Transform::Translate(vec3 translationvector,float deltaTime)
 	position += translationvector* deltaTime;
 	std::cout << position << "\n";
 }
+void Transform::Translate(vec3 vec)
+{
+	position += vec ;
+}
 void Transform::Rotate()
 {
 }
