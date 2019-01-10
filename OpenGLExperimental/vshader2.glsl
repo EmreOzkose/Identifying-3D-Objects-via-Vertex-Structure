@@ -15,9 +15,5 @@ void main()
 
 vec4 pos=Projection*ModelView*vPosition;
   gl_Position = pos;
-  if(mod(ceil(pos.x+pos.y+pos.z),2)==0)
-	vColor=vec4(1,0,0,1);
-else
-	vColor=vec4(1,1,0,1);
-	vColor=vec4(pos.x+pos.y+pos.z*5);
+	vColor=gl_Position;
 }

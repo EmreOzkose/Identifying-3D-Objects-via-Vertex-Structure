@@ -1,5 +1,6 @@
 #pragma once
 #include "Transform.h"
+#include "Material.h"
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -12,7 +13,7 @@ public:
 	mat4 getModelMatrix();
 
 	Transform transform;
-
+	Material o_Material;
 	
 
 	

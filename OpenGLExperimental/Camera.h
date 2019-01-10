@@ -16,7 +16,7 @@ public:
 	enum ProjectionMode { PerspectiveMode, OrthoghrapicMode };
 	ProjectionMode mode = ProjectionMode::PerspectiveMode;
 
-	float FOV=45, CameraNear=0.01, CameraFar=1000,aspect=1;
+	GLfloat FOV=75, CameraNear=0.01, CameraFar=1000,aspect= 1;
 private:
 	string str = "MainCamera";
 };

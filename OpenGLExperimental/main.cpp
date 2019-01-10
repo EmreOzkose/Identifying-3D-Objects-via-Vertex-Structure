@@ -7,7 +7,7 @@
 	#define width 1920
 	#define height 1080
 	#define window_name "Assignment-2"
-	#define Object_SIZE 25
+	#define Object_SIZE 6
 	#define PI 3.14159265359
 	/*-----------------DEPENDENCIES AND MACROS----------------*/
 
@@ -35,7 +35,7 @@
 	void Mouse(int x, int y);
 	void Timer(int value);
 	void Idle();
-	void ExportVertices(GameObject arr[Object_SIZE], GLuint times);
+	void ExportVertices(vector<GameObject> arr, GLuint times);
 	/*-----------------DEFINITIONS----------------*/
 
 
@@ -54,12 +54,14 @@ int main(int argc, char **argv) {
 	mainWindow=mainScene.SetupWindow(Mode,vec2(0,0),vec2(width,height), window_name);
 	mainScene.SetupConsole(guiWindow,mainWindow);
 	mainLight = &mainScene.CreateMainLight(vec3(1,1,1),vec3(0,0,1),2,0.4f);
-	//tek vao ýncele
-
+	
+	//set up shaders
 	Shader shader = Shader("vshader.glsl", "fshader.glsl");
 	Shader standart = Shader("vshader2.glsl", "fshader2.glsl");
 	Shader ground = Shader("groundvertex.glsl", "groundfragment.glsl");
+	Shader perFragment = Shader("groundvertex.glsl", "groundfragment.glsl");
 
+	//Create a base plane
 	groundLevel = GameObject("Ground", "Models/Plane.obj", false, ground);
 	groundLevel.SetupMesh();
 	/*-----------------SETUP SCENE----------------*/
@@ -67,48 +69,97 @@ int main(int argc, char **argv) {
 
 
 
-	//need to add shader use
+	
 
 
 	string name = "Model";
-	string path = "Models/Sphere.obj", path2 = "Models/Player.obj", path3 = "Models/Cube.obj";
+	string pathSphere = "Models/Sphere.obj", pathPlayer = "Models/Human.obj", pathCar = "Models/Car.obj",
+		pathDragon="Models/Dragon.obj", pathTree = "Models/Tree.obj",PathDog = "Models/Dog.obj";
 	//objetin icine file exception ekle.
 
 	
 	GameObject objyn2;
-	for (size_t i = 0; i < (sqrt(Object_SIZE)); i++)
+	/*for (size_t i = 0; i < (sqrt(Object_SIZE)); i++)
 	{
 		for (size_t j = 0; j < (sqrt(Object_SIZE)); j++)
 		{
 			if ((i+j) % 2 == 0)
-				objyn2 = GameObject(name, path3, false, shader);
+				objyn2 = GameObject(name, pathTree, false, shader);
 			else
-				objyn2 = GameObject(name, path, false, standart);
+				objyn2 = GameObject(name, pathTree, false, standart);
 			objyn2.SetupMesh();
 			objyn2.transform.position = vec3(-3 * GLfloat(i), 0, -3 * GLfloat(j));
 			ObjectsOnScene.push_back(objyn2);
 		}
 		
 		
-	}
+	}*/
+	GLuint i=0,j=0;
+
+
+	
+	objyn2 = GameObject(name, pathSphere, false, standart);
+	objyn2.SetupMesh();
+	objyn2.transform.position = vec3(-3 * GLfloat(i++), 0, -3 * GLfloat(j++));
+	ObjectsOnScene.push_back(objyn2);
+
+
+	objyn2 = GameObject(name, pathPlayer, false, standart);
+	objyn2.SetupMesh();
+	objyn2.transform.position = vec3(-3 * GLfloat(i++), 0, -3 * GLfloat(j++));
+	ObjectsOnScene.push_back(objyn2);
+
+
+	objyn2 = GameObject(name, pathCar, false, standart);
+	objyn2.SetupMesh();
+	objyn2.transform.position = vec3(-3 * GLfloat(i++), 0, -3 * GLfloat(j++));
+	ObjectsOnScene.push_back(objyn2);
+
+
+	objyn2 = GameObject(name, pathDragon, false, standart);
+	objyn2.SetupMesh();
+	objyn2.transform.position = vec3(-3 * GLfloat(i++), 0, -3 * GLfloat(j++));
+	ObjectsOnScene.push_back(objyn2);
+
+
+	objyn2 = GameObject(name, PathDog, false, standart);
+	objyn2.SetupMesh();
+	objyn2.transform.position = vec3(-3 * GLfloat(i++), 0, -3 * GLfloat(j++));
+	ObjectsOnScene.push_back(objyn2);
+
+	objyn2 = GameObject(name, pathTree, false, standart);
+	objyn2.SetupMesh();
+	objyn2.transform.position = vec3(-3 * GLfloat(i++), 0, -3 * GLfloat(j++));
+	ObjectsOnScene.push_back(objyn2);
+
+
+
+
+
+
+
+
+
 
 
 	mainScene.SelectedObject = &ObjectsOnScene.at(0);
-
+	//ExportVertices(ObjectsOnScene,250),
 	
 	/*-----------------CALLBACKS----------------*/
 	
     //	glutIgnoreKeyRepeat(1);
-	glutDisplayFunc(Display);
-	glutIdleFunc(Display);
+	//glutDisplayFunc(Display);
+	//glutIdleFunc(Display);
 	glutReshapeFunc(Reshape);
 	//glutMouseFunc(Mouse);
 	//glutPassiveMotionFunc(Mouse);
 	//glutMotionFunc(MouseMotion);
-	glutKeyboardFunc(Keyboard);
+	//glutKeyboardFunc();
 	//glutKeyboardUpFunc(KeyboardUp);
 	//glutIdleFunc(Idle);
+	GLUI_Master.set_glutDisplayFunc(Display);
 	GLUI_Master.set_glutIdleFunc(Idle);
+	GLUI_Master.set_glutKeyboardFunc(Keyboard);
     //	glutTimerFunc(1, Timer, 0);
 	glutMainLoop();
 
@@ -162,6 +213,7 @@ void Timer(int value)
 
 void Idle()
 {
+	glutSetWindow(mainWindow);
 	glutPostRedisplay();
 }
 
@@ -176,9 +228,10 @@ void MouseMotion(int x, int y)
 }
 
 #pragma endregion
-void ExportVertices(GameObject arr[Object_SIZE],GLuint times)
+void ExportVertices(vector<GameObject> arr,GLuint times)
 {
-	for (size_t x = 0; x < Object_SIZE; x++)
+	//680 is max
+	for (size_t x = 0; x < arr.size(); x++)
 	{
 		string s = std::to_string(x+1);
 		string name= "Vertices/Model " + s + ".txt";
@@ -189,18 +242,36 @@ void ExportVertices(GameObject arr[Object_SIZE],GLuint times)
 		{
 			
 			outfile << "Echo "+to_string(i+1)  << std::endl;
+			//considering ofc vertex size is more than 680
+			GLuint difference = arr[x].BaseVertices.size() - 680,Jump=0;
+
+			GLuint ind ;
+			if (difference != 0)
+				ind = arr[x].BaseVertices.size() / difference;
+			//outfile << "Difference is : " << to_string(difference) << "\n";
+			//outfile << "Vertex size is : " << to_string(arr[x].BaseVertices.size()) << "\n";
+			//outfile << "Index is : " << to_string(ind) << "\n";
 			for (size_t j = 0; j < arr[x].BaseVertices.size(); j++)
 			{
-				GLuint modulo = 5;
-				GLfloat x = rand() % modulo + 1;
-				GLfloat y = rand() % modulo + 1;
-				GLfloat z = rand() % modulo + 1;
 				
-				mainScene.SelectedObject->Deform(vec3(x, y, z), 1.0f);
+				GLuint modulo = 5;
+				GLfloat a = rand() % modulo + 1;
+				GLfloat b = rand() % modulo + 1;
+				GLfloat c = rand() % modulo + 1;
+				
+				mainScene.SelectedObject->Deform(vec3(a, b, c), 1.0f);
+				if (Jump < difference) {
+					if (j%ind == 0)
+					{
+						//cout << "Skippped at" << to_string(j)<<"\n";
+						Jump++;
+						continue;
+					}
+				}
 				outfile << mainScene.SelectedObject->DeformedVertices.at(j).x << " "
-					    << mainScene.SelectedObject->DeformedVertices.at(j).y << " "
+						<< mainScene.SelectedObject->DeformedVertices.at(j).y << " "
 						<< mainScene.SelectedObject->DeformedVertices.at(j).z << " "
-					    << std::endl;
+						<< std::endl;
 			}
 			
 		}

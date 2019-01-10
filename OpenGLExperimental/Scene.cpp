@@ -52,7 +52,7 @@ void Scene::SetupConsole(GLUI* glui_v_subwindow,int main_window)
 	GLUI_Master.sync_live_all(); 
 }
 
-Light Scene::CreateMainLight(vec4 color, vec4 ambient, GLfloat intensity, GLfloat ambientIntensity)
+Light Scene::CreateMainLight(vec3 color, vec3 ambient, GLfloat intensity, GLfloat ambientIntensity)
 {
 	return Light(color, ambient, intensity, ambientIntensity);
 }

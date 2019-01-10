@@ -161,10 +161,7 @@ void GameObject::Deform(vec3 ScaleModifier,GLfloat deformModifier) {
 	GLfloat x, y, z, randomize = float(rand() % 10) / 10, cont;
 	vec4 deformedVertex, normalizedVectorfromOrigin;
 	DeformedVertices.clear();
-
-
 	deformModifier *= randomize;
-
 	for (size_t i = 0; i < BaseVertices.size(); i++)
 	{
 		cont = rand() % 2;

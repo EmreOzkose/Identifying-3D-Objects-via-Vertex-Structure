@@ -2,20 +2,20 @@
 
 void Light::ChangeIntensity(GLfloat intensity)
 {
-	this->intensity = intensity;
+	l_Intensity = intensity;
 }
 
 void Light::ChangeAmbientIntensity(GLfloat intensity)
 {
-	ambientIntensity = intensity;
+	l_AmbientStrenght = intensity;
 }
 
-void Light::SetColor(vec4 targetColor)
+void Light::SetColor(vec3 targetColor)
 {
-	color = targetColor;
+	l_LightColor = targetColor;
 }
 
-void Light::SetAmbientColor(vec4 targetColor)
+void Light::SetAmbientColor(vec3 targetColor)
 {
-	ambient = targetColor;
+	l_AmbientColor = targetColor;
 }

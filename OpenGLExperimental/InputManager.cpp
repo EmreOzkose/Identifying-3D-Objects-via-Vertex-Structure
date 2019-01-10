@@ -48,9 +48,11 @@ void InputManager::Process(unsigned char key,Scene &mainScene, vector<GameObject
 		mainScene.SelectedObject->transform.position.x -= 1;
 	if (key == 'z')
 	{
-		index--;
-		if (index < 0)
+		if(index==0)
 			index = 24;
+		else
+			index--;
+			
 		mainScene.SelectedObject = &ObjectsOnScene.at(index);
 		mainScene.MainCamera.transform.position = mainScene.SelectedObject->transform.position - vec3(0, -2, 6);
 		mainScene.MainCamera.at = mainScene.SelectedObject->transform.position;
