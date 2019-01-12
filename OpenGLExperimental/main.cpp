@@ -7,21 +7,26 @@
 	#define width 1920
 	#define height 1080
 	#define window_name "Assignment-2"
-	#define Object_SIZE 6
+	#define Object_SIZE 100
 	#define PI 3.14159265359
+
 	/*-----------------DEPENDENCIES AND MACROS----------------*/
 
 
 	/*-----------------GLOBAL VARIABLES----------------*/
 	GLuint shader;
 	Scene mainScene ;
+
 	vector<GameObject> ObjectsOnScene;
-	InputManager inputManager=InputManager();;
-	
+	InputManager inputManager=InputManager();
+	GLfloat time = 0;
+	GLuint locationTime, locationView;
+	Shader water;
+
 	Light* mainLight;
 	int mainWindow;
 	GLUI* guiWindow;
-	GameObject groundLevel;
+	GameObject Sea,Ground;
 	/*-----------------GLOBAL VARIABLES----------------*/
 	GLboolean wireframeMode = GL_FALSE;
 
@@ -55,15 +60,25 @@ int main(int argc, char **argv) {
 	mainScene.SetupConsole(guiWindow,mainWindow);
 	mainLight = &mainScene.CreateMainLight(vec3(1,1,1),vec3(0,0,1),2,0.4f);
 	
+	
+
 	//set up shaders
 	Shader shader = Shader("vshader.glsl", "fshader.glsl");
 	Shader standart = Shader("vshader2.glsl", "fshader2.glsl");
-	Shader ground = Shader("groundvertex.glsl", "groundfragment.glsl");
+	water = Shader("groundvertex.glsl", "groundfragment.glsl");
+	locationTime = glGetUniformLocation(water.getShaderID(),"time");
+	locationView = glGetUniformLocation(water.getShaderID(), "ViewPos");
 	Shader perFragment = Shader("groundvertex.glsl", "groundfragment.glsl");
 
+	
+
+
 	//Create a base plane
-	groundLevel = GameObject("Ground", "Models/Plane.obj", false, ground);
-	groundLevel.SetupMesh();
+	Sea = GameObject("Ground", "Models/Plane.obj", true, water,4);
+	Sea.SetupMesh();
+	Ground = GameObject("Ground", "Models/PlaneLowP.obj", false, standart,2);
+	//Ground.SetupMesh();
+	Sea.transform.Translate(vec3(0, -2, 0));
 	/*-----------------SETUP SCENE----------------*/
 
 
@@ -79,7 +94,7 @@ int main(int argc, char **argv) {
 
 	
 	GameObject objyn2;
-	/*for (size_t i = 0; i < (sqrt(Object_SIZE)); i++)
+	for (size_t i = 0; i < (sqrt(Object_SIZE)); i++)
 	{
 		for (size_t j = 0; j < (sqrt(Object_SIZE)); j++)
 		{
@@ -93,44 +108,44 @@ int main(int argc, char **argv) {
 		}
 		
 		
-	}*/
+	}
 	GLuint i=0,j=0;
 
 
 	
-	objyn2 = GameObject(name, pathSphere, false, standart);
+	/*objyn2 = GameObject(name, "Models/Mountain.obj", false, shader);
 	objyn2.SetupMesh();
 	objyn2.transform.position = vec3(-3 * GLfloat(i++), 0, -3 * GLfloat(j++));
 	ObjectsOnScene.push_back(objyn2);
 
 
-	objyn2 = GameObject(name, pathPlayer, false, standart);
+	objyn2 = GameObject(name, pathTree, false, shader);
 	objyn2.SetupMesh();
 	objyn2.transform.position = vec3(-3 * GLfloat(i++), 0, -3 * GLfloat(j++));
 	ObjectsOnScene.push_back(objyn2);
 
 
-	objyn2 = GameObject(name, pathCar, false, standart);
+	objyn2 = GameObject(name, pathTree, false, shader);
 	objyn2.SetupMesh();
 	objyn2.transform.position = vec3(-3 * GLfloat(i++), 0, -3 * GLfloat(j++));
 	ObjectsOnScene.push_back(objyn2);
 
 
-	objyn2 = GameObject(name, pathDragon, false, standart);
+	objyn2 = GameObject(name, pathTree, false, shader);
 	objyn2.SetupMesh();
 	objyn2.transform.position = vec3(-3 * GLfloat(i++), 0, -3 * GLfloat(j++));
 	ObjectsOnScene.push_back(objyn2);
 
 
-	objyn2 = GameObject(name, PathDog, false, standart);
+	objyn2 = GameObject(name, pathTree, false, shader);
 	objyn2.SetupMesh();
 	objyn2.transform.position = vec3(-3 * GLfloat(i++), 0, -3 * GLfloat(j++));
 	ObjectsOnScene.push_back(objyn2);
 
-	objyn2 = GameObject(name, pathTree, false, standart);
+	objyn2 = GameObject(name, pathTree, false, shader);
 	objyn2.SetupMesh();
 	objyn2.transform.position = vec3(-3 * GLfloat(i++), 0, -3 * GLfloat(j++));
-	ObjectsOnScene.push_back(objyn2);
+	ObjectsOnScene.push_back(objyn2);*/
 
 
 
@@ -139,10 +154,10 @@ int main(int argc, char **argv) {
 
 
 
+	mainScene.MainCamera.transform.position = vec3(0,10,-2);
 
 
-
-	mainScene.SelectedObject = &ObjectsOnScene.at(0);
+	//mainScene.SelectedObject = &ObjectsOnScene.at(0);
 	//ExportVertices(ObjectsOnScene,250),
 	
 	/*-----------------CALLBACKS----------------*/
@@ -176,7 +191,11 @@ void Display(void)
 	glPolygonMode(GL_FRONT, GL_FILL);
 	glPolygonMode(GL_BACK, GL_FILL);
 	
-	groundLevel.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix());
+	Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix());
+	glUniform1f(locationTime, time);
+	glUniform3fv(locationView,1,&mainScene.MainCamera.transform.position[0]);
+	Ground.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix());
+	//cout << "Time " << time << endl;
 	if (wireframeMode)
 	{
 		glPolygonMode(GL_FRONT, GL_LINE);
@@ -206,13 +225,11 @@ void KeyboardUp(unsigned char key, int x, int y)
 {
 }
 
-void Timer(int value)
-{
 
-}
 
 void Idle()
 {
+	time += 0.02f;
 	glutSetWindow(mainWindow);
 	glutPostRedisplay();
 }

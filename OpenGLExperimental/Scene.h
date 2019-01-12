@@ -21,4 +21,5 @@ public:
 	int SetupWindow(unsigned int mode, vec2 windowPosition, vec2 windowSize, const char* name);
 	void SetupConsole(GLUI* glui_v_subwindow, int main_window);
 	Light CreateMainLight(vec3 color, vec3 ambient, GLfloat intensity, GLfloat ambientIntensity);
+	GLuint loadCubemap(vector<std::string> faces);
 };

@@ -1,19 +1,23 @@
 #version 330 core
 
 in vec4 vPosition;
-in vec3 vNormal;
 
 uniform mat4 ModelView,Projection;
 
-out  vec4 vColor;
 
-
-
+out vec3 Normal;
+out vec3 FragPos;
+vec3 normal=vec3(1,1,1);
 void main()
 {
+	
+	vec4 pos=vPosition;
+	
+	//normal+=vec3(0,pos.y,0);
+	Normal = mat3((inverse(ModelView))) * normal;  
+    FragPos=vec3(ModelView * vec4(vPosition));
+	gl_Position = Projection*ModelView*pos;
 
 
-vec4 pos=Projection*ModelView*vPosition;
-gl_Position = pos;
-vColor=ModelView*vPosition;
 }
+

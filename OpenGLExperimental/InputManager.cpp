@@ -12,15 +12,15 @@ void InputManager::Process(unsigned char key,Scene &mainScene, vector<GameObject
 	}
 
 	if (key == 's')
-		mainScene.MainCamera.transform.Translate(vec3(0,0,-1));
+		mainScene.MainCamera.transform.Translate(vec3(0,-1,-1));
 	if (key == 'd')
 		mainScene.SelectedObject->transform.Translate(vec3(0, 0, -1));
 	if (key == 'a')
 		mainScene.SelectedObject->transform.Translate(vec3(1, 0, 0));
 	if (key == 'o')
-		mainScene.SelectedObject->transform.position.y += 1;
+		mainScene.MainCamera.transform.position.y += 1;
 	if (key == 'p')
-		mainScene.SelectedObject->transform.position.y -= 1;
+		mainScene.MainCamera.transform.position.y -= 1;
 	
 
 	if (key == 'k')

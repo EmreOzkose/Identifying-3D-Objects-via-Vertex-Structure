@@ -4,7 +4,7 @@
 vec4 Lerp(vec4 from, vec4 to, GLfloat delta);
 void Camera::Refresh()
 {
-	eye = Lerp(eye, transform.position,0.016f);
+	eye = Lerp(eye, transform.position,0.006f);
 	//eye = transform.position
 }
 

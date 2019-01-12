@@ -1,22 +1,25 @@
 #pragma once
 #include "Object.h"
 #include "Shader.h"
+
 using namespace std;
 class GameObject :public Object {
 
 public:
 	void load_obj(string path, bool includetexandnormals);
+	void load_obj(string path, bool includetexandnormals,GLfloat scale);
 	void Draw(mat4 view, mat4 pro);
+	void Draw(mat4 view, mat4 pro,GLboolean asArray, GLuint cubemapTexture);
 	void SetupMesh();
 	void Deform(vec3 ScaleModifier, GLfloat deformModifier);
 	void Bind(GLuint program);
 	void PrintRandomVertex();
 	void ResetVertices();
 	//remove useshader func and add a shader class
-	GLuint VAO, VBO, EBO;
+	GLuint VAO, VBO, EBO,Texture,VBOtexture, VBOnormal;
 
 	Shader shader;
-
+	string  texturePath;
 
 
 	vector<vec4> BaseVertices;
@@ -39,6 +42,10 @@ public:
 	}GameObject(string name, string modelPath, bool hastextureandnormals, Shader shader) : Object(name)
 	{
 		load_obj(modelPath, hastextureandnormals);
+		this->shader = shader;
+	}GameObject(string name, string modelPath, bool hastextureandnormals, Shader shader,GLfloat scale) : Object(name)
+	{
+		load_obj(modelPath, hastextureandnormals, scale);
 		this->shader = shader;
 	}GameObject() : Object()
 	{
