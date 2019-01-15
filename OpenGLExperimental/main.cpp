@@ -7,7 +7,7 @@
 	#define width 1920
 	#define height 1080
 	#define window_name "Assignment-2"
-	#define Object_SIZE 4
+	#define Object_SIZE 9
 	#define PI 3.14159265359
 
 	/*-----------------DEPENDENCIES AND MACROS----------------*/
@@ -22,10 +22,9 @@
 	GLfloat time = 0;
 	GLuint locationTime, locationView;
 	Shader water,Toon,Particle;
-
+	Console main_console;
 	Light* mainLight;
 	int mainWindow;
-	GLUI* guiWindow;
 	GameObject Sea,Ground;
 	/*-----------------GLOBAL VARIABLES----------------*/
 	GLboolean wireframeMode = GL_FALSE;
@@ -57,7 +56,8 @@ int main(int argc, char **argv) {
 	mainScene.Init(argc,argv);
 	unsigned int Mode= GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE |GLUT_STENCIL;
 	mainWindow=mainScene.SetupWindow(Mode,vec2(0,0),vec2(width,height), window_name);
-	//mainScene.SetupConsole(guiWindow,mainWindow);
+	main_console = Console(mainWindow);
+	main_console.SetupConsole();
 	mainLight = &mainScene.CreateMainLight(vec3(1,.5,1),vec3(0,0,1),2,0.4f);
 	mainLight->transform.position = vec3(10,30,24);
 	
@@ -71,10 +71,10 @@ int main(int argc, char **argv) {
 
 
 	//Create a base plane
-	Sea = GameObject("Sea", "Models/Plane.obj", true, water,4);
-	//Sea.SetupMesh();
+	Sea = GameObject("Sea", "Models/Plane.obj", true, water);
+	Sea.SetupMesh();
 	Ground = GameObject("Ground", "Models/PlaneLowP.obj", true, BlinnPhong);
-	//Ground.SetupMesh();
+	Ground.SetupMesh();
 	//Sea.transform.Translate(vec3(0, -2, 0));
 	/*-----------------SETUP SCENE----------------*/
 
@@ -96,9 +96,9 @@ int main(int argc, char **argv) {
 		for (size_t j = 0; j < (sqrt(Object_SIZE)); j++)
 		{
 			if ((i+j) % 2 == 0)
-				objyn2 = GameObject(name, pathDragon, true, BlinnPhong);
+				objyn2 = GameObject(name, pathPlayer, true, Flat);
 			else
-				objyn2 = GameObject(name, pathDragon, true, Toon);
+				objyn2 = GameObject(name, pathPlayer, true, Toon);
 			objyn2.SetupMesh();
 			objyn2.transform.position = vec3(-3 * GLfloat(i), 0, -3 * GLfloat(j));
 			ObjectsOnScene.push_back(objyn2);
@@ -114,7 +114,8 @@ int main(int argc, char **argv) {
 	//mainScene.MainCamera.transform.position = vec3(0,1,-2);
 
 
-	//mainScene.SelectedObject = &ObjectsOnScene.at(0);
+	mainScene.SelectedObject = &ObjectsOnScene.at(0);
+	
 	//ExportVertices(ObjectsOnScene,250),
 	
 	/*-----------------CALLBACKS----------------*/
@@ -144,23 +145,24 @@ void Display(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //clear the color buffer and the depth buffer
 	mainScene.MainCamera.Refresh();
-
+	
 	glPolygonMode(GL_FRONT, GL_FILL);
 	glPolygonMode(GL_BACK, GL_FILL);
-	
-	Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(),time,mainLight,mainScene.MainCamera.transform.position);
-	Ground.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
 
-	if (wireframeMode)
+	//main_console.Update(mainScene.SelectedObject);
+//	Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(),time,mainLight,mainScene.MainCamera.transform.position);
+	//Ground.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
+
+	/*if (wireframeMode)
 	{
 		glPolygonMode(GL_FRONT, GL_LINE);
 		glPolygonMode(GL_BACK, GL_LINE);
-	}
+	}*/
 
-
+	
 	for (size_t i = 0; i < Object_SIZE; i++)
 		ObjectsOnScene.at(i).Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
-
+	
 	
 	glutSwapBuffers();
 }

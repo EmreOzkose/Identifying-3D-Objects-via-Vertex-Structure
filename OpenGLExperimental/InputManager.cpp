@@ -6,20 +6,18 @@ void InputManager::Process(unsigned char key,Scene &mainScene, vector<GameObject
 		std::exit(0);
 
 	if (key == 'w')
-	{
-		mainScene.MainCamera.transform.position.z += 1;
-
-	}
+		mainScene.MainCamera.transform.Translate(mainScene.MainCamera.camForward);
 
 	if (key == 's')
-		mainScene.MainCamera.transform.Translate(vec3(0,-1,-1));
-
-
+		mainScene.MainCamera.transform.Translate(-mainScene.MainCamera.camForward);
 	if (key == 'd')
-		light->transform.Translate(vec3(0, -1, 0));
+		mainScene.MainCamera.transform.Translate(mainScene.MainCamera.camRight);
 	if (key == 'a')
-		light->transform.Translate(vec3(-1, 1, -1));
-
+		mainScene.MainCamera.transform.Translate(-mainScene.MainCamera.camRight);
+	if (key == 'q')
+		mainScene.MainCamera.transform.Translate(vec3(0,1,0));
+	if (key == 'e')
+		mainScene.MainCamera.transform.Translate(-vec3(0, 1, 0));
 
 
 	if (key == 'o')
@@ -29,11 +27,13 @@ void InputManager::Process(unsigned char key,Scene &mainScene, vector<GameObject
 
 	if (key == 'k')
 	{
-		GLuint modulo = 5;
+		/*GLuint modulo = 5;
 		GLfloat x = rand() % modulo + 1;
 		GLfloat y = rand() % modulo + 1;
 		GLfloat z = rand() % modulo + 1;
-		mainScene.SelectedObject->Deform(vec3(x, y, z), 1.0f);
+		mainScene.SelectedObject->Deform(vec3(x, y, z), 1.0f);*/
+		GLuint r = rand() % ObjectsOnScene.size();
+		mainScene.SelectedObject = &ObjectsOnScene.at(r);
 	}
 
 	if (key == 'm')
@@ -50,29 +50,6 @@ void InputManager::Process(unsigned char key,Scene &mainScene, vector<GameObject
 		mainScene.MainCamera.yaw += 1;
 	if (key == 't')
 		mainScene.MainCamera.pitch += 1;
-	if (key == 'z')
-	{
-		if(index==0)
-			index = 24;
-		else
-			index--;
-			
-		mainScene.SelectedObject = &ObjectsOnScene.at(index);
-		mainScene.MainCamera.transform.position = mainScene.SelectedObject->transform.position - vec3(0, -2, 6);
-		mainScene.MainCamera.at = mainScene.SelectedObject->transform.position;
-	}
-	if (key == 'c')
-	{
-		index++;
-		if (index > 24)
-			index = 0;
-
-	    mainScene.SelectedObject = &ObjectsOnScene.at(index);
-
-		mainScene.MainCamera.transform.position = mainScene.SelectedObject->transform.position - vec3(0, -2, 6);
-		mainScene.MainCamera.at = mainScene.SelectedObject->transform.position;
-	}
-	cout << mainScene.SelectedObject << "\n";
 
 	glutPostRedisplay();
 }

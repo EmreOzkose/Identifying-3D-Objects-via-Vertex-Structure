@@ -75,6 +75,9 @@
     <ClCompile Include="Material.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
+    <ClCompile Include="Console.cpp">
+      <Filter>Source Files\Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\Desktop\OpenGLStuff\Angel_commons\Angel.h">
@@ -118,6 +121,9 @@
     </ClInclude>
     <ClInclude Include="..\Include\stb_image.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Console.h">
+      <Filter>Source Files\Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

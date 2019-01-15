@@ -323,6 +323,7 @@ void GameObject::load_obj(string path, bool includetexandnormals,GLfloat scale)
 	{
 		textureCoordinate.at(i) = vec2(BaseVertices.at(i).x, BaseVertices.at(i).z);
 	}
+	cout << "index size(old loaders) : " << VertexIndices.size()<<endl;
 }
 void GameObject::Draw(mat4 view, mat4 pro, GLfloat time, Light *Light, vec3 Camerapos)
 {
@@ -350,7 +351,7 @@ void GameObject::Draw(mat4 view, mat4 pro, GLfloat time, Light *Light, vec3 Came
 	glUniform3fv(shader.CameraPosLocation, 1, cP);
 
 	glUniform1f(shader.LocationTime, time);
-
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glDrawElements(GL_TRIANGLES, VertexIndices.size(), GL_UNSIGNED_INT, 0);
 }
 
@@ -371,7 +372,7 @@ void GameObject::SetupMesh()
 
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, VertexIndices.size() * sizeof(GLuint), &VertexIndices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, VertexIndices.size() * sizeof(GLuint), &VertexIndices[0], GL_DYNAMIC_DRAW);
 
 	
 	glBindBuffer(GL_ARRAY_BUFFER, VBOtexture);

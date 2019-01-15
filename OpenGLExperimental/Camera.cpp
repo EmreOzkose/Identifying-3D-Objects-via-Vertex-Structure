@@ -4,7 +4,8 @@
 vec4 Lerp(vec4 from, vec4 to, GLfloat delta);
 void Camera::Refresh()
 {
-	eye = Lerp(eye, transform.position,0.006f);
+
+
 
 
 	camForward.x = cos(DegreesToRadians * (yaw)) * cos(DegreesToRadians * (pitch));
@@ -21,8 +22,9 @@ void Camera::Refresh()
 	camUp = cross(camRight, camForward);
 	camUp = normalize(-camUp);
 
-	
-
+	eye = Lerp(eye, transform.position, 0.02f);
+	at = eye + camForward;
+	at.w = 1;
 	//eye = transform.position
 }
 
@@ -47,6 +49,6 @@ vec4 Lerp(vec4 from, vec4 to, GLfloat delta)
 }
 void Camera::Debug()
 {
-	cout << "Eye: " << eye << "At :" << at<<endl;
+	cout << "Eye: " << eye << "At :" << at<< "Cam forward : "<< vec4(camForward,0)+ eye <<endl;
 
 }
