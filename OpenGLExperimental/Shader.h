@@ -23,11 +23,11 @@ public:
 		LightPosLocation= glGetUniformLocation(sID, "LightPos");
 		CameraPosLocation = glGetUniformLocation(sID, "ViewPos");
 		LightColorLocation = glGetUniformLocation(sID, "LightColor");
-		
+	
 		
 	}Shader() {
 	}
 
-	GLuint LocationTime, LightPosLocation, CameraPosLocation, LightColorLocation;
+	GLuint LocationTime, LightPosLocation, CameraPosLocation, LightColorLocation,RotationLocation;
 	GLuint sID,ProjectionID,ModelID,ViewID;
 };

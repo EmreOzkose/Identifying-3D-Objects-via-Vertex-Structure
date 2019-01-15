@@ -33,6 +33,7 @@ void Shader::Load(string vertexPath, string fragmentPath)
 	ModelID=glGetUniformLocation(program,"Model");
 	ViewID = glGetUniformLocation(program, "View");
 	ProjectionID = glGetUniformLocation(program, "Projection");
+	RotationLocation = glGetUniformLocation(program, "rotationVector");
 	sID = program;
 }
 

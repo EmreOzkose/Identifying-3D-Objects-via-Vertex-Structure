@@ -14,6 +14,7 @@ void Transform::Debug()
 	std::cout << "Scale :";
 	std::cout << scale << "\n";*/
  }
+
 void Transform::Translate(vec3 translationvector,float deltaTime)
 {
 	position += translationvector* deltaTime;

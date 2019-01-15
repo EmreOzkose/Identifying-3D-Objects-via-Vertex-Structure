@@ -5,15 +5,35 @@ void InputManager::Process(unsigned char key,Scene &mainScene, vector<GameObject
 	if (key == exit)
 		std::exit(0);
 
+	if (key == '1')
+		mainScene.SelectedObject->transform.rotX += 1;
+	if (key == '2')
+		mainScene.SelectedObject->transform.rotX -= 1;
+
+	if (key == '3')
+		mainScene.SelectedObject->transform.rotY += 1;
+	if (key == '4')
+		mainScene.SelectedObject->transform.rotY -= 1;
+
+	if (key == '5')
+		mainScene.SelectedObject->transform.rotZ += 1;
+	if (key == '6')
+		mainScene.SelectedObject->transform.rotZ -= 1;
+
 	if (key == 'w')
 		mainScene.MainCamera.transform.Translate(mainScene.MainCamera.camForward);
-
 	if (key == 's')
 		mainScene.MainCamera.transform.Translate(-mainScene.MainCamera.camForward);
 	if (key == 'd')
 		mainScene.MainCamera.transform.Translate(mainScene.MainCamera.camRight);
 	if (key == 'a')
 		mainScene.MainCamera.transform.Translate(-mainScene.MainCamera.camRight);
+
+
+
+
+
+
 	if (key == 'q')
 		mainScene.MainCamera.transform.Translate(vec3(0,1,0));
 	if (key == 'e')

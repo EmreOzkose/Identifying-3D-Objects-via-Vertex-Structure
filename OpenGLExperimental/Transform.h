@@ -20,10 +20,14 @@ public:
 	void Rotate();
 	void Debug();
 	vec3 position = vec3(0, 0, 0);
-	vec3 rotation;
 	vec3 scale;
 	string name;
 	vec4 forward = position+vec3(0,0,1);
+
+	GLfloat rotX, rotY, rotZ;
+
+
+
 private:
 	
 	

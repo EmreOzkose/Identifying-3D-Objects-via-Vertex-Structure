@@ -341,14 +341,17 @@ void GameObject::Draw(mat4 view, mat4 pro, GLfloat time, Light *Light, vec3 Came
 	glUniformMatrix4fv(shader.getProjectionID(), 1, GL_TRUE, &P[0][0]);
 
 	vec3 lP = Light->transform.position;
-	glUniform3fv(shader.LightPosLocation,1,lP);
+	glUniform3fv(shader.LightPosLocation,1,&lP[0]);
 
 	vec3 coP = Light->l_LightColor;
-	glUniform3fv(shader.LightColorLocation, 1, coP);
+	glUniform3fv(shader.LightColorLocation, 1, &coP[0]);
 
 
 	vec3 cP = Camerapos;
-	glUniform3fv(shader.CameraPosLocation, 1, cP);
+	glUniform3fv(shader.CameraPosLocation, 1, &cP[0]);
+
+	vec3 rP = vec3(transform.rotX, transform.rotY, transform.rotZ);
+	glUniform3fv(shader.RotationLocation, 1, &rP[0]);
 
 	glUniform1f(shader.LocationTime, time);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -372,7 +375,7 @@ void GameObject::SetupMesh()
 
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, VertexIndices.size() * sizeof(GLuint), &VertexIndices[0], GL_DYNAMIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, VertexIndices.size() * sizeof(GLuint), &VertexIndices[0], GL_STATIC_DRAW);
 
 	
 	glBindBuffer(GL_ARRAY_BUFFER, VBOtexture);
