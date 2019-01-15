@@ -55,9 +55,6 @@ vec3 pos= (Model * vPosition).xyz;
 	vColor=vec4(result,1);
 	//normal+=vec3(0,pos.y,0);
 gl_Position = Projection*View*Model*rZ*rY*rX*inverse(Model)*Model*vPosition;
-
-
-
 	
 
 }

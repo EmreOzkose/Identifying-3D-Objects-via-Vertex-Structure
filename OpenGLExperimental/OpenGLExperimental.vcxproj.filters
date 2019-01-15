@@ -31,6 +31,9 @@
     <Filter Include="Source Files\Objects\Classes">
       <UniqueIdentifier>{1c1920cf-0991-4324-8d22-93f3197ee0d6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\V2L">
+      <UniqueIdentifier>{24063e47-e865-46ae-90b1-4f7f078c8e67}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -78,6 +81,9 @@
     <ClCompile Include="Console.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Source Files\V2L</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\Desktop\OpenGLStuff\Angel_commons\Angel.h">
@@ -124,6 +130,15 @@
     </ClInclude>
     <ClInclude Include="Console.h">
       <Filter>Source Files\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Source Files\V2L</Filter>
+    </ClInclude>
+    <ClInclude Include="parameters.h">
+      <Filter>Source Files\V2L</Filter>
+    </ClInclude>
+    <ClInclude Include="read_weights.h">
+      <Filter>Source Files\V2L</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
