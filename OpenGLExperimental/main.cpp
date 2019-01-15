@@ -7,7 +7,7 @@
 	#define width 1920
 	#define height 1080
 	#define window_name "Assignment-2"
-	#define Object_SIZE 16
+	#define Object_SIZE 4
 	#define PI 3.14159265359
 
 	/*-----------------DEPENDENCIES AND MACROS----------------*/
@@ -21,7 +21,7 @@
 	InputManager inputManager=InputManager();
 	GLfloat time = 0;
 	GLuint locationTime, locationView;
-	Shader water,Toon,Particle;
+	Shader water,Toon,Particle,PBR;
 	Console main_console;
 	Light* mainLight;
 	int mainWindow;
@@ -59,7 +59,7 @@ int main(int argc, char **argv) {
 	main_console = Console(mainWindow);
 	main_console.SetupConsole();
 	mainLight = &mainScene.CreateMainLight(vec3(1,.5,1),vec3(0,0,1),2,0.4f);
-	mainLight->transform.position = vec3(10,50,24);
+	mainLight->transform.position = vec3(10,30,4);
 	cout << "Scene and Light created." << endl;
 
 	//set up shaders
@@ -68,14 +68,15 @@ int main(int argc, char **argv) {
 	water = Shader("groundvertex.glsl", "groundfragment.glsl");
 	Toon = Shader("ToonVertex.glsl", "ToonFragment.glsl");
 	Particle = Shader("particleVertex.glsl", "particleFragment.glsl");
+	PBR = Shader("vshader2.glsl", "PBRShader.glsl");
 	cout << "Shaders are created." << endl;
 
 	//Create a base plane
-	Sea = GameObject("Sea", "Models/Plane.obj", true, water);
-	Sea.SetupMesh();
+	//Sea = GameObject("Sea", "Models/Plane.obj", true, water);
+	//Sea.SetupMesh();
 	cout << "Sea is created." << endl;
-	Ground = GameObject("Ground", "Models/PlaneLowP.obj", true, BlinnPhong);
-	Ground.SetupMesh();
+	//Ground = GameObject("Ground", "Models/PlaneLowP.obj", true, BlinnPhong);
+	//Ground.SetupMesh();
 	cout << "Ground is created." << endl;
 	//Sea.transform.Translate(vec3(0, -2, 0));
 	/*-----------------SETUP SCENE----------------*/
@@ -98,9 +99,9 @@ int main(int argc, char **argv) {
 		for (size_t j = 0; j < (sqrt(Object_SIZE)); j++)
 		{
 			if ((i+j) % 2 == 0)
-				objyn2 = GameObject(name, pathPlayer, true, BlinnPhong);
+				objyn2 = GameObject(name, PathDog, true, Toon);
 			else
-				objyn2 = GameObject(name, pathPlayer, true, Flat);
+				objyn2 = GameObject(name, PathDog, true, Flat);
 			objyn2.SetupMesh();
 			objyn2.transform.position = vec3( GLfloat(i), 0, GLfloat(j));
 			ObjectsOnScene.push_back(objyn2);

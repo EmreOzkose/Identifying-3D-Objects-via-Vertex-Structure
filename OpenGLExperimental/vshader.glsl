@@ -30,8 +30,7 @@ void main()
 {
 vec3 pos= (Model * vPosition).xyz;
 
-	
-	vec3 N=normalize(mat3((inverse(Model))) * vNormal).xyz;
+	vec3 N=normalize(mat3(Model*rZ*rY*rX*inverse(Model)*(inverse(Model))) * vNormal).xyz;
 	vec3 V=normalize(viewPos);
 	vec3 L=normalize(LightPos);
 	vec3 H = normalize( L + V );// Transform vertex normal into eye coordinates

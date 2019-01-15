@@ -157,5 +157,8 @@
     <None Include="particleFragment.glsl">
       <Filter>Source Files\Shaders</Filter>
     </None>
+    <None Include="PBRShader.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

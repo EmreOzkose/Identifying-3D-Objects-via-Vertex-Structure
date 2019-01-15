@@ -27,5 +27,6 @@ void main(){
 	else 
 		color=vec4(.1,.1,.1,1);
 
+
 		fColor=color*vec4(LightColor,1)+ambientIntensity*color;
 }
