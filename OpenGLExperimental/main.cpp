@@ -62,6 +62,45 @@ int main(int argc, char **argv) {
 	mainLight->transform.position = vec3(10,50,24);
 	cout << "Scene and Light created." << endl;
 
+	// create depth map 
+	unsigned int depthMapFBO;
+	glGenFramebuffers(1, &depthMapFBO);
+
+	// Create 2D texture
+	const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+
+	unsigned int depthMap;
+	glGenTextures(1, &depthMap);
+	glBindTexture(GL_TEXTURE_2D, depthMap);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
+		SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	// attach it as the framebuffer's depth buffer
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+	glDrawBuffer(GL_NONE);		// Nones are here for texture/depth are colorness (:D)
+	glReadBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	// 1. first render to depth map
+	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	glClear(GL_DEPTH_BUFFER_BIT);
+	ConfigureShaderAndMatrices();
+	RenderScene();
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	// 2. then render scene as normal with shadow mapping (using depth map)
+	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	ConfigureShaderAndMatrices();
+	glBindTexture(GL_TEXTURE_2D, depthMap);
+	RenderScene();
+
+
 	//set up shaders
 	Shader Flat = Shader("vshader.glsl", "fshader.glsl");
 	Shader BlinnPhong = Shader("vshader2.glsl", "fshader2.glsl");
@@ -77,13 +116,8 @@ int main(int argc, char **argv) {
 	Ground = GameObject("Ground", "Models/PlaneLowP.obj", true, BlinnPhong);
 	Ground.SetupMesh();
 	cout << "Ground is created." << endl;
-	//Sea.transform.Translate(vec3(0, -2, 0));
+	Sea.transform.Translate(vec3(0, -2, 0));
 	/*-----------------SETUP SCENE----------------*/
-
-
-
-
-	
 
 
 	string name = "Model";
@@ -109,8 +143,6 @@ int main(int argc, char **argv) {
 			GLfloat percantage = i * sqrt(Object_SIZE) + j+1;
 			cout << "Model loading : %" << (percantage)*100 / Object_SIZE << endl;
 		}
-		
-		
 	}
 
 	mainScene.MainCamera.transform.position = vec3(0,1,-2);
@@ -151,8 +183,8 @@ void Display(void)
 	glPolygonMode(GL_BACK, GL_FILL);
 
 	//main_console.Update(mainScene.SelectedObject);
-//	Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(),time,mainLight,mainScene.MainCamera.transform.position);
-	//Ground.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
+	Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(),time,mainLight,mainScene.MainCamera.transform.position);
+	Ground.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
 
 /*	if (wireframeMode)
 	{
