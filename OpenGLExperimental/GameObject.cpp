@@ -2,16 +2,32 @@
 #include <fstream>
 #include <string>
 #include <sstream>
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
-
+#include <set> 
+#include <iterator> 
+ 
 vector<string> split(string strToSplit, char delimeter);
 GLfloat LengthofVec(vec4 vect);
 vec3 Direction(vec3 vect);
 
+struct Vertex
+{
+	GLuint vertexIndex;
+	vector<GLuint> normalIndices;
+};
 
+GLuint check(vector<Vertex> List, GLuint index)
+{
+	for (size_t i = 0; i < List.size(); i++)
+	{
+		if (List.at(i).vertexIndex == index)
+			return i;
+	}
+	//null
+	return -1;
+}
 void GameObject::load_obj(string path, bool includetexandnormals)
 {
+	vector<Vertex> vertexList;
 	string line, v, X, Y, Z;
 	vec4 vertex;
 	ifstream file(path);
@@ -67,8 +83,6 @@ void GameObject::load_obj(string path, bool includetexandnormals)
 			vector<string> f2C = split(f2, '/');
 			vector<string> f3C = split(f3, '/');
 
-
-			//push vertices
 			X = f1C.at(0);
 			Y = f2C.at(0);
 			Z = f3C.at(0);
@@ -77,29 +91,78 @@ void GameObject::load_obj(string path, bool includetexandnormals)
 			VertexIndices.push_back((b - 1));
 			VertexIndices.push_back((c - 1));
 
+			string XN = f1C.at(2);
+			string YN = f2C.at(2);
+			string ZN = f3C.at(2);
+			GLuint an = atoi(XN.c_str()), bn = atoi(YN.c_str()), cn = atoi(ZN.c_str());
 
-			//push texture coordinates
-			X = f1C.at(1);
+
+
+			Vertex vertexA, vertexB, vertexC;
+			GLuint indexA = check(vertexList, a), indexB = check(vertexList, b), indexC = check(vertexList, c);
+			if (indexA == -1) {
+				vertexA = Vertex();
+				vertexA.vertexIndex = a;
+			}
+			else
+				vertexA = vertexList.at(indexA);
+			if (indexB == -1)	{
+				vertexB = Vertex();
+				vertexB.vertexIndex = b;
+			}
+			else
+				vertexB = vertexList.at(indexB);
+			if (indexC == -1)
+			{
+				vertexC = Vertex();
+				vertexC.vertexIndex = c;
+			}
+			else
+				vertexC = vertexList.at(indexC);
+			vertexA.normalIndices.push_back(an);
+			vertexB.normalIndices.push_back(an);
+			vertexC.normalIndices.push_back(an);
+
+			if (indexA == -1) {
+				vertexList.push_back(vertexA);
+			}
+			else {
+				vertexList.at(indexA).normalIndices.push_back(an);
+			}
+			
+			if (indexB == -1) {
+				vertexList.push_back(vertexB);
+			}
+			else {
+				vertexList.at(indexB).normalIndices.push_back(bn);
+			}
+			if (indexC == -1)
+			{
+				vertexList.push_back(vertexC);
+			}
+			else {
+				vertexList.at(indexC).normalIndices.push_back(cn);
+			}
+
+			/*X = f1C.at(1);
 			Y = f2C.at(1);
 			Z = f3C.at(1);
 			a = atoi(X.c_str()), b = atoi(Y.c_str()), c = atoi(Z.c_str());
 			TextureIndices.push_back((a - 1));
 			TextureIndices.push_back((b - 1));
-			TextureIndices.push_back((c - 1));
+			TextureIndices.push_back((c - 1));*/
 
 
 			//push normals
-			X = f1C.at(2);
-			Y = f2C.at(2);
-			Z = f3C.at(2);
-			a = atoi(X.c_str()), b = atoi(Y.c_str()), c = atoi(Z.c_str());
+			
 
 			//OrderedNormals.insert(vec3(1), 1);
-
-			NormalIndices.push_back((a - 1));
+			
+			/*NormalIndices.push_back((a - 1));
 			NormalIndices.push_back((b - 1));
-			NormalIndices.push_back((c - 1));
-
+			NormalIndices.push_back((c - 1));*/
+			
+			
 
 		}
 		else if (line[0] == 'v')
@@ -116,15 +179,37 @@ void GameObject::load_obj(string path, bool includetexandnormals)
 
 		}
 	}
-	if (!includetexandnormals)
+	/*cout <<"Size "<<BaseVertices.size()<<" esit "<< vertexList.size() << endl;
+	for (size_t i = 0; i < vertexList.size(); i++)
 	{
-		return;
-	}
+		cout << "Vertex :" << vertexList.at(i).vertexIndex << " Normals size: "<< vertexList.at(i).normalIndices.size()<<endl;
+		*
+	}*/
 
-	for (size_t i = 0; i < textureCoordinate.size(); i++)
+	set <GLuint, greater <GLuint> > ::iterator itr;
+	set <GLuint, greater <GLuint> > set;
+	for (size_t x = 0; x < vertexList.size(); x++)
+		EndNormals.push_back(vec3(0));
+	for (size_t i = 0; i < vertexList.size(); i++)
 	{
-		textureCoordinate.at(i) = vec2(BaseVertices.at(i).x , BaseVertices.at(i).z);
+		GLuint vertexIndex = vertexList.at(i).vertexIndex;
+		set.clear();
+		for (size_t j = 0; j < vertexList.at(i).normalIndices.size(); j++)
+			set.insert(vertexList.at(i).normalIndices.at(j));
+		vec3 Normal = vec3(0);
+		for (itr = set.begin(); itr != set.end(); ++itr)
+		{
+			GLuint newIndex = *itr;
+			Normal += Normals.at(newIndex-1);
+		}
+		Normal /= 3;
+		EndNormals.at(vertexIndex-1) = Normal;
 	}
+	for (size_t i = 0; i < EndNormals.size(); i++)
+	{
+		cout << EndNormals.at(i) << endl;
+	}
+	
 }
 void GameObject::load_obj(string path, bool includetexandnormals,GLfloat scale)
 {
@@ -242,37 +327,34 @@ void GameObject::load_obj(string path, bool includetexandnormals,GLfloat scale)
 		textureCoordinate.at(i) = vec2(BaseVertices.at(i).x, BaseVertices.at(i).z);
 	}
 }
-void GameObject::Draw(mat4 view,mat4 proj)
+void GameObject::Draw(mat4 view, mat4 pro, GLfloat time, Light *Light, vec3 Camerapos)
 {
 	shader.Use();
 	Bind(shader.getShaderID());
 	
-	mat4 MV = view * getModelMatrix();
-	glUniformMatrix4fv(shader.getModelViewID(), 1, GL_TRUE, &MV[0][0]);
-	
-	mat4 P = proj;
-	glUniformMatrix4fv(shader.getProjectionID(), 1, GL_TRUE, &P[0][0]);
+	mat4 MV = view;
+	glUniformMatrix4fv(shader.getViewID(), 1, GL_TRUE, &MV[0][0]);
+
+	mat4 M= getModelMatrix();
+	glUniformMatrix4fv(shader.getModelID(), 1, GL_TRUE, &M[0][0]);
 
 	
+	mat4 P = pro;
+	glUniformMatrix4fv(shader.getProjectionID(), 1, GL_TRUE, &P[0][0]);
+
+	vec3 lP = Light->transform.position;
+	glUniform3fv(shader.LightPosLocation,1,lP);
+
+	vec3 coP = Light->l_LightColor;
+	glUniform3fv(shader.LightColorLocation, 1, coP);
+
+
+	vec3 cP = Camerapos;
+	glUniform3fv(shader.CameraPosLocation, 1, cP);
+
+	glUniform1f(shader.LocationTime, time);
 
 	glDrawElements(GL_TRIANGLES, VertexIndices.size(), GL_UNSIGNED_INT, 0);
-}
-void GameObject::Draw(mat4 view, mat4 proj,GLboolean asArray,GLuint cubemapTexture)
-{
-	glDepthMask(GL_FALSE);	
-	shader.Use();
-	Bind(shader.getShaderID());
-
-	mat4 MV = view * getModelMatrix();
-	glUniformMatrix4fv(shader.getModelViewID(), 1, GL_TRUE, &MV[0][0]);
-
-	mat4 P = proj;
-	glUniformMatrix4fv(shader.getProjectionID(), 1, GL_TRUE, &P[0][0]);
-
-
-	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-	glDrawArrays(GL_TRIANGLES,0, 36);
-	glDepthMask(GL_TRUE);
 }
 
 void GameObject::SetupMesh()
@@ -300,9 +382,9 @@ void GameObject::SetupMesh()
 
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBOnormal);
-	glBufferData(GL_ARRAY_BUFFER, Normals.size() * sizeof(vec3), &Normals[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, EndNormals.size() * sizeof(vec3), &EndNormals[0], GL_STATIC_DRAW);
 
-/*
+	/*
 	int width, height, nrChannels;
 	unsigned char *data = stbi_load("tex.jpg", &width, &height, &nrChannels, 0);
 	if (!data)
@@ -356,16 +438,8 @@ void GameObject::Deform(vec3 ScaleModifier,GLfloat deformModifier) {
 }
 void GameObject::Bind(GLuint program)
 {
-	glBindTexture(GL_TEXTURE_2D, Texture);
 	glBindVertexArray(VAO);
-
-
-
-
-	glUniform1i(glGetUniformLocation(shader.getShaderID(), "Texture"),Texture);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-
-
 
 	/*glBindBuffer(GL_ARRAY_BUFFER, VBOtexture);
 

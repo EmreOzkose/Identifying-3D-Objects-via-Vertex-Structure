@@ -139,5 +139,17 @@
     <None Include="groundfragment.glsl">
       <Filter>Source Files\Shaders</Filter>
     </None>
+    <None Include="ToonVertex.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="ToonFragment.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="particleVertex.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="particleFragment.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

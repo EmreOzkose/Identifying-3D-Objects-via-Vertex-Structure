@@ -1,6 +1,6 @@
 #include "InputManager.h"
 #include <Angel_commons/Angel.h>
-void InputManager::Process(unsigned char key,Scene &mainScene, vector<GameObject> &ObjectsOnScene)
+void InputManager::Process(unsigned char key,Scene &mainScene, vector<GameObject> &ObjectsOnScene,Light* light)
 {
 	if (key == exit)
 		std::exit(0);
@@ -13,15 +13,19 @@ void InputManager::Process(unsigned char key,Scene &mainScene, vector<GameObject
 
 	if (key == 's')
 		mainScene.MainCamera.transform.Translate(vec3(0,-1,-1));
+
+
 	if (key == 'd')
-		mainScene.SelectedObject->transform.Translate(vec3(0, 0, -1));
+		light->transform.Translate(vec3(0, -1, 0));
 	if (key == 'a')
-		mainScene.SelectedObject->transform.Translate(vec3(1, 0, 0));
+		light->transform.Translate(vec3(-1, 1, -1));
+
+
+
 	if (key == 'o')
-		mainScene.MainCamera.transform.position.y += 1;
+		light->l_LightColor -= vec3(.01);
 	if (key == 'p')
-		mainScene.MainCamera.transform.position.y -= 1;
-	
+		light->l_LightColor += vec3(.01);
 
 	if (key == 'k')
 	{

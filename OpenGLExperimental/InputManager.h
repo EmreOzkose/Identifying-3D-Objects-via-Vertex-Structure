@@ -8,7 +8,7 @@ public:
 	GLuint  index = 0;
 
 
-	void Process(unsigned char key,Scene &mainScene, vector<GameObject> &ObjectsOnScene);
+	void Process(unsigned char key,Scene &mainScene, vector<GameObject> &ObjectsOnScene, Light* light);
 	InputManager()
 	{
 		index = 0;

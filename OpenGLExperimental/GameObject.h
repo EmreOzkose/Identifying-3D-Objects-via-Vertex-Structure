@@ -1,15 +1,14 @@
 #pragma once
 #include "Object.h"
 #include "Shader.h"
-
+#include "Light.h"
 using namespace std;
 class GameObject :public Object {
 
 public:
 	void load_obj(string path, bool includetexandnormals);
 	void load_obj(string path, bool includetexandnormals,GLfloat scale);
-	void Draw(mat4 view, mat4 pro);
-	void Draw(mat4 view, mat4 pro,GLboolean asArray, GLuint cubemapTexture);
+	void Draw(mat4 view, mat4 pro, GLfloat time, Light *Light, vec3 Camerapos);
 	void SetupMesh();
 	void Deform(vec3 ScaleModifier, GLfloat deformModifier);
 	void Bind(GLuint program);
@@ -24,7 +23,7 @@ public:
 
 	vector<vec4> BaseVertices;
 	vector<vec4> DeformedVertices;
-	vector<vec3> Normals;
+	vector<vec3> Normals,EndNormals;
 	vector<vec2> textureCoordinate;
 
 	vector<GLuint> VertexIndices;

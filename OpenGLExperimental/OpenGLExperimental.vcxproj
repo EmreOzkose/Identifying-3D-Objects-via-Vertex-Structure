@@ -164,6 +164,10 @@
     <None Include="fshader2.glsl" />
     <None Include="groundfragment.glsl" />
     <None Include="groundvertex.glsl" />
+    <None Include="particleFragment.glsl" />
+    <None Include="particleVertex.glsl" />
+    <None Include="ToonFragment.glsl" />
+    <None Include="ToonVertex.glsl" />
     <None Include="vshader.glsl" />
     <None Include="vshader2.glsl" />
   </ItemGroup>

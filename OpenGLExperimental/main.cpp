@@ -7,7 +7,7 @@
 	#define width 1920
 	#define height 1080
 	#define window_name "Assignment-2"
-	#define Object_SIZE 100
+	#define Object_SIZE 1
 	#define PI 3.14159265359
 
 	/*-----------------DEPENDENCIES AND MACROS----------------*/
@@ -21,7 +21,7 @@
 	InputManager inputManager=InputManager();
 	GLfloat time = 0;
 	GLuint locationTime, locationView;
-	Shader water;
+	Shader water,Toon,Particle;
 
 	Light* mainLight;
 	int mainWindow;
@@ -55,30 +55,27 @@ int main(int argc, char **argv) {
 
 	mainScene = Scene();
 	mainScene.Init(argc,argv);
-	unsigned int Mode= GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE;
+	unsigned int Mode= GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE |GLUT_STENCIL;
 	mainWindow=mainScene.SetupWindow(Mode,vec2(0,0),vec2(width,height), window_name);
-	mainScene.SetupConsole(guiWindow,mainWindow);
-	mainLight = &mainScene.CreateMainLight(vec3(1,1,1),vec3(0,0,1),2,0.4f);
-	
+	//mainScene.SetupConsole(guiWindow,mainWindow);
+	mainLight = &mainScene.CreateMainLight(vec3(1,.5,1),vec3(0,0,1),2,0.4f);
+	mainLight->transform.position = vec3(10,30,24);
 	
 
 	//set up shaders
-	Shader shader = Shader("vshader.glsl", "fshader.glsl");
-	Shader standart = Shader("vshader2.glsl", "fshader2.glsl");
+	Shader Flat = Shader("vshader.glsl", "fshader.glsl");
+	Shader BlinnPhong = Shader("vshader2.glsl", "fshader2.glsl");
 	water = Shader("groundvertex.glsl", "groundfragment.glsl");
-	locationTime = glGetUniformLocation(water.getShaderID(),"time");
-	locationView = glGetUniformLocation(water.getShaderID(), "ViewPos");
-	Shader perFragment = Shader("groundvertex.glsl", "groundfragment.glsl");
-
-	
+	Toon = Shader("ToonVertex.glsl", "ToonFragment.glsl");
+	Particle = Shader("particleVertex.glsl", "particleFragment.glsl");
 
 
 	//Create a base plane
-	Sea = GameObject("Ground", "Models/Plane.obj", true, water,4);
-	Sea.SetupMesh();
-	Ground = GameObject("Ground", "Models/PlaneLowP.obj", false, standart,2);
+	Sea = GameObject("Sea", "Models/Plane.obj", true, water,4);
+	//Sea.SetupMesh();
+	Ground = GameObject("Ground", "Models/PlaneLowP.obj", true, BlinnPhong);
 	//Ground.SetupMesh();
-	Sea.transform.Translate(vec3(0, -2, 0));
+	//Sea.transform.Translate(vec3(0, -2, 0));
 	/*-----------------SETUP SCENE----------------*/
 
 
@@ -89,7 +86,7 @@ int main(int argc, char **argv) {
 
 	string name = "Model";
 	string pathSphere = "Models/Sphere.obj", pathPlayer = "Models/Human.obj", pathCar = "Models/Car.obj",
-		pathDragon="Models/Dragon.obj", pathTree = "Models/Tree.obj",PathDog = "Models/Dog.obj";
+		pathDragon="Models/Dragon.obj", pathTree = "Models/Tree.obj", PathDog = "Models/DogN.obj", PathMonkey = "Models/Monkey.obj";
 	//objetin icine file exception ekle.
 
 	
@@ -99,9 +96,9 @@ int main(int argc, char **argv) {
 		for (size_t j = 0; j < (sqrt(Object_SIZE)); j++)
 		{
 			if ((i+j) % 2 == 0)
-				objyn2 = GameObject(name, pathTree, false, shader);
+				objyn2 = GameObject(name, "Models/Cube.obj", true, BlinnPhong);
 			else
-				objyn2 = GameObject(name, pathTree, false, standart);
+				objyn2 = GameObject(name, PathDog, true, Toon);
 			objyn2.SetupMesh();
 			objyn2.transform.position = vec3(-3 * GLfloat(i), 0, -3 * GLfloat(j));
 			ObjectsOnScene.push_back(objyn2);
@@ -109,52 +106,8 @@ int main(int argc, char **argv) {
 		
 		
 	}
-	GLuint i=0,j=0;
 
-
-	
-	/*objyn2 = GameObject(name, "Models/Mountain.obj", false, shader);
-	objyn2.SetupMesh();
-	objyn2.transform.position = vec3(-3 * GLfloat(i++), 0, -3 * GLfloat(j++));
-	ObjectsOnScene.push_back(objyn2);
-
-
-	objyn2 = GameObject(name, pathTree, false, shader);
-	objyn2.SetupMesh();
-	objyn2.transform.position = vec3(-3 * GLfloat(i++), 0, -3 * GLfloat(j++));
-	ObjectsOnScene.push_back(objyn2);
-
-
-	objyn2 = GameObject(name, pathTree, false, shader);
-	objyn2.SetupMesh();
-	objyn2.transform.position = vec3(-3 * GLfloat(i++), 0, -3 * GLfloat(j++));
-	ObjectsOnScene.push_back(objyn2);
-
-
-	objyn2 = GameObject(name, pathTree, false, shader);
-	objyn2.SetupMesh();
-	objyn2.transform.position = vec3(-3 * GLfloat(i++), 0, -3 * GLfloat(j++));
-	ObjectsOnScene.push_back(objyn2);
-
-
-	objyn2 = GameObject(name, pathTree, false, shader);
-	objyn2.SetupMesh();
-	objyn2.transform.position = vec3(-3 * GLfloat(i++), 0, -3 * GLfloat(j++));
-	ObjectsOnScene.push_back(objyn2);
-
-	objyn2 = GameObject(name, pathTree, false, shader);
-	objyn2.SetupMesh();
-	objyn2.transform.position = vec3(-3 * GLfloat(i++), 0, -3 * GLfloat(j++));
-	ObjectsOnScene.push_back(objyn2);*/
-
-
-
-
-
-
-
-
-	mainScene.MainCamera.transform.position = vec3(0,10,-2);
+	//mainScene.MainCamera.transform.position = vec3(0,1,-2);
 
 
 	//mainScene.SelectedObject = &ObjectsOnScene.at(0);
@@ -191,20 +144,20 @@ void Display(void)
 	glPolygonMode(GL_FRONT, GL_FILL);
 	glPolygonMode(GL_BACK, GL_FILL);
 	
-	Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix());
-	glUniform1f(locationTime, time);
-	glUniform3fv(locationView,1,&mainScene.MainCamera.transform.position[0]);
-	Ground.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix());
-	//cout << "Time " << time << endl;
+	Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(),time,mainLight,mainScene.MainCamera.transform.position);
+	Ground.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
+
 	if (wireframeMode)
 	{
 		glPolygonMode(GL_FRONT, GL_LINE);
 		glPolygonMode(GL_BACK, GL_LINE);
 	}
-	for (size_t i = 0; i < Object_SIZE; i++)
-		ObjectsOnScene.at(i).Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix());
-	
 
+
+	for (size_t i = 0; i < Object_SIZE; i++)
+		ObjectsOnScene.at(i).Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
+
+	
 	glutSwapBuffers();
 }
 void Reshape(int w, int h) {
@@ -217,7 +170,7 @@ void Reshape(int w, int h) {
 void Keyboard(unsigned char key, int x, int y)
 {
 
-	inputManager.Process(key,mainScene, ObjectsOnScene);
+	inputManager.Process(key,mainScene, ObjectsOnScene, mainLight);
 	
 }
 

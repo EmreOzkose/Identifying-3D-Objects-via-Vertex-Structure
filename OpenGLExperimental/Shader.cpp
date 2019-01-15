@@ -9,9 +9,13 @@ GLuint Shader::getShaderID()
 {
 	return sID;
 }
-GLuint Shader::getModelViewID()
+GLuint Shader::getModelID()
 {
-	return ModelViewID;
+	return ModelID;
+}
+GLuint Shader::getViewID()
+{
+	return ViewID;
 }
 GLuint Shader::getProjectionID()
 {
@@ -26,7 +30,8 @@ void Shader::Load(string vertexPath, string fragmentPath)
 	glEnableVertexAttribArray(attr);
 	glVertexAttribPointer(attr, 4, GL_FLOAT, GL_FALSE, 0, 0);
 	glBindAttribLocation(program, attr, "vPosition");
-	ModelViewID=glGetUniformLocation(program,"ModelView");
+	ModelID=glGetUniformLocation(program,"Model");
+	ViewID = glGetUniformLocation(program, "View");
 	ProjectionID = glGetUniformLocation(program, "Projection");
 	sID = program;
 }
