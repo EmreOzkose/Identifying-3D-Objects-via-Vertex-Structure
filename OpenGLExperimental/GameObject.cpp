@@ -393,7 +393,7 @@ void GameObject::SetupMesh()
 
 
 void GameObject::Deform(vec3 ScaleModifier,GLfloat deformModifier) {
-	GLfloat x, y, z, randomize = float(rand() % 10) / 10, cont;
+	/*GLfloat x, y, z, randomize = float(rand() % 10) / 10, cont;
 	vec4 deformedVertex, normalizedVectorfromOrigin;
 	DeformedVertices.clear();
 	deformModifier *= randomize;
@@ -412,6 +412,12 @@ void GameObject::Deform(vec3 ScaleModifier,GLfloat deformModifier) {
 	
 		deformedVertex = BaseVertices.at(i)* ScaleModifier+vec4(Direction(vec3(x, y, z)),0)/10;
 		//cout << deformedVertex << "\n";
+		DeformedVertices.push_back(deformedVertex);
+	}*/
+
+	for (size_t i = 0; i < BaseVertices.size(); i++)
+	{
+		vec4 deformedVertex = vec4 (BaseVertices.at(i).x*ScaleModifier.x, BaseVertices.at(i).y*ScaleModifier.y, BaseVertices.at(i).z*ScaleModifier.z, BaseVertices.at(i).w);
 		DeformedVertices.push_back(deformedVertex);
 	}
 	glBindVertexArray(VAO);

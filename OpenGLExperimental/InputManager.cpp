@@ -2,8 +2,7 @@
 #include <Angel_commons/Angel.h>
 void InputManager::Process(unsigned char key,Scene &mainScene, vector<GameObject> &ObjectsOnScene,Light* light)
 {
-	if (key == exit)
-		std::exit(0);
+	
 
 	if (key == '1')
 		mainScene.SelectedObject->transform.rotX += 1;
@@ -29,9 +28,10 @@ void InputManager::Process(unsigned char key,Scene &mainScene, vector<GameObject
 	if (key == 'a')
 		mainScene.MainCamera.transform.Translate(-mainScene.MainCamera.camRight);
 
+	cout << key<<endl;
 
-
-
+	if (key == exit)
+		std::exit(0);
 
 
 	if (key == 'q')

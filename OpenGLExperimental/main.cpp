@@ -27,7 +27,7 @@
 	int mainWindow;
 	GameObject Sea,Ground;
 	/*-----------------GLOBAL VARIABLES----------------*/
-	GLboolean wireframeMode = GL_FALSE;
+	GLboolean wireframeMode = GL_FALSE,reflectionIsOn=GL_FALSE;
 
 
 	/*-----------------DEFINITIONS----------------*/
@@ -74,11 +74,11 @@ int main(int argc, char **argv) {
 	//Create a base plane
 	Sea = GameObject("Sea", "Models/Plane.obj", true, WaterShader);
 	Sea.SetupMesh();
-	cout << "Sea is created." << endl;
-	Ground = GameObject("Ground", "Models/PlaneLowP.obj", true, BlinnPhongShader);
-	Ground.SetupMesh();
-	cout << "Ground is created." << endl;
-	Sea.transform.Translate(vec3(0, -2, 0));
+	//cout << "Sea is created." << endl;
+	//Ground = GameObject("Ground", "Models/PlaneLowP.obj", true, BlinnPhongShader);
+	//Ground.SetupMesh();
+	//cout << "Ground is created." << endl;
+	//Sea.transform.Translate(vec3(0, -2, 0));
 	/*-----------------SETUP SCENE----------------*/
 
 
@@ -99,11 +99,11 @@ int main(int argc, char **argv) {
 		for (size_t j = 0; j < (sqrt(Object_SIZE)); j++)
 		{
 			if ((i+j) % 2 == 0)
-				objyn2 = GameObject(name, PathDog, true, ToonShader);
+				objyn2 = GameObject(name, pathPlayer, true, BlinnPhongShader);
 			else
-				objyn2 = GameObject(name, PathDog, true, BlinnPhongShader);
+				objyn2 = GameObject(name, pathPlayer, true, BlinnPhongShader);
 			objyn2.SetupMesh();
-			objyn2.transform.position = vec3( GLfloat(i), 0, GLfloat(j));
+			objyn2.transform.position = vec3(GLfloat(i)*10, 0, GLfloat(j)*10);
 			ObjectsOnScene.push_back(objyn2);
 
 			//can be deleted
@@ -134,7 +134,8 @@ int main(int argc, char **argv) {
 	GLUI_Master.set_glutReshapeFunc(Reshape);
 	GLUI_Master.set_glutDisplayFunc(Display);
 	GLUI_Master.set_glutIdleFunc(Idle);
-	GLUI_Master.set_glutKeyboardFunc(Keyboard);
+	//GLUI_Master.set_glutKeyboardFunc();
+	glutKeyboardFunc(Keyboard);
     //	glutTimerFunc(1, Timer, 0);
 	glutMainLoop();
 
@@ -145,27 +146,69 @@ int main(int argc, char **argv) {
 #pragma region callbacks
 void Display(void)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //clear the color buffer and the depth buffer
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); //clear the color buffer and the depth buffer
 	mainScene.MainCamera.Refresh();
 	
-	glPolygonMode(GL_FRONT, GL_FILL);
-	glPolygonMode(GL_BACK, GL_FILL);
-
-	//main_console.Update(mainScene.SelectedObject);
-  	Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(),time,mainLight,mainScene.MainCamera.transform.position);
-	Ground.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
-
-/*	if (wireframeMode)
+	if (wireframeMode)
 	{
 		glPolygonMode(GL_FRONT, GL_LINE);
 		glPolygonMode(GL_BACK, GL_LINE);
-	}*/
+	}
+	else {
+		glPolygonMode(GL_FRONT, GL_FILL);
+		glPolygonMode(GL_BACK, GL_FILL);
+	}
 
+	/////
+	if (reflectionIsOn)
+	{
+		glEnable(GL_STENCIL_TEST);
+		glStencilFunc(GL_ALWAYS, 1, 1);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+		glDisable(GL_DEPTH_TEST);
+		//////
+		//main_console.Update(mainScene.SelectedObject);
+		Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
+		//Ground.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
+		glEnable(GL_DEPTH_TEST);
 	
-	for (size_t i = 0; i < Object_SIZE; i++)
-		ObjectsOnScene.at(i).Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
+		for (size_t i = 0; i < Object_SIZE; i++)
+		{
+			//deformdan dolayý kasýyor sureklý -1 scalelý uretmek yerýne en basta yapýlabilir
+			//deform yERINE SCALE FONSKÝYONU
+			ObjectsOnScene.at(i).Deform(vec3(1, -1, 1), 1);
+			ObjectsOnScene.at(i).Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
+
+		}
+
+		glDisable(GL_STENCIL_TEST);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
+		glDisable(GL_BLEND);
 	
-	
+
+
+		for (size_t i = 0; i < Object_SIZE; i++)
+		{
+			ObjectsOnScene.at(i).ResetVertices();
+			ObjectsOnScene.at(i).Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
+
+		}
+
+	}
+	else {
+		glDisable(GL_BLEND);
+		Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
+		for (size_t i = 0; i < Object_SIZE; i++)
+			ObjectsOnScene.at(i).Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
+	}
+	//Ground.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
+
+
+
+/*	*/
+
 	glutSwapBuffers();
 }
 void Reshape(int w, int h) {
@@ -177,7 +220,10 @@ void Reshape(int w, int h) {
 }
 void Keyboard(unsigned char key, int x, int y)
 {
-
+	if (key == 'b')
+		reflectionIsOn = !reflectionIsOn;
+	if (key == 'l')
+		wireframeMode = !wireframeMode;
 	inputManager.Process(key,mainScene, ObjectsOnScene, mainLight);
 	
 }

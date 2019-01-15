@@ -8,7 +8,7 @@ uniform vec3 LightPos;
 uniform vec3 viewPos; 
 uniform vec3 lightcolor;
 uniform vec3 objectcolor;
-
+ precision highp float;
 void main()
 {
     // ambient
@@ -33,7 +33,6 @@ void main()
 	float attenuation=1.0/(.1+.01*dist+.001*dist*dist);
 	vec3 result = (diffuse+specular)*attenuation+ambient;
 
-	
-
-	 FragColor = vec4(result,1);
+	 FragColor = vec4(result,.8);
 } 
+
