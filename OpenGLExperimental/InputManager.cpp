@@ -36,10 +36,10 @@ void InputManager::Process(unsigned char key,Scene &mainScene, vector<GameObject
 		mainScene.SelectedObject->Deform(vec3(x, y, z), 1.0f);
 	}
 
-/*	if (key == 'm')
-		wireframeMode = true;
-	if (key == 'n')
-		wireframeMode = false;*/
+	if (key == 'm')
+		mainScene.MainCamera.Debug();
+
+		
 	if (key == 'x')
 	{
 		mainScene.MainCamera.transform.position = mainScene.SelectedObject->transform.position - 3 * vec3(0, -1, 1.5f);
@@ -47,9 +47,9 @@ void InputManager::Process(unsigned char key,Scene &mainScene, vector<GameObject
 	}
 
 	if (key == 'y')
-		mainScene.SelectedObject->transform.position.x += 1;
-	if (key == 'u')
-		mainScene.SelectedObject->transform.position.x -= 1;
+		mainScene.MainCamera.yaw += 1;
+	if (key == 't')
+		mainScene.MainCamera.pitch += 1;
 	if (key == 'z')
 	{
 		if(index==0)

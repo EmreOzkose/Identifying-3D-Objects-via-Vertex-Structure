@@ -205,10 +205,7 @@ void GameObject::load_obj(string path, bool includetexandnormals)
 		Normal /= 3;
 		EndNormals.at(vertexIndex-1) = Normal;
 	}
-	for (size_t i = 0; i < EndNormals.size(); i++)
-	{
-		cout << EndNormals.at(i) << endl;
-	}
+
 	
 }
 void GameObject::load_obj(string path, bool includetexandnormals,GLfloat scale)
@@ -403,7 +400,7 @@ void GameObject::SetupMesh()
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 
 	stbi_image_free(data);*/
-
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 }
 
 
@@ -461,6 +458,7 @@ void GameObject::Bind(GLuint program)
 	glEnableVertexAttribArray(attr);
 	glVertexAttribPointer(attr, 4, GL_FLOAT, GL_FALSE, 0, 0);
 	glBindAttribLocation(program, attr, "vPosition");
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
 }
 void GameObject::PrintRandomVertex()

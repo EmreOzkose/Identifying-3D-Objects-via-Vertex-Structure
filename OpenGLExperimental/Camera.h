@@ -17,6 +17,11 @@ public:
 	ProjectionMode mode = ProjectionMode::PerspectiveMode;
 
 	GLfloat FOV=75, CameraNear=0.01, CameraFar=1000,aspect= 1;
+
+	GLfloat yaw, pitch;
+	//cam forward = transform forward
+	vec3 camForward, camRight, camUp;
+	void Debug();
 private:
 	string str = "MainCamera";
 };

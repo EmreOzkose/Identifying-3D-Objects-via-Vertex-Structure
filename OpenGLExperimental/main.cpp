@@ -7,7 +7,7 @@
 	#define width 1920
 	#define height 1080
 	#define window_name "Assignment-2"
-	#define Object_SIZE 1
+	#define Object_SIZE 4
 	#define PI 3.14159265359
 
 	/*-----------------DEPENDENCIES AND MACROS----------------*/
@@ -96,12 +96,16 @@ int main(int argc, char **argv) {
 		for (size_t j = 0; j < (sqrt(Object_SIZE)); j++)
 		{
 			if ((i+j) % 2 == 0)
-				objyn2 = GameObject(name, "Models/Cube.obj", true, BlinnPhong);
+				objyn2 = GameObject(name, pathDragon, true, BlinnPhong);
 			else
-				objyn2 = GameObject(name, PathDog, true, Toon);
+				objyn2 = GameObject(name, pathDragon, true, Toon);
 			objyn2.SetupMesh();
 			objyn2.transform.position = vec3(-3 * GLfloat(i), 0, -3 * GLfloat(j));
 			ObjectsOnScene.push_back(objyn2);
+
+			//can be deleted
+			GLfloat percantage = i * sqrt(Object_SIZE) + j+1;
+			cout << "Done : %" << (percantage)*100 / Object_SIZE << endl;
 		}
 		
 		
