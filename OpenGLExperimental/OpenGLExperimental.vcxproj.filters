@@ -127,24 +127,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="fshader.glsl">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="vshader.glsl">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="vshader2.glsl">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="fshader2.glsl">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="groundvertex.glsl">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="groundfragment.glsl">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
     <None Include="ToonVertex.glsl">
       <Filter>Source Files\Shaders</Filter>
     </None>
@@ -157,7 +139,22 @@
     <None Include="particleFragment.glsl">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="PBRShader.glsl">
+    <None Include="FlatFragment.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="BlinnPhongFragment.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="BlinnPhongVertex.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="FlatVertex.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="WaterFragment.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="WaterVertex.glsl">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>

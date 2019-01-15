@@ -162,17 +162,16 @@
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="fshader.glsl" />
-    <None Include="fshader2.glsl" />
-    <None Include="groundfragment.glsl" />
-    <None Include="groundvertex.glsl" />
+    <None Include="FlatFragment.glsl" />
+    <None Include="BlinnPhongFragment.glsl" />
+    <None Include="WaterFragment.glsl" />
+    <None Include="WaterVertex.glsl" />
     <None Include="particleFragment.glsl" />
     <None Include="particleVertex.glsl" />
-    <None Include="PBRShader.glsl" />
     <None Include="ToonFragment.glsl" />
     <None Include="ToonVertex.glsl" />
-    <None Include="vshader.glsl" />
-    <None Include="vshader2.glsl" />
+    <None Include="FlatVertex.glsl" />
+    <None Include="BlinnPhongVertex.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

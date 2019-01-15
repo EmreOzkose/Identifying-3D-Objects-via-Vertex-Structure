@@ -144,23 +144,6 @@ void GameObject::load_obj(string path, bool includetexandnormals)
 				vertexList.at(indexC).normalIndices.push_back(cn);
 			}
 
-			/*X = f1C.at(1);
-			Y = f2C.at(1);
-			Z = f3C.at(1);
-			a = atoi(X.c_str()), b = atoi(Y.c_str()), c = atoi(Z.c_str());
-			TextureIndices.push_back((a - 1));
-			TextureIndices.push_back((b - 1));
-			TextureIndices.push_back((c - 1));*/
-
-
-			//push normals
-			
-
-			//OrderedNormals.insert(vec3(1), 1);
-			
-			/*NormalIndices.push_back((a - 1));
-			NormalIndices.push_back((b - 1));
-			NormalIndices.push_back((c - 1));*/
 			
 			
 
