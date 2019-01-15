@@ -13,6 +13,7 @@ struct Vertex
 {
 	GLuint vertexIndex;
 	vector<GLuint> normalIndices;
+	vector<GLuint> texIndices;
 };
 
 GLuint check(vector<Vertex> List, GLuint index)
@@ -96,6 +97,10 @@ void GameObject::load_obj(string path, bool includetexandnormals)
 			string ZN = f3C.at(2);
 			GLuint an = atoi(XN.c_str()), bn = atoi(YN.c_str()), cn = atoi(ZN.c_str());
 
+			string XT = f1C.at(1);
+			string YT = f2C.at(1);
+			string ZT = f3C.at(1);
+			GLuint at = atoi(XT.c_str()), bt = atoi(YT.c_str()), ct = atoi(ZT.c_str());
 
 
 			Vertex vertexA, vertexB, vertexC;
@@ -120,14 +125,21 @@ void GameObject::load_obj(string path, bool includetexandnormals)
 			else
 				vertexC = vertexList.at(indexC);
 			vertexA.normalIndices.push_back(an);
-			vertexB.normalIndices.push_back(an);
-			vertexC.normalIndices.push_back(an);
+			vertexB.normalIndices.push_back(bn);
+			vertexC.normalIndices.push_back(cn);
+
+			vertexA.texIndices.push_back(at);
+			vertexB.texIndices.push_back(bt);
+			vertexC.texIndices.push_back(ct);
+
+			
 
 			if (indexA == -1) {
 				vertexList.push_back(vertexA);
 			}
 			else {
 				vertexList.at(indexA).normalIndices.push_back(an);
+				vertexList.at(indexA).texIndices.push_back(at);
 			}
 			
 			if (indexB == -1) {
@@ -135,6 +147,7 @@ void GameObject::load_obj(string path, bool includetexandnormals)
 			}
 			else {
 				vertexList.at(indexB).normalIndices.push_back(bn);
+				vertexList.at(indexB).texIndices.push_back(bt);
 			}
 			if (indexC == -1)
 			{
@@ -142,6 +155,7 @@ void GameObject::load_obj(string path, bool includetexandnormals)
 			}
 			else {
 				vertexList.at(indexC).normalIndices.push_back(cn);
+				vertexList.at(indexC).texIndices.push_back(ct);
 			}
 
 			/*X = f1C.at(1);
@@ -179,33 +193,90 @@ void GameObject::load_obj(string path, bool includetexandnormals)
 
 		}
 	}
-	/*cout <<"Size "<<BaseVertices.size()<<" esit "<< vertexList.size() << endl;
-	for (size_t i = 0; i < vertexList.size(); i++)
-	{
-		cout << "Vertex :" << vertexList.at(i).vertexIndex << " Normals size: "<< vertexList.at(i).normalIndices.size()<<endl;
-		*
-	}*/
+
 
 	set <GLuint, greater <GLuint> > ::iterator itr;
-	set <GLuint, greater <GLuint> > set;
+	set <GLuint, greater <GLuint> > set,set2;
 	for (size_t x = 0; x < vertexList.size(); x++)
 		EndNormals.push_back(vec3(0));
 	for (size_t i = 0; i < vertexList.size(); i++)
 	{
 		GLuint vertexIndex = vertexList.at(i).vertexIndex;
 		set.clear();
+		set2.clear();
 		for (size_t j = 0; j < vertexList.at(i).normalIndices.size(); j++)
 			set.insert(vertexList.at(i).normalIndices.at(j));
+		for (size_t j = 0; j < vertexList.at(i).texIndices.size(); j++)
+			set2.insert(vertexList.at(i).texIndices.at(j));
 		vec3 Normal = vec3(0);
+		
 		for (itr = set.begin(); itr != set.end(); ++itr)
 		{
 			GLuint newIndex = *itr;
 			Normal += Normals.at(newIndex-1);
 		}
+		vec2 Tex = vec2(0);
+		for (itr = set2.begin(); itr != set2.end(); ++itr)
+		{
+			GLuint newIndex = *itr;
+			Tex += textureCoordinate.at(newIndex - 1);
+			
+		}
+		//cout <<(Tex) << endl;
+		//cout <<"Index "<< vertexIndex<<":"<< vertexList.at(i).texIndices.size()<<"\t"<<vertexList.at(i).normalIndices.size() << endl;
 		Normal /= 3;
 		EndNormals.at(vertexIndex-1) = Normal;
 	}
 
+
+	
+
+
+
+
+
+
+
+	for (size_t i = 0; i < BaseVertices.size(); i++) {
+		Tangents.push_back(vec3(0));
+	}
+	for (size_t i = 0; i < VertexIndices.size(); i += 3) {
+		vec4& v0 = BaseVertices[VertexIndices[i]];
+		vec4& v1 = BaseVertices[VertexIndices[i + 1]];
+		vec4& v2 = BaseVertices[VertexIndices[i + 2]];
+
+		vec3 Edge1 = vec3(v1.x,v1.y,v2.z) - vec3(v0.x, v0.y, v0.z);
+		vec3 Edge2 = vec3(v2.x, v2.y, v2.z) - vec3(v0.x, v0.y, v0.z);
+
+		/*float DeltaU1 = v1.m_tex.x - v0.m_tex.x;
+		float DeltaV1 = v1.m_tex.y - v0.m_tex.y;
+		float DeltaU2 = v2.m_tex.x - v0.m_tex.x;
+		float DeltaV2 = v2.m_tex.y - v0.m_tex.y;*/
+		float DeltaU1 = v1.x - v0.x;
+		float DeltaV1 = v1.y - v0.y;
+		float DeltaU2 = v2.x - v0.x;
+		float DeltaV2 = v2.y - v0.y;
+
+		float f = 1.0f / (DeltaU1 * DeltaV2 - DeltaU2 * DeltaV1);
+
+		vec3 Tangent, Bitangent;
+
+		Tangent.x = f * (DeltaV2 * Edge1.x - DeltaV1 * Edge2.x);
+		Tangent.y = f * (DeltaV2 * Edge1.y - DeltaV1 * Edge2.y);
+		Tangent.z = f * (DeltaV2 * Edge1.z - DeltaV1 * Edge2.z);
+
+		Bitangent.x = f * (-DeltaU2 * Edge1.x - DeltaU1 * Edge2.x);
+		Bitangent.y = f * (-DeltaU2 * Edge1.y - DeltaU1 * Edge2.y);
+		Bitangent.z = f * (-DeltaU2 * Edge1.z - DeltaU1 * Edge2.z);
+
+		Tangents.at(VertexIndices[i] ) += Tangent;
+		Tangents.at(VertexIndices[i+1]) += Tangent;
+		Tangents.at(VertexIndices[i+2] ) += Tangent;
+	}
+
+	for (size_t i = 0; i < BaseVertices.size(); i++) {
+		Tangents.at(i) = normalize(Tangents.at(i));
+	}
 	
 }
 void GameObject::load_obj(string path, bool includetexandnormals,GLfloat scale)

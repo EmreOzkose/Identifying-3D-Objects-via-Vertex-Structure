@@ -28,9 +28,9 @@ uniform vec3 rotationVector;
 
 void main()
 {
-vec3 pos= (Model * vPosition).xyz;
 
-	vec3 N=normalize(mat3(Model*rZ*rY*rX*inverse(Model)*(inverse(Model))) * vNormal).xyz;
+	vec3 N=normalize(mat3(inverse(Model)) * vNormal).xyz;
+
 	vec3 V=normalize(viewPos);
 	vec3 L=normalize(LightPos);
 	vec3 H = normalize( L + V );// Transform vertex normal into eye coordinates
@@ -44,7 +44,6 @@ vec3 pos= (Model * vPosition).xyz;
     vec3 diffuse = Kd * vec3(1,1,0);
     
     // specular
-    vec3 viewDir = normalize(viewPos - pos);
 
 
 
@@ -54,9 +53,9 @@ vec3 pos= (Model * vPosition).xyz;
 
 	vColor=vec4(result,1);
 	//normal+=vec3(0,pos.y,0);
-gl_Position = Projection*View*Model*rZ*rY*rX*inverse(Model)*Model*vPosition;
+	gl_Position = Projection*View*Model*rZ*rY*rX*inverse(Model)*Model*vPosition;
 
-
+	//gl_Position = Projection*View*Model*vPosition;
 
 	
 

@@ -99,7 +99,7 @@ int main(int argc, char **argv) {
 		for (size_t j = 0; j < (sqrt(Object_SIZE)); j++)
 		{
 			if ((i+j) % 2 == 0)
-				objyn2 = GameObject(name, PathDog, true, Toon);
+				objyn2 = GameObject(name, PathDog, true, BlinnPhong);
 			else
 				objyn2 = GameObject(name, PathDog, true, Flat);
 			objyn2.SetupMesh();

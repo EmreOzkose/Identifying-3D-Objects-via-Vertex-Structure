@@ -29,8 +29,7 @@ uniform vec3 rotationVector;
 void main(){
 
 	LightDir=normalize(LightPos.xyz);
-Normal = mat3(Model*rZ*rY*rX*inverse(Model)*(inverse(Model))) * vNormal;  
-
+	Normal = (mat3(Model*rZ*rY*rX*inverse(Model)*(inverse(Model))) * vNormal).xyz;
 	gl_Position = Projection*View*Model*rZ*rY*rX*inverse(Model)*Model*vPosition;
 
 }

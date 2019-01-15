@@ -24,7 +24,8 @@ public:
 	vector<vec4> BaseVertices;
 	vector<vec4> DeformedVertices;
 	vector<vec3> Normals,EndNormals;
-	vector<vec2> textureCoordinate;
+	vector<vec2> textureCoordinate,EndTextureCoordinates;
+	vector<vec3> Tangents;
 
 	vector<GLuint> VertexIndices;
 	vector<GLuint> NormalIndices;
