@@ -6,8 +6,8 @@
 	#include "InputManager.h"
 	#define width 1920
 	#define height 1080
-	#define window_name "Assignment-2"
-	#define Object_SIZE 16
+	#define window_name "OpenGL"
+	#define Object_SIZE 4
 	#define PI 3.14159265359
 
 	/*-----------------DEPENDENCIES AND MACROS----------------*/
@@ -21,7 +21,7 @@
 	InputManager inputManager=InputManager();
 	GLfloat time = 0;
 	GLuint locationTime, locationView;
-	Shader water,Toon,Particle;
+	Shader WaterShader,ToonShader,ParticleShader,FlatShader,BlinnPhongShader;
 	Console main_console;
 	Light* mainLight;
 	int mainWindow;
@@ -59,7 +59,7 @@ int main(int argc, char **argv) {
 	main_console = Console(mainWindow);
 	main_console.SetupConsole();
 	mainLight = &mainScene.CreateMainLight(vec3(1,.5,1),vec3(0,0,1),2,0.4f);
-	mainLight->transform.position = vec3(10,50,24);
+	mainLight->transform.position = vec3(10,30,4);
 	cout << "Scene and Light created." << endl;
 
 	// create depth map 
@@ -102,18 +102,19 @@ int main(int argc, char **argv) {
 
 
 	//set up shaders
-	Shader Flat = Shader("vshader.glsl", "fshader.glsl");
-	Shader BlinnPhong = Shader("vshader2.glsl", "fshader2.glsl");
-	water = Shader("groundvertex.glsl", "groundfragment.glsl");
-	Toon = Shader("ToonVertex.glsl", "ToonFragment.glsl");
-	Particle = Shader("particleVertex.glsl", "particleFragment.glsl");
+	FlatShader = Shader("FlatVertex.glsl", "FlatFragment.glsl");
+	BlinnPhongShader = Shader("BlinnPhongVertex.glsl", "BlinnPhongFragment.glsl");
+	WaterShader = Shader("WaterVertex.glsl", "WaterFragment.glsl");
+	ToonShader = Shader("ToonVertex.glsl", "ToonFragment.glsl");
+	ParticleShader = Shader("particleVertex.glsl", "particleFragment.glsl");
+
 	cout << "Shaders are created." << endl;
 
 	//Create a base plane
-	Sea = GameObject("Sea", "Models/Plane.obj", true, water);
+	Sea = GameObject("Sea", "Models/Plane.obj", true, WaterShader);
 	Sea.SetupMesh();
 	cout << "Sea is created." << endl;
-	Ground = GameObject("Ground", "Models/PlaneLowP.obj", true, BlinnPhong);
+	Ground = GameObject("Ground", "Models/PlaneLowP.obj", true, BlinnPhongShader);
 	Ground.SetupMesh();
 	cout << "Ground is created." << endl;
 	Sea.transform.Translate(vec3(0, -2, 0));
@@ -132,9 +133,9 @@ int main(int argc, char **argv) {
 		for (size_t j = 0; j < (sqrt(Object_SIZE)); j++)
 		{
 			if ((i+j) % 2 == 0)
-				objyn2 = GameObject(name, pathPlayer, true, BlinnPhong);
+				objyn2 = GameObject(name, PathDog, true, ToonShader);
 			else
-				objyn2 = GameObject(name, pathPlayer, true, Flat);
+				objyn2 = GameObject(name, PathDog, true, BlinnPhongShader);
 			objyn2.SetupMesh();
 			objyn2.transform.position = vec3( GLfloat(i), 0, GLfloat(j));
 			ObjectsOnScene.push_back(objyn2);
@@ -183,8 +184,8 @@ void Display(void)
 	glPolygonMode(GL_BACK, GL_FILL);
 
 	//main_console.Update(mainScene.SelectedObject);
-	Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(),time,mainLight,mainScene.MainCamera.transform.position);
-	Ground.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
+//	Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(),time,mainLight,mainScene.MainCamera.transform.position);
+	//Ground.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
 
 /*	if (wireframeMode)
 	{

@@ -67,9 +67,10 @@ void InputManager::Process(unsigned char key,Scene &mainScene, vector<GameObject
 	}
 
 	if (key == 'y')
-		mainScene.MainCamera.yaw += 1;
-	if (key == 't')
 		mainScene.MainCamera.pitch += 1;
+
+	if (key == 't')
+	mainScene.MainCamera.yaw += 1;
 
 	glutPostRedisplay();
 }

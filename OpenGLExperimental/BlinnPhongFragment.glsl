@@ -28,10 +28,12 @@ void main()
     vec3 specular = Ks * vec3(1,1,1);  
 
 	float dist=length(LightPos-FragPos);
-	float attenuation=1.0/(.01+.001*dist+.0001*dist*dist);
+	float attenuation=1.0/(.1+.01*dist+.001*dist*dist);
 
 	//*LightColor
-	vec3 result = (diffuse+ambient+specular);
+	vec3 result = (diffuse+specular)*attenuation+ambient;
+	
+
     FragColor = vec4(result, 1.0);
 
 

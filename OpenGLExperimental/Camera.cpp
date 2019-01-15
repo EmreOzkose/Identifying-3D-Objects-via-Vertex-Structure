@@ -49,6 +49,7 @@ vec4 Lerp(vec4 from, vec4 to, GLfloat delta)
 }
 void Camera::Debug()
 {
-	cout << "Eye: " << eye << "At :" << at<< "Cam forward : "<< vec4(camForward,0)+ eye <<endl;
+	cout << "Eye: " << eye << "\nAt :" << at<< "\nCam forward : "<< vec4(camForward,0)+ eye <<
+		"\nPithc :"<<pitch<<"\nYaw: "<<yaw<<endl;
 
 }
