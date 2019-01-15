@@ -4,6 +4,8 @@
 	/*-----------------DEPENDENCIES AND MACROS----------------*/
 	#include "Scene.h"
 	#include "InputManager.h"
+	#include "Model.h"
+	#include "read_weights.h"
 	#define width 1920
 	#define height 1080
 	#define window_name "OpenGL"
@@ -50,6 +52,26 @@
 
 int main(int argc, char **argv) {
 	
+	/*-----------------Test V2L----------------*/
+	Model *model = new Model;
+	model = read_weight_matrices(model);			// Read trained weights. Model is given for hyper-parameters
+
+	// Create a test object
+	const int num_of_vertices = num_of_vertex;
+	vector<vector<float>> test_object[num_of_vertices];
+
+	// Initialize the test object
+	for (int i = 0; i < num_of_vertices; i++)
+		test_object->push_back(vector<float> {-0.1f, 0.2f, 0.3f, 1.0f});
+
+	vector<float> probs = model->forward(test_object);
+
+	const int out_dim = output_dim;
+	for (int i = 0; i < out_dim; i++)
+		cout << probs.at(i) << endl;
+
+
+
 	/*-----------------SETUP SCENE----------------*/
 
 	mainScene = Scene();
@@ -85,20 +107,6 @@ int main(int argc, char **argv) {
 	glDrawBuffer(GL_NONE);		// Nones are here for texture/depth are colorness (:D)
 	glReadBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	// 1. first render to depth map
-	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-	glClear(GL_DEPTH_BUFFER_BIT);
-	ConfigureShaderAndMatrices();
-	RenderScene();
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	// 2. then render scene as normal with shadow mapping (using depth map)
-	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	ConfigureShaderAndMatrices();
-	glBindTexture(GL_TEXTURE_2D, depthMap);
-	RenderScene();
 
 
 	//set up shaders
