@@ -15,6 +15,13 @@ int SoundManager::soundCheck() {
 }
 
 void SoundManager::sound_background(){
-	engine->play2D("breakout.mp3", true);
+	engine->play2D("audio/background.mp3", true);
+}
 
+void SoundManager::sound_airplane_departure() {
+	engine->play2D("audio/airplane_departure.mp3", true);
+}
+
+void SoundManager::sound_robot() {
+	engine->play2D("audio/robot.mp3", true);
 }

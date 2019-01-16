@@ -51,7 +51,7 @@
 
 
 int main(int argc, char **argv) {
-	soundManager.sound_background();
+	soundManager.sound_robot();
 
 	
 	/*-----------------SETUP SCENE----------------*/
@@ -75,7 +75,7 @@ int main(int argc, char **argv) {
 	mainLight[3] = mainScene.CreateMainLight(vec3(229.0 / 255.0, 136.0 / 255.0, 31.0 / 255.0), vec3(0, 0, 1), 2, 0.4f);
 	mainLight[3].transform.position = vec3(20, -60, -20);
 	*/
-		
+	
 	
 	mainLight->transform.position = vec3(10,30,4);
 	cout << "Scene and Light created." << endl;
@@ -174,10 +174,12 @@ int main(int argc, char **argv) {
 	/*-----------------Console Design----------------*/
 	main_console.text_scene = new GLUI_EditText(main_console.glui_v_panel_parameters, "Scene:", main_console.command_text, 4, &control_cb);
 	main_console.text_num_of_light = new GLUI_EditText(main_console.glui_v_panel_parameters, "#of Light:", main_console.command_text, 5, &control_cb);
-	main_console.text_command = new GLUI_EditText(main_console.glui_v_subwindow, "Command:", main_console.command_text, 3, &control_cb);
-	main_console.checkbox_wireframe = new GLUI_Checkbox(main_console.glui_v_subwindow, "Wireframe: ", &main_console.wireframe, 6, &control_cb);
-	main_console.checkbox_bumpmap = new GLUI_Checkbox(main_console.glui_v_subwindow, "Bump Map: ", &main_console.bumpmap, 6, &control_cb);
-
+	
+	main_console.text_command = new GLUI_EditText(main_console.glui_v_panel_command, "", main_console.command_text, 3, &control_cb);
+	
+	main_console.checkbox_wireframe = new GLUI_Checkbox(main_console.glui_v_panel_features, "Wireframe: ", &main_console.wireframe, 6, &control_cb);
+	main_console.checkbox_bumpmap = new GLUI_Checkbox(main_console.glui_v_panel_features, "Bump Map: ", &main_console.bumpmap, 6, &control_cb);
+	new GLUI_StaticText(main_console.glui_v_subwindow, "Press ESC to exit\n");
 	/*-----------------Console Design----------------*/
 
 
