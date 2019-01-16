@@ -2,11 +2,13 @@
 
 in vec4 vPosition;
 in vec3 vNormal;
+in vec2 vTexture;
 out vec3 ViewPos;
 uniform mat4 Model,View,Projection;
 
 out vec3 Normal;
 out vec3 FragPos;
+out vec2 vCoords;
 
 uniform vec3 rotationVector;
 	//x/y/z
@@ -29,7 +31,7 @@ uniform vec3 rotationVector;
 void main()
 {
 	
-	
+	vCoords=vTexture;
 	//normal+=vec3(0,pos.y,0);
 	Normal = mat3(Model*rZ*rY*rX*inverse(Model)*(inverse(Model))) * vNormal;  
     FragPos=vec3(Model * vec4(vPosition));

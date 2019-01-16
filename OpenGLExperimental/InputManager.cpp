@@ -28,7 +28,7 @@ void InputManager::Process(unsigned char key,Scene &mainScene, vector<GameObject
 	if (key == 'a')
 		mainScene.MainCamera.transform.Translate(-mainScene.MainCamera.camRight);
 
-	cout << key<<endl;
+	
 
 	if (key == exit)
 		std::exit(0);

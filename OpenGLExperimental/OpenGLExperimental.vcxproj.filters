@@ -84,6 +84,9 @@
     <ClCompile Include="Model.cpp">
       <Filter>Source Files\V2L</Filter>
     </ClCompile>
+    <ClCompile Include="Vertex.cpp">
+      <Filter>Source Files\Objects\Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\Desktop\OpenGLStuff\Angel_commons\Angel.h">
@@ -125,9 +128,6 @@
     <ClInclude Include="Material.h">
       <Filter>Source Files\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\stb_image.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Console.h">
       <Filter>Source Files\Headers</Filter>
     </ClInclude>
@@ -139,6 +139,9 @@
     </ClInclude>
     <ClInclude Include="read_weights.h">
       <Filter>Source Files\V2L</Filter>
+    </ClInclude>
+    <ClInclude Include="Vertex.h">
+      <Filter>Source Files\Objects\Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -74,10 +74,10 @@ int main(int argc, char **argv) {
 	//Create a base plane
 	Sea = GameObject("Sea", "Models/Plane.obj", true, WaterShader);
 	Sea.SetupMesh();
-	//cout << "Sea is created." << endl;
-	//Ground = GameObject("Ground", "Models/PlaneLowP.obj", true, BlinnPhongShader);
+	cout << "Sea is created." << endl;
+//	Ground = GameObject("Ground", "Models/PlaneLowP.obj", true, BlinnPhongShader);
 	//Ground.SetupMesh();
-	//cout << "Ground is created." << endl;
+	cout << "Ground is created." << endl;
 	//Sea.transform.Translate(vec3(0, -2, 0));
 	/*-----------------SETUP SCENE----------------*/
 
@@ -99,11 +99,11 @@ int main(int argc, char **argv) {
 		for (size_t j = 0; j < (sqrt(Object_SIZE)); j++)
 		{
 			if ((i+j) % 2 == 0)
-				objyn2 = GameObject(name, pathPlayer, true, BlinnPhongShader);
+				objyn2 = GameObject(name, pathPlayer, GL_TRUE, BlinnPhongShader);
 			else
-				objyn2 = GameObject(name, pathPlayer, true, BlinnPhongShader);
+				objyn2 = GameObject(name, pathPlayer, GL_TRUE, BlinnPhongShader);
 			objyn2.SetupMesh();
-			objyn2.transform.position = vec3(GLfloat(i)*10, 0, GLfloat(j)*10);
+			objyn2.transform.position = vec3(GLfloat(i)*2, 0, GLfloat(j)*2);
 			ObjectsOnScene.push_back(objyn2);
 
 			//can be deleted
@@ -200,10 +200,11 @@ void Display(void)
 	else {
 		glDisable(GL_BLEND);
 		Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
+
+		//Ground.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
 		for (size_t i = 0; i < Object_SIZE; i++)
 			ObjectsOnScene.at(i).Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
 	}
-	//Ground.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
 
 
 
@@ -254,7 +255,7 @@ void MouseMotion(int x, int y)
 #pragma endregion
 void ExportVertices(vector<GameObject> arr,GLuint times)
 {
-	//680 is max
+	/*//680 is max
 	for (size_t x = 0; x < arr.size(); x++)
 	{
 		string s = std::to_string(x+1);
@@ -301,6 +302,6 @@ void ExportVertices(vector<GameObject> arr,GLuint times)
 		}
 		outfile.close();
 		
-	}
+	}*/
 }
 

@@ -4,9 +4,11 @@ out vec4 FragColor;
 in vec3 Normal;  
 in vec3 FragPos;  
 in vec3 ViewPos;
+in vec2 vCoords;
 
 uniform vec3 LightPos; 
 uniform vec3 LightColor; 
+uniform sampler2D tex;
 void main()
 {
     // ambient
@@ -33,8 +35,8 @@ void main()
 	//*LightColor
 	vec3 result = (diffuse+specular)*attenuation+ambient;
 	
-
-    FragColor = vec4(result, 1.0);
+	vec3 text=texture(tex,vCoords).xyz;
+    FragColor = vec4(result*text, 1.0);
 
 
 } 
