@@ -24,7 +24,7 @@ public:
 	string name;
 	vec4 forward = position+vec3(0,0,1);
 
-	GLfloat rotX, rotY, rotZ;
+	GLfloat rotX=0.0f, rotY = 0.0f, rotZ = 0.0f;
 
 
 

@@ -242,11 +242,11 @@ void GameObject::SetupMesh()
 
 
 void GameObject::Deform(vec3 ScaleModifier,GLfloat deformModifier) {
-	/*GLfloat x, y, z, randomize = float(rand() % 10) / 10, cont;
-	vec4 deformedVertex, normalizedVectorfromOrigin;
-	DeformedVertices.clear();
-	deformModifier *= randomize;
-	for (size_t i = 0; i < BaseVertices.size(); i++)
+	//GLfloat x, y, z, randomize = float(rand() % 10) / 10, cont;
+	//vec4 deformedVertex, normalizedVectorfromOrigin;
+	//DeformedVertices.clear();
+	//deformModifier *= randomize;
+/*	for (size_t i = 0; i < BaseVertices.size(); i++)
 	{
 		cont = rand() % 2;
 		if (cont == 0)
@@ -264,9 +264,9 @@ void GameObject::Deform(vec3 ScaleModifier,GLfloat deformModifier) {
 		DeformedVertices.push_back(deformedVertex);
 	}*/
 
-	/*for (size_t i = 0; i < BaseVertices.size(); i++)
+	for (size_t i = 0; i < VertexPositions.size(); i++)
 	{
-		vec4 deformedVertex = vec4 (BaseVertices.at(i).x*ScaleModifier.x, BaseVertices.at(i).y*ScaleModifier.y, BaseVertices.at(i).z*ScaleModifier.z, BaseVertices.at(i).w);
+		vec4 deformedVertex = vec4 (VertexPositions.at(i).x*ScaleModifier.x, VertexPositions.at(i).y*ScaleModifier.y, VertexPositions.at(i).z*ScaleModifier.z, VertexPositions.at(i).w);
 		DeformedVertices.push_back(deformedVertex);
 	}
 	glBindVertexArray(VAO);
@@ -309,9 +309,9 @@ void GameObject::PrintRandomVertex()
 }
 void GameObject::ResetVertices()
 {
-	//glBindVertexArray(VAO);
-	//glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	//glBufferData(GL_ARRAY_BUFFER, BaseVertices.size() * sizeof(vec4), &BaseVertices[0], GL_STATIC_DRAW);
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, VertexPositions.size() * sizeof(vec4), &VertexPositions[0], GL_STATIC_DRAW);
 }
 
 vector<string> split(string strToSplit, char delimeter)

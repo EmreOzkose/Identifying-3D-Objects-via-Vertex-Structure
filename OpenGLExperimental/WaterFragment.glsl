@@ -33,6 +33,6 @@ void main()
 	float attenuation=1.0/(.1+.01*dist+.001*dist*dist);
 	vec3 result = (diffuse+specular)*attenuation+ambient;
 
-	 FragColor = vec4(result,.8);
+	 FragColor = vec4(result,.9);
 } 
 
