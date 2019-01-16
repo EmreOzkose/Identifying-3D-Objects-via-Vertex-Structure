@@ -7,7 +7,8 @@ public:
 	Camera() : Object() {
 		transform.position = vec3(0,0,-10);
 	}
-	void Refresh();
+	void Refresh(); 
+	mat4 ViewMatrix(GLboolean sky);
 	mat4 ViewMatrix();
 	mat4 ProjectionMatrix();
 	vec4 eye = transform.position ,at = vec4(0,0,0,0);

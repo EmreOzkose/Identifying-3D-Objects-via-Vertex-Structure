@@ -183,12 +183,14 @@ void GameObject::Draw(mat4 view, mat4 pro, GLfloat time, Light *Light, vec3 Came
 	glUniform3fv(shader.RotationLocation, 1, &rP[0]);
 
 	glUniform1i(shader.textureLocation, Texture);
+	glUniform1i(shader.skyboxLocation, Texture);
+
 	glUniform1f(shader.LocationTime, time);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glDrawElements(GL_TRIANGLES, VertexIndices.size(), GL_UNSIGNED_INT, 0);
 }
 
-void GameObject::SetupMesh()
+void GameObject::SetupMesh(GLboolean Cubemap, vector<string> faces)
 {
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
@@ -214,7 +216,11 @@ void GameObject::SetupMesh()
 	glBindBuffer(GL_ARRAY_BUFFER, VBOnormal);
 	glBufferData(GL_ARRAY_BUFFER, EndNormals.size() * sizeof(vec3), &EndNormals[0], GL_STATIC_DRAW);
 
-	
+	if (Cubemap)
+	{
+		Texture=loadCubemap(faces);
+		return;
+	}
 	int width, height, nrChannels;
 	unsigned char *data = stbi_load("tex.jpg", &width, &height, &nrChannels, 0);
 	if (!data)
@@ -280,6 +286,9 @@ void GameObject::Bind(GLuint program)
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
+	glBindTexture(GL_TEXTURE_CUBE_MAP, Texture);
+	glBindTexture(GL_TEXTURE_2D, Texture);
+
 	glBindBuffer(GL_ARRAY_BUFFER, VBOtexture);
 	GLuint vTex = glGetAttribLocation(program, "vTexture");
 	glVertexAttribPointer(vTex, 2, GL_FLOAT, GL_FALSE, 0, 0);
@@ -333,4 +342,35 @@ vec3 Direction(vec3 vect)
 {
 	//cout << vect / LengthofVec(vect) << "\n";
 	return (vect/ LengthofVec(vect));
+}
+GLuint GameObject:: loadCubemap(vector<string> faces)
+{
+	
+	glGenTextures(1, &Texture);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, Texture);
+
+	int width, height, nrChannels;
+	for (unsigned int i = 0; i < faces.size(); i++)
+	{
+		unsigned char *data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
+		if (data)
+		{
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+				0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data
+			);
+			stbi_image_free(data);
+		}
+		else
+		{
+			std::cout << "Cubemap texture failed to load at path: " << faces[i] << std::endl;
+			stbi_image_free(data);
+		}
+	}
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	return Texture;
 }

@@ -15,12 +15,12 @@ public:
 	void load_obj(string path, bool includetexandnormals);
 	void load_obj(string path, bool includetexandnormals,GLfloat scale);
 	void Draw(mat4 view, mat4 pro, GLfloat time, Light *Light, vec3 Camerapos);
-	void SetupMesh();
+	void SetupMesh(GLboolean Cubemap, vector<string> faces);
 	void Deform(vec3 ScaleModifier, GLfloat deformModifier);
 	void Bind(GLuint program);
 	void PrintRandomVertex();
 	void ResetVertices();
-	
+	GLuint loadCubemap(vector<string> faces);
 	//remove useshader func and add a shader class
 	GLuint VAO, VBO, EBO,Texture,VBOtexture, VBOnormal;
 

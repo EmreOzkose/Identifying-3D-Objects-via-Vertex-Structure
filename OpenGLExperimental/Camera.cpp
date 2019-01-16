@@ -41,6 +41,10 @@ mat4 Camera::ViewMatrix()
 {
 	return LookAt(eye, at, vec3(0, 1, 0));
 }
+mat4 Camera::ViewMatrix(GLboolean sky)
+{
+	return LookAt(eye, vec3(0), vec3(0, 1, 0));
+}
 vec4 Lerp(vec4 from, vec4 to, GLfloat delta)
 {
 	return from * (1 - delta) + to * (delta);

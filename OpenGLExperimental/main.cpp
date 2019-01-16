@@ -7,7 +7,7 @@
 	#define width 1920
 	#define height 1080
 	#define window_name "OpenGL"
-	#define Object_SIZE 4
+	#define Object_SIZE 1
 	#define PI 3.14159265359
 
 	/*-----------------DEPENDENCIES AND MACROS----------------*/
@@ -21,11 +21,11 @@
 	InputManager inputManager=InputManager();
 	GLfloat time = 0;
 	GLuint locationTime, locationView;
-	Shader WaterShader,ToonShader,ParticleShader,FlatShader,BlinnPhongShader;
+	Shader WaterShader,ToonShader,ParticleShader,FlatShader,BlinnPhongShader,SkyboxShader;
 	Console main_console;
 	Light* mainLight;
 	int mainWindow;
-	GameObject Sea,Ground;
+	GameObject Sea,Ground,Skybox;
 	/*-----------------GLOBAL VARIABLES----------------*/
 	GLboolean wireframeMode = GL_FALSE,reflectionIsOn=GL_FALSE;
 
@@ -68,12 +68,24 @@ int main(int argc, char **argv) {
 	WaterShader = Shader("WaterVertex.glsl", "WaterFragment.glsl");
 	ToonShader = Shader("ToonVertex.glsl", "ToonFragment.glsl");
 	ParticleShader = Shader("particleVertex.glsl", "particleFragment.glsl");
-
+	SkyboxShader = Shader("SkyboxVertex.glsl", "SkyboxFragment.glsl");
+	
 	cout << "Shaders are created." << endl;
 
 	//Create a base plane
 	Sea = GameObject("Sea", "Models/Plane.obj", true, WaterShader);
-	Sea.SetupMesh();
+	vector<std::string> faces
+{
+    "Skybox/right.jpg",
+    "Skybox/left.jpg",
+    "Skybox/top.jpg",
+    "Skybox/bottom.jpg",
+    "Skybox/front.jpg",
+    "Skybox/back.jpg"
+};
+	Skybox = GameObject("Skybox", "Models/Cube.obj", true, SkyboxShader);
+	Skybox.SetupMesh(GL_TRUE, faces);
+	Sea.SetupMesh(GL_FALSE,vector<string>());
 	cout << "Sea is created." << endl;
 //	Ground = GameObject("Ground", "Models/PlaneLowP.obj", true, BlinnPhongShader);
 	//Ground.SetupMesh();
@@ -102,7 +114,7 @@ int main(int argc, char **argv) {
 				objyn2 = GameObject(name, pathPlayer, GL_TRUE, BlinnPhongShader);
 			else
 				objyn2 = GameObject(name, pathPlayer, GL_TRUE, BlinnPhongShader);
-			objyn2.SetupMesh();
+			objyn2.SetupMesh(GL_FALSE,vector<string>());
 			objyn2.transform.position = vec3(GLfloat(i)*2, 0, GLfloat(j)*2);
 			ObjectsOnScene.push_back(objyn2);
 
@@ -200,10 +212,13 @@ void Display(void)
 	else {
 		glDisable(GL_BLEND);
 		Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
-
+		glDepthFunc(GL_LEQUAL);
+		mat4 skyView = LookAt(vec3(-75.0868, 2, -38.2421),vec3(-74.3675f, 2, -37.5474),vec3(0,1,0));
+		Skybox.Draw(skyView, mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
+		glDepthFunc(GL_LESS);
 		//Ground.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
-		for (size_t i = 0; i < Object_SIZE; i++)
-			ObjectsOnScene.at(i).Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
+		//for (size_t i = 0; i < Object_SIZE; i++)
+		//	ObjectsOnScene.at(i).Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
 	}
 
 

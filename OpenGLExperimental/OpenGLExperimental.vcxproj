@@ -181,6 +181,8 @@
   <ItemGroup>
     <None Include="FlatFragment.glsl" />
     <None Include="BlinnPhongFragment.glsl" />
+    <None Include="SkyboxFragment.glsl" />
+    <None Include="SkyboxVertex.glsl" />
     <None Include="WaterFragment.glsl" />
     <None Include="WaterVertex.glsl" />
     <None Include="particleFragment.glsl" />
