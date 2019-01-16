@@ -72,8 +72,8 @@ int main(int argc, char **argv) {
 	cout << "Shaders are created." << endl;
 
 	//Create a base plane
-	Sea = GameObject("Sea", "Models/Plane.obj", true, WaterShader);
-	Sea.SetupMesh();
+	//Sea = GameObject("Sea", "Models/Plane.obj", true, WaterShader);
+	//Sea.SetupMesh();
 	cout << "Sea is created." << endl;
 //	Ground = GameObject("Ground", "Models/PlaneLowP.obj", true, BlinnPhongShader);
 	//Ground.SetupMesh();
