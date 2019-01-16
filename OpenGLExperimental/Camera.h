@@ -21,7 +21,7 @@ public:
 
 	GLfloat yaw=0, pitch=0;
 	//cam forward = transform forward
-	vec3 camForward, camRight, camUp;
+	vec3 camForward=vec3(0), camRight = vec3(0), camUp = vec3(0);
 	void Debug();
 private:
 	string str = "MainCamera";

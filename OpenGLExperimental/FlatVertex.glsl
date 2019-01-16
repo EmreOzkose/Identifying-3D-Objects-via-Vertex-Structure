@@ -5,7 +5,8 @@ in vec3 vNormal;
 uniform mat4 Model,Projection,View;
 
 flat out vec4 vColor;
-uniform vec3 LightPos; 
+uniform vec3 LightPos[4]; 
+uniform vec3 LightColor[4]; 
 uniform vec3 viewPos; 
 
 
@@ -28,20 +29,24 @@ uniform vec3 rotationVector;
 
 void main()
 {
-vec3 pos= (Model * vPosition).xyz;
+	vec3 pos= (Model * vPosition).xyz;
+	vec3 diffuse,specular,ambient;
+	for(int i=0;i<4;i++)
+	{
 
+	
 	vec3 N=normalize(mat3(Model*rZ*rY*rX*inverse(Model)*(inverse(Model))) * vNormal).xyz;
 	vec3 V=normalize(viewPos);
-	vec3 L=normalize(LightPos);
+	vec3 L=normalize(LightPos[i]);
 	vec3 H = normalize( L + V );// Transform vertex normal into eye coordinates
 
 	float ambientStrength = 0.15;
-    vec3 ambient = ambientStrength * vec3(1,1,0);
+    ambient += ambientStrength * LightColor[i];
   	
     // diffuse 
 
     float Kd = max(dot(N, L), 0.0);
-    vec3 diffuse = Kd * vec3(1,1,0);
+    diffuse += Kd * LightColor[i];
     
     // specular
     vec3 viewDir = normalize(viewPos - pos);
@@ -49,7 +54,9 @@ vec3 pos= (Model * vPosition).xyz;
 
 
     float Ks = pow(max(dot(N, H), 0.0), 32);
-    vec3 specular = Ks * vec3(1,1,0);  
+    specular += Ks * vec3(1,1,0);  
+
+	}
 	vec3 result = (diffuse+ambient+specular);
 
 	vColor=vec4(result,1);

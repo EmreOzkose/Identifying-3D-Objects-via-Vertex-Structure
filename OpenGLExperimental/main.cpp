@@ -4,30 +4,32 @@
 	/*-----------------DEPENDENCIES AND MACROS----------------*/
 	#include "Scene.h"
 	#include "InputManager.h"
-	#define width 1920
-	#define height 1080
-	#define window_name "OpenGL"
-	#define Object_SIZE 1
+	#define WINDOW_WIDTH 1920
+	#define WINDOW_HEIGHT 1080
+	#define WINDOW_NAME "OpenGL"
+	#define OBJECTS_BEGIN_SIZE 36
+	#define MAX_LIGHTS_SIZE 9
 	#define PI 3.14159265359
 
 	/*-----------------DEPENDENCIES AND MACROS----------------*/
 
 
 	/*-----------------GLOBAL VARIABLES----------------*/
-	GLuint shader;
-	Scene mainScene ;
-
-	vector<GameObject> ObjectsOnScene;
-	InputManager inputManager=InputManager();
-	GLfloat time = 0;
-	GLuint locationTime, locationView;
-	Shader WaterShader,ToonShader,ParticleShader,FlatShader,BlinnPhongShader,SkyboxShader;
+	Scene mainScene;
 	Console main_console;
-	Light* mainLight;
+	Light mainLight[MAX_LIGHTS_SIZE];
+	InputManager inputManager;
+	vector<GameObject> ObjectsOnScene;
+
+	GLfloat time = 0;
+	Shader WaterShader,ToonShader,ParticleShader,FlatShader,BlinnPhongShader,SkyboxShader;
+	
+	
 	int mainWindow;
 	GameObject Sea,Ground,Skybox;
 	/*-----------------GLOBAL VARIABLES----------------*/
-	GLboolean wireframeMode = GL_FALSE,reflectionIsOn=GL_FALSE;
+	GLboolean wireframeMode = GL_FALSE, reflectionIsOn = GL_FALSE;
+	GLuint bumpMapOn = 1;
 
 
 	/*-----------------DEFINITIONS----------------*/
@@ -55,72 +57,93 @@ int main(int argc, char **argv) {
 	mainScene = Scene();
 	mainScene.Init(argc,argv);
 	unsigned int Mode= GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE |GLUT_STENCIL;
-	mainWindow=mainScene.SetupWindow(Mode,vec2(0,0),vec2(width,height), window_name);
+	mainWindow=mainScene.SetupWindow(Mode,vec2(0,0),vec2(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_NAME);
 	main_console = Console(mainWindow);
 	main_console.SetupConsole();
-	mainLight = &mainScene.CreateMainLight(vec3(1,.5,1),vec3(0,0,1),2,0.4f);
+
+	mainLight[0] = mainScene.CreateMainLight(vec3(229.0 / 255.0, 136.0 / 255.0, 31.0 / 255.0), vec3(0, 0, 1), 2, 0.4f);
+	mainLight[0].transform.position=vec3(20, 60, 20);
+
+	mainLight[1] = mainScene.CreateMainLight(vec3(229.0 / 255.0, 136.0 / 255.0, 31.0 / 255.0), vec3(0, 0, 1), 2, 0.4f);
+	mainLight[1].transform.position = vec3(-20, 60, -20);
+
+	mainLight[2] = mainScene.CreateMainLight(vec3(229.0 / 255.0, 136.0 / 255.0, 31.0 / 255.0), vec3(0, 0, 1), 2, 0.4f);
+	mainLight[2].transform.position = vec3(-20, -60, 20);
+
+	mainLight[3] = mainScene.CreateMainLight(vec3(229.0 / 255.0, 136.0 / 255.0, 31.0 / 255.0), vec3(0, 0, 1), 2, 0.4f);
+	mainLight[3].transform.position = vec3(20, -60, -20);
+
+		
+	
 	mainLight->transform.position = vec3(10,30,4);
 	cout << "Scene and Light created." << endl;
 
-	//set up shaders
+	/*-----------------SETUP SCENE----------------*/
+
+
+
+	/*-----------------SETUP SHADERS----------------*/
+
 	FlatShader = Shader("FlatVertex.glsl", "FlatFragment.glsl");
 	BlinnPhongShader = Shader("BlinnPhongVertex.glsl", "BlinnPhongFragment.glsl");
 	WaterShader = Shader("WaterVertex.glsl", "WaterFragment.glsl");
 	ToonShader = Shader("ToonVertex.glsl", "ToonFragment.glsl");
 	ParticleShader = Shader("particleVertex.glsl", "particleFragment.glsl");
 	SkyboxShader = Shader("SkyboxVertex.glsl", "SkyboxFragment.glsl");
-	
 	cout << "Shaders are created." << endl;
 
-	//Create a base plane
-	Sea = GameObject("Sea", "Models/Plane.obj", true, WaterShader);
-	vector<std::string> faces
-{
-    "Skybox/right.jpg",
-    "Skybox/left.jpg",
-    "Skybox/top.jpg",
-    "Skybox/bottom.jpg",
-    "Skybox/front.jpg",
-    "Skybox/back.jpg"
-};
+	/*-----------------SETUP SHADERS----------------*/
+
+
+
+
+	/*-----------------CREATE ENVIROMENT----------------*/
+
+	//Sea = GameObject("Sea", "Models/Plane.obj", true, WaterShader);
 	Skybox = GameObject("Skybox", "Models/Cube.obj", true, SkyboxShader);
-	Skybox.SetupMesh(GL_TRUE, faces);
-	Sea.SetupMesh(GL_FALSE,vector<string>());
+	//Skybox.SetupMesh(GL_TRUE);
+	//Sea.SetupMesh();
 	cout << "Sea is created." << endl;
-//	Ground = GameObject("Ground", "Models/PlaneLowP.obj", true, BlinnPhongShader);
+ 	Ground = GameObject("Ground", "Models/PlaneLowP.obj", true, BlinnPhongShader);
 	//Ground.SetupMesh();
 	cout << "Ground is created." << endl;
 	//Sea.transform.Translate(vec3(0, -2, 0));
-	/*-----------------SETUP SCENE----------------*/
+
+	/*-----------------CREATE ENVIROMENT----------------*/
 
 
 
+	/*-----------------DEFINE MODEL PATHS----------------*/
 
-	
+	string pathSphere = "Models/Sphere.obj";
+	string pathPlayer = "Models/Human.obj";
+	string pathCar = "Models/Car.obj";
+	string pathDragon = "Models/Dragon.obj";
+	string pathTree = "Models/Tree.obj";
+	string PathDog = "Models/DogN.obj";
+	string PathMonkey = "Models/Monkey.obj";
+	string PathCube = "Models/Cube.obj";
+
+	/*-----------------DEFINE MODEL PATHS----------------*/
 
 
-	string name = "Model";
-	string pathSphere = "Models/Sphere.obj", pathPlayer = "Models/Human.obj", pathCar = "Models/Car.obj",
-		pathDragon="Models/Dragon.obj", pathTree = "Models/Tree.obj", PathDog = "Models/DogN.obj", PathMonkey = "Models/Monkey.obj";
-	//objetin icine file exception ekle.
-
-	
 	GameObject objyn2;
-	for (size_t i = 0; i < (sqrt(Object_SIZE)); i++)
+	for (size_t i = 0; i < (sqrt(OBJECTS_BEGIN_SIZE)); i++)
 	{
-		for (size_t j = 0; j < (sqrt(Object_SIZE)); j++)
+		for (size_t j = 0; j < (sqrt(OBJECTS_BEGIN_SIZE)); j++)
 		{
-			if ((i+j) % 2 == 0)
-				objyn2 = GameObject(name, pathPlayer, GL_TRUE, BlinnPhongShader);
+			string name = "Object_" + to_string(i * sqrt(OBJECTS_BEGIN_SIZE) + j);
+			if ((i + j) % 2 == 0)
+				objyn2 = GameObject(name, PathCube, GL_TRUE, BlinnPhongShader);
 			else
-				objyn2 = GameObject(name, pathPlayer, GL_TRUE, BlinnPhongShader);
-			objyn2.SetupMesh(GL_FALSE,vector<string>());
+				objyn2 = GameObject(name, pathSphere, GL_TRUE, BlinnPhongShader);
+			objyn2.SetupMesh();
 			objyn2.transform.position = vec3(GLfloat(i)*2, 0, GLfloat(j)*2);
 			ObjectsOnScene.push_back(objyn2);
 
 			//can be deleted
-			GLfloat percantage = i * sqrt(Object_SIZE) + j+1;
-			cout << "Model loading : %" << (percantage)*100 / Object_SIZE << endl;
+			GLfloat percantage = i * sqrt(OBJECTS_BEGIN_SIZE) + j+1;
+			cout << "Model loading : %" << (percantage)*100 / OBJECTS_BEGIN_SIZE << endl;
 		}
 		
 		
@@ -171,7 +194,6 @@ void Display(void)
 		glPolygonMode(GL_BACK, GL_FILL);
 	}
 
-	/////
 	if (reflectionIsOn)
 	{
 		glEnable(GL_STENCIL_TEST);
@@ -180,46 +202,47 @@ void Display(void)
 		glDisable(GL_DEPTH_TEST);
 		//////
 		//main_console.Update(mainScene.SelectedObject);
-		Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
-		//Ground.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
+		Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
+		Ground.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
 		glEnable(GL_DEPTH_TEST);
 	
-		for (size_t i = 0; i < Object_SIZE; i++)
+		for (size_t i = 0; i < OBJECTS_BEGIN_SIZE; i++)
 		{
 			//deformdan dolayý kasýyor sureklý -1 scalelý uretmek yerýne en basta yapýlabilir
 			//deform yERINE SCALE FONSKÝYONU
-			ObjectsOnScene.at(i).Deform(vec3(1, -1, 1), 1);
-			ObjectsOnScene.at(i).Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
+			ObjectsOnScene.at(i).BindScaledVertexList();
+			ObjectsOnScene.at(i).Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
 
 		}
-
 		glDisable(GL_STENCIL_TEST);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
+		Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
 		glDisable(GL_BLEND);
 	
 
 
-		for (size_t i = 0; i < Object_SIZE; i++)
+		for (size_t i = 0; i < OBJECTS_BEGIN_SIZE; i++)
 		{
 			ObjectsOnScene.at(i).ResetVertices();
-			ObjectsOnScene.at(i).Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
+			ObjectsOnScene.at(i).Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
 
 		}
 
 	}
 	else {
 		glDisable(GL_BLEND);
-		Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
-		glDepthFunc(GL_LEQUAL);
-		mat4 skyView = LookAt(vec3(-75.0868, 2, -38.2421),vec3(-74.3675f, 2, -37.5474),vec3(0,1,0));
-		Skybox.Draw(skyView, mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
-		glDepthFunc(GL_LESS);
-		//Ground.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
-		//for (size_t i = 0; i < Object_SIZE; i++)
-		//	ObjectsOnScene.at(i).Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position);
+		//Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
+		
+		Ground.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
+		for (size_t i = 0; i < OBJECTS_BEGIN_SIZE; i++)
+			ObjectsOnScene.at(i).Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
 	}
+	
+	glDepthFunc(GL_LEQUAL);
+	mat4 skyView = LookAt(vec3(-75.0868, 2, -38.2421), vec3(-74.3675f, 2, -37.5474), vec3(0, 1, 0));
+	Skybox.Draw(skyView, mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
+	glDepthFunc(GL_LESS);
 
 
 
@@ -240,6 +263,16 @@ void Keyboard(unsigned char key, int x, int y)
 		reflectionIsOn = !reflectionIsOn;
 	if (key == 'l')
 		wireframeMode = !wireframeMode;
+	if (key == '7')
+		mainScene.SelectedObject->SwitchShader(FlatShader);
+	if (key == '8')
+		mainScene.SelectedObject->SwitchShader(ToonShader);
+	if (key == '9')
+		mainScene.SelectedObject->SwitchShader(BlinnPhongShader);
+	if (key == 'n')
+		bumpMapOn = !bumpMapOn;
+
+	
 	inputManager.Process(key,mainScene, ObjectsOnScene, mainLight);
 	
 }

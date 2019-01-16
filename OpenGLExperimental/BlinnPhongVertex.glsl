@@ -3,6 +3,10 @@
 in vec4 vPosition;
 in vec3 vNormal;
 in vec2 vTexture;
+in vec3 vTangent;
+in vec3 vBitangent;
+
+out mat3 TBN;
 out vec3 ViewPos;
 uniform mat4 Model,View,Projection;
 
@@ -36,7 +40,7 @@ void main()
 	Normal = mat3(Model*rZ*rY*rX*inverse(Model)*(inverse(Model))) * vNormal;  
     FragPos=vec3(Model * vec4(vPosition));
 	gl_Position = Projection*View*Model*rZ*rY*rX*inverse(Model)*Model*vPosition;
-
+	TBN=transpose(mat3(vTangent,vBitangent,vNormal));
 
 }
 

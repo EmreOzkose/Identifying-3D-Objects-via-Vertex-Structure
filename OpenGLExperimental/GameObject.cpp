@@ -138,6 +138,8 @@ void GameObject::load_obj(string path, bool includetexandnormals)
 			//std::cout << "Size:" << X << "\t"<<Y<<"\t"<<Z<<"\n";
 			vertex = vec4(strtof((X).c_str(), 0), strtof((Y).c_str(), 0), strtof((Z).c_str(), 0), 1);
 			VertexPositions.push_back(vertex);
+			vertex = vec4(strtof((X).c_str(), 0), -strtof((Y).c_str(), 0), strtof((Z).c_str(), 0), 1);
+			
 
 		}
 	}
@@ -145,16 +147,54 @@ void GameObject::load_obj(string path, bool includetexandnormals)
 	for (size_t i = 0; i < vertexList.size(); i++)
 	{
 		EndVertexPositions.push_back(vertexList.at(i).vertexPosition);
+		vec4 minus_pos = vertexList.at(i).vertexPosition;
+		ScaledVertices.push_back(vec4(minus_pos.x,-minus_pos.y, minus_pos.z, minus_pos.w));
 		EndNormals.push_back(vertexList.at(i).vertexNormal);
 		EndTextureCoordinates.push_back(vertexList.at(i).vertexUV);
 		
+
+		
+
+
+	}
+	for (size_t i = 0; i < vertexList.size(); i+=3)
+	{
+		vec4 & v0 = vertexList[i + 0].vertexPosition;
+		vec4 & v1 = vertexList[i + 1].vertexPosition;
+		vec4 & v2 = vertexList[i + 2].vertexPosition;
+
+		// Shortcuts for UVs
+		vec2 & uv0 = vertexList[i + 0].vertexUV;
+		vec2 & uv1 = vertexList[i + 1].vertexUV;
+		vec2 & uv2 = vertexList[i + 2].vertexUV;
+
+		// Edges of the triangle : position delta
+		vec4 deltaPos1 = v1 - v0;
+		vec4 deltaPos2 = v2 - v0;
+
+		// UV delta
+		vec2 deltaUV1 = uv1 - uv0;
+		vec2 deltaUV2 = uv2 - uv0;
+
+		float r = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
+		vec4 tangent = (deltaPos1 * deltaUV2.y - deltaPos2 * deltaUV1.y)*r;
+		vec4 bitangent = (deltaPos2 * deltaUV1.x - deltaPos1 * deltaUV2.x)*r;
+
+		Tangents.push_back(vec3(tangent.x, tangent.y, tangent.z));
+		Tangents.push_back(vec3(tangent.x, tangent.y, tangent.z));
+		Tangents.push_back(vec3(tangent.x, tangent.y, tangent.z));
+
+		// Same thing for bitangents
+		Bitangents.push_back(vec3(bitangent.x, bitangent.y, bitangent.z));
+		Bitangents.push_back(vec3(bitangent.x, bitangent.y, bitangent.z));
+		Bitangents.push_back(vec3(bitangent.x, bitangent.y, bitangent.z));
 	}
 	for (size_t i = 0; i < AllVertexList.size(); i++)
 		VertexIndices.push_back(AllVertexList.at(i).getIndex(vertexList));
 	
 }
 
-void GameObject::Draw(mat4 view, mat4 pro, GLfloat time, Light *Light, vec3 Camerapos)
+void GameObject::Draw(mat4 view, mat4 pro, GLfloat time, Light Light[4], vec3 Camerapos,GLuint &usebump)
 {
 	shader.Use();
 	Bind(shader.getShaderID());
@@ -169,11 +209,12 @@ void GameObject::Draw(mat4 view, mat4 pro, GLfloat time, Light *Light, vec3 Came
 	mat4 P = pro;
 	glUniformMatrix4fv(shader.getProjectionID(), 1, GL_TRUE, &P[0][0]);
 
-	vec3 lP = Light->transform.position;
-	glUniform3fv(shader.LightPosLocation,1,&lP[0]);
+	vec3 lP[4] = { Light[0].transform.position, Light[1].transform.position, Light[2].transform.position, Light[3].transform.position };
+	glUniform3fv(shader.LightPosLocation,4,lP[0]);
 
-	vec3 coP = Light->l_LightColor;
-	glUniform3fv(shader.LightColorLocation, 1, &coP[0]);
+	vec3 coP[4] = { Light[0].l_LightColor, Light[1].l_LightColor, Light[2].l_LightColor, Light[3].l_LightColor };
+
+	glUniform3fv(shader.LightColorLocation,4, coP[0]);
 
 
 	vec3 cP = Camerapos;
@@ -184,19 +225,22 @@ void GameObject::Draw(mat4 view, mat4 pro, GLfloat time, Light *Light, vec3 Came
 
 	glUniform1i(shader.textureLocation, Texture);
 	glUniform1i(shader.skyboxLocation, Texture);
+	glUniform1i(shader.UseBumpMapLocation, usebump);
 
 	glUniform1f(shader.LocationTime, time);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glDrawElements(GL_TRIANGLES, VertexIndices.size(), GL_UNSIGNED_INT, 0);
 }
 
-void GameObject::SetupMesh(GLboolean Cubemap, vector<string> faces)
+void GameObject::SetupMesh()
 {
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
 	glGenBuffers(1, &VBOtexture);	
 	glGenBuffers(1, &VBOnormal);
+	glGenBuffers(1, &VBOTangent);
+	glGenBuffers(1, &VBOBitangent);
 	glBindVertexArray(VAO);
 
 	
@@ -209,18 +253,22 @@ void GameObject::SetupMesh(GLboolean Cubemap, vector<string> faces)
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, VertexIndices.size() * sizeof(GLuint), &VertexIndices[0], GL_STATIC_DRAW);
 
 	
-	glBindBuffer(GL_ARRAY_BUFFER, VBOtexture);
-	glBufferData(GL_ARRAY_BUFFER, EndTextureCoordinates.size() * sizeof(vec2), &EndTextureCoordinates[0], GL_STATIC_DRAW);
+
 
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBOnormal);
 	glBufferData(GL_ARRAY_BUFFER, EndNormals.size() * sizeof(vec3), &EndNormals[0], GL_STATIC_DRAW);
 
-	if (Cubemap)
-	{
-		Texture=loadCubemap(faces);
-		return;
-	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBOTangent);
+	glBufferData(GL_ARRAY_BUFFER, Tangents.size() * sizeof(vec3), &Tangents[0], GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBOBitangent);
+	glBufferData(GL_ARRAY_BUFFER, Bitangents.size() * sizeof(vec3), &Bitangents[0], GL_STATIC_DRAW);
+
+	
+	glBindBuffer(GL_ARRAY_BUFFER, VBOtexture);
+	glBufferData(GL_ARRAY_BUFFER, EndTextureCoordinates.size() * sizeof(vec2), &EndTextureCoordinates[0], GL_STATIC_DRAW);
 	int width, height, nrChannels;
 	unsigned char *data = stbi_load("tex.jpg", &width, &height, &nrChannels, 0);
 	if (!data)
@@ -244,35 +292,67 @@ void GameObject::SetupMesh(GLboolean Cubemap, vector<string> faces)
 	stbi_image_free(data);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 }
+void GameObject::SetupMesh(GLboolean cubemap)
+{
+	//hardcoded since there is only one skybox.
+	vector<std::string> faces
+	{
+		"Skybox/right.jpg",
+		"Skybox/left.jpg",
+		"Skybox/top.jpg",
+		"Skybox/bottom.jpg",
+		"Skybox/front.jpg",
+		"Skybox/back.jpg"
+	};
 
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
+	glGenBuffers(1, &VBOtexture);
+	glGenBuffers(1, &VBOnormal);
+	glBindVertexArray(VAO);
+
+
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, EndVertexPositions.size() * sizeof(vec4), &EndVertexPositions[0], GL_STATIC_DRAW);
+
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, VertexIndices.size() * sizeof(GLuint), &VertexIndices[0], GL_STATIC_DRAW);
+
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBOtexture);
+	glBufferData(GL_ARRAY_BUFFER, EndTextureCoordinates.size() * sizeof(vec2), &EndTextureCoordinates[0], GL_STATIC_DRAW);
+
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBOnormal);
+	glBufferData(GL_ARRAY_BUFFER, EndNormals.size() * sizeof(vec3), &EndNormals[0], GL_STATIC_DRAW);
+
+	Texture = loadCubemap(faces);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+}
 
 
 void GameObject::Deform(vec3 ScaleModifier,GLfloat deformModifier) {
-	//GLfloat x, y, z, randomize = float(rand() % 10) / 10, cont;
-	//vec4 deformedVertex, normalizedVectorfromOrigin;
-	//DeformedVertices.clear();
-	//deformModifier *= randomize;
-/*	for (size_t i = 0; i < BaseVertices.size(); i++)
+	GLfloat x, y, z, randomize = float(rand() % 10) / 10, cont;
+	vec4 deformedVertex, normalizedVectorfromOrigin;
+	DeformedVertices.clear();
+	deformModifier *= randomize;
+	for (size_t i = 0; i < EndVertexPositions.size(); i++)
 	{
 		cont = rand() % 2;
 		if (cont == 0)
 		{
-			DeformedVertices.push_back(BaseVertices.at(i));
+			DeformedVertices.push_back(EndVertexPositions.at(i));
 			continue;
 		}
 			
-		x = BaseVertices.at(i).x;
-		y = BaseVertices.at(i).y;
-		z = BaseVertices.at(i).z;
+		x = EndVertexPositions.at(i).x;
+		y = EndVertexPositions.at(i).y;
+		z = EndVertexPositions.at(i).z;
 	
-		deformedVertex = BaseVertices.at(i)* ScaleModifier+vec4(Direction(vec3(x, y, z)),0)/10;
-		//cout << deformedVertex << "\n";
-		DeformedVertices.push_back(deformedVertex);
-	}*/
-
-	for (size_t i = 0; i < VertexPositions.size(); i++)
-	{
-		vec4 deformedVertex = vec4 (VertexPositions.at(i).x*ScaleModifier.x, VertexPositions.at(i).y*ScaleModifier.y, VertexPositions.at(i).z*ScaleModifier.z, VertexPositions.at(i).w);
+		deformedVertex = EndVertexPositions.at(i)* ScaleModifier+vec4(Direction(vec3(x, y, z)),0)/10;
 		DeformedVertices.push_back(deformedVertex);
 	}
 	glBindVertexArray(VAO);
@@ -303,24 +383,49 @@ void GameObject::Bind(GLuint program)
 	glBindAttribLocation(program, vN, "vNormal");
 
 
+
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBOTangent);
+	GLuint attr2 = glGetAttribLocation(program, "vTangent");
+	glEnableVertexAttribArray(attr2);
+	glVertexAttribPointer(attr2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glBindAttribLocation(program, attr2, "vTangent");
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBOBitangent);
+	GLuint attr3 = glGetAttribLocation(program, "vBitangent");
+	glEnableVertexAttribArray(attr3);
+	glVertexAttribPointer(attr3, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glBindAttribLocation(program, attr3, "vBitangent");
+
+
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	GLuint attr = glGetAttribLocation(program, "vPosition");
 	glEnableVertexAttribArray(attr);
 	glVertexAttribPointer(attr, 4, GL_FLOAT, GL_FALSE, 0, 0);
 	glBindAttribLocation(program, attr, "vPosition");
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
+}
+void GameObject::BindScaledVertexList()
+{
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, ScaledVertices.size() * sizeof(vec4), &ScaledVertices[0], GL_STATIC_DRAW);
 }
 void GameObject::PrintRandomVertex()
 {
-	//int a = rand() % BaseVertices.size();
-	//cout << "Random Vertex: " << BaseVertices.at(a) << "\n";
+	 int a = rand() % VertexPositions.size();
+	 cout << "Random Vertex: " << VertexPositions.at(a) << "\n";
 }
 void GameObject::ResetVertices()
 {
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, VertexPositions.size() * sizeof(vec4), &VertexPositions[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, EndVertexPositions.size() * sizeof(vec4), &EndVertexPositions[0], GL_STATIC_DRAW);
+}
+
+void GameObject::SwitchShader(Shader &shader)
+{
+	this -> shader = shader;
 }
 
 vector<string> split(string strToSplit, char delimeter)
@@ -340,7 +445,6 @@ GLfloat LengthofVec(vec4 vect)
 }
 vec3 Direction(vec3 vect)
 {
-	//cout << vect / LengthofVec(vect) << "\n";
 	return (vect/ LengthofVec(vect));
 }
 GLuint GameObject:: loadCubemap(vector<string> faces)
