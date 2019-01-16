@@ -175,5 +175,11 @@
     <None Include="WaterVertex.glsl">
       <Filter>Source Files\Shaders</Filter>
     </None>
+    <None Include="SkyboxVertex.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="SkyboxFragment.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

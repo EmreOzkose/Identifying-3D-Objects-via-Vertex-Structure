@@ -6,7 +6,7 @@ in vec3 LightDir;
 out vec4 fColor;
 int slices=5;
 
-uniform vec3 LightColor;
+uniform vec3 LightColor[4];
 void main(){
 
 	vec4 ObjectColor=vec4(1,1,1,1);
@@ -28,5 +28,5 @@ void main(){
 		color=vec4(.1,.1,.1,1);
 
 
-		fColor=color*vec4(LightColor,1)+ambientIntensity*color;
+		fColor=color*vec4(LightColor[0],1)+ambientIntensity*color;
 }

@@ -7,7 +7,8 @@ public:
 	Camera() : Object() {
 		transform.position = vec3(0,0,-10);
 	}
-	void Refresh();
+	void Refresh(); 
+	mat4 ViewMatrix(GLboolean sky);
 	mat4 ViewMatrix();
 	mat4 ProjectionMatrix();
 	vec4 eye = transform.position ,at = vec4(0,0,0,0);
@@ -20,7 +21,7 @@ public:
 
 	GLfloat yaw=0, pitch=0;
 	//cam forward = transform forward
-	vec3 camForward, camRight, camUp;
+	vec3 camForward=vec3(0), camRight = vec3(0), camUp = vec3(0);
 	void Debug();
 private:
 	string str = "MainCamera";

@@ -35,6 +35,10 @@ void Shader::Load(string vertexPath, string fragmentPath)
 	ProjectionID = glGetUniformLocation(program, "Projection");
 	RotationLocation = glGetUniformLocation(program, "rotationVector");
 	textureLocation = glGetUniformLocation(program, "tex");
+	skyboxLocation = glGetUniformLocation(program, "Skybox");
+	UseBumpMapLocation = glGetUniformLocation(program, "useBump");
+	
+	
 	sID = program;
 }
 

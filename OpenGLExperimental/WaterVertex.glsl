@@ -1,10 +1,10 @@
 #version 330 core
 
 in vec4 vPosition;
-
+in vec2 vTexture;
 uniform mat4 Model,View,Projection;
 uniform float time;
-
+out vec2 vCoords;
 out vec3 ViewPos;
  flat out vec3 Normal;
 flat out vec3 FragPos;
@@ -20,7 +20,7 @@ void main()
 	Normal = mat3((inverse(Model))) * normal;  
     FragPos=vec3(Model * vec4(vPosition));
 	gl_Position = Projection*View*Model*pos;
-
+	vCoords=vTexture;
 
 }
 float rand(vec2 co){

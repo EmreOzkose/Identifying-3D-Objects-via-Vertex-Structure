@@ -1,6 +1,6 @@
 #version 330 core
 uniform mat4 Model,View,Projection;
-uniform vec3 LightPos;
+uniform vec3 LightPos[4]; 
 
 in vec4 vPosition;
 in vec3 vNormal;
@@ -28,7 +28,7 @@ uniform vec3 rotationVector;
 
 void main(){
 
-	LightDir=normalize(LightPos.xyz);
+	LightDir=normalize(LightPos[0].xyz);
 Normal = mat3(Model*rZ*rY*rX*inverse(Model)*(inverse(Model))) * vNormal;  
 
 	gl_Position = Projection*View*Model*rZ*rY*rX*inverse(Model)*Model*vPosition;

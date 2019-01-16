@@ -18,6 +18,8 @@ public:
 		ChangeIntensity(intensity);
 		ChangeAmbientIntensity(ambientIntensity);
 	}
+	Light(){
+	}
 
 };
 
