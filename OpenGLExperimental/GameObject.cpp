@@ -235,8 +235,16 @@ void GameObject::Draw(mat4 view, mat4 pro, GLfloat time, Light Light[4], vec3 Ca
 	glUniform3fv(shader.LightPosLocation,4,lP[0]);
 
 	vec3 coP[4] = { Light[0].l_LightColor, Light[1].l_LightColor, Light[2].l_LightColor, Light[3].l_LightColor };
-
 	glUniform3fv(shader.LightColorLocation,4, coP[0]);
+
+	vec3 lcI[4] = { Light[0].l_Intensity, Light[1].l_Intensity, Light[2].l_Intensity, Light[3].l_Intensity };
+	glUniform3fv(shader.LightIntensityLocation, 4, lcI[0]);
+
+	vec3 lcaI[4] = { Light[0].l_AmbientStrenght, Light[1].l_AmbientStrenght, Light[2].l_AmbientStrenght, Light[3].l_AmbientStrenght };
+	glUniform3fv(shader.LightAmbientIntensityLocation, 4, lcaI[0]);
+
+	vec3 lcA[4] = { Light[0].l_AmbientColor, Light[1].l_AmbientColor, Light[2].l_AmbientColor, Light[3].l_AmbientColor };
+	glUniform3fv(shader.LightAmbientLocation, 4, lcA[0]);
 
 
 	vec3 cP = Camerapos;

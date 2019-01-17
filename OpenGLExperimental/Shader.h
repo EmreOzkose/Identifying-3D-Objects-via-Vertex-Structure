@@ -28,7 +28,8 @@ public:
 	}Shader() {
 	}
 
-	GLuint LocationTime, LightPosLocation, CameraPosLocation, LightColorLocation,RotationLocation,
+	GLuint LocationTime, LightPosLocation, CameraPosLocation, LightColorLocation, LightIntensityLocation,LightAmbientLocation
+		,LightAmbientIntensityLocation,RotationLocation,
 		textureLocation,normalMapLocation,skyboxLocation,UseBumpMapLocation;
 	GLuint sID,ProjectionID,ModelID,ViewID;
 };

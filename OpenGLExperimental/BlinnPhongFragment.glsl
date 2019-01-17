@@ -10,6 +10,12 @@ in mat3 rotationModel;
 
 uniform vec3 LightPos[4]; 
 uniform vec3 LightColor[4]; 
+uniform vec3 LightIntensity[4]; 
+uniform vec3 LightAmbient[4]; 
+uniform vec3 LightAmbientIntensity[4]; 
+
+
+
 uniform sampler2D Texture,NormalMap;
 uniform int useBump;
 void main()
@@ -21,8 +27,7 @@ void main()
 
     for(int i=0;i<4;i++)
     {
-		float ambientStrength = 0.1;
-		ambient += ambientStrength * LightColor[i];
+		ambient += LightAmbientIntensity[i] * LightAmbient[i];
   	
 		
 		
@@ -43,7 +48,7 @@ void main()
 	
 
 			float Kd = max(dot(L, TextureNormal_tangentspace), 0.0);
-			diffuse += Kd * LightColor[i] *attenuation;
+			diffuse += Kd * LightColor[i] *attenuation*LightIntensity[i];
     
 
 			float Ks = pow(max(dot(TextureNormal_tangentspace, H), 0.0), 32);
@@ -59,7 +64,7 @@ void main()
 			vec3 H = normalize( L + V );  
 	
 			float Kd = max(dot(L, N), 0.0);
-			diffuse += Kd * LightColor[i] *attenuation;
+			diffuse += Kd * LightColor[i] *attenuation*LightIntensity[i];
     
 
 			float Ks = pow(max(dot(N, H), 0.0), 32);

@@ -58,27 +58,49 @@ int main(int argc, char **argv) {
 	mainScene.Init(argc,argv);
 	unsigned int Mode= GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE |GLUT_STENCIL;
 	mainWindow=mainScene.SetupWindow(Mode,vec2(0,0),vec2(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_NAME);
+
+	/*-----------------SETUP SCENE----------------*/
+
+
+
+
+
+
+	/*-----------------SETUP CONSOLE----------------*/
+
 	main_console = Console(mainWindow);
 	main_console.SetupConsole();
 
-	mainLight[0] = mainScene.CreateMainLight(vec3(1), vec3(0, 0, 1), 2, 0.4f);
-	mainLight[0].transform.position=vec3(0, 60, 0);
+	/*-----------------SETUP CONSOLE----------------*/
 
-	mainLight[1] = mainScene.CreateMainLight(vec3(0,0,0), vec3(0, 0, 1), 2, 0.4f);
+
+
+
+
+
+
+	/*-----------------SETUP LIGHTS----------------*/
+
+
+	mainLight[0] = mainScene.CreateMainLight(vec3(1), vec3(0, 0, 1), 2, 0.1f);
+	mainLight[0].transform.position=vec3(20, 60, 20);
+
+	mainLight[1] = mainScene.CreateMainLight(vec3(0,1,0), vec3(0), 2, 0.4f);
 	mainLight[1].transform.position = vec3(-20, 60, -20);
 
-	mainLight[2] = mainScene.CreateMainLight(vec3(0,0,0), vec3(0, 0, 1), 2, 0.4f);
+	mainLight[2] = mainScene.CreateMainLight(vec3(0,0,1), vec3(0), 2, 0.4f);
 	mainLight[2].transform.position = vec3(-20, -60, 20);
 
-	mainLight[3] = mainScene.CreateMainLight(vec3(0,0,0), vec3(0, 0, 1), 2, 0.4f);
+	mainLight[3] = mainScene.CreateMainLight(vec3(1,0,0), vec3(0), 2, 0.4f);
 	mainLight[3].transform.position = vec3(20, -60, -20);
-
-		
-	
-	mainLight->transform.position = vec3(10,30,4);
 	cout << "Scene and Light created." << endl;
+	/*-----------------SETUP LIGHTS----------------*/
 
-	/*-----------------SETUP SCENE----------------*/
+
+	
+	
+
+	
 
 
 
@@ -99,10 +121,10 @@ int main(int argc, char **argv) {
 
 	/*-----------------CREATE ENVIROMENT----------------*/
 
-	Sea = GameObject("Sea", "Models/Plane.obj", true, WaterShader);
+	//Sea = GameObject("Sea", "Models/Plane.obj", true, WaterShader);
 	Skybox = GameObject("Skybox", "Models/Cube.obj", true, SkyboxShader);
 	Skybox.SetupMesh(GL_TRUE);
-	Sea.SetupMesh();
+	//Sea.SetupMesh();
 	cout << "Sea is created." << endl;
  	Ground = GameObject("Ground", "Models/Ground.obj", true, BlinnPhongShader);
 	Ground.SetupMesh();
@@ -127,6 +149,47 @@ int main(int argc, char **argv) {
 	/*-----------------DEFINE MODEL PATHS----------------*/
 
 
+
+	/*-----------------DEFINE TEXTURE PATHS----------------*/
+
+	string albedo_01 = "Textures/Albedo_01.jpg";
+	string normal_01 = "Textures/Albedo_01_NRM.jpg";
+	string albedo_02 = "Textures/Albedo_02.jpg";
+	string normal_02 = "Textures/Albedo_02_NRM.jpg";
+	string albedo_03 = "Textures/Albedo_03.jpg";
+	string normal_03 = "Textures/Albedo_03_NRM.jpg";
+	string albedo_04 = "Textures/Albedo_04.jpg";
+	string normal_04 = "Textures/Albedo_04_NRM.jpg";
+	string albedo_05 = "Textures/Albedo_05.jpg";
+	string normal_05 = "Textures/Albedo_05_NRM.jpg";
+	string albedo_06 = "Textures/Albedo_06.jpg";
+	string normal_06 = "Textures/Albedo_06_NRM.jpg";
+	string albedo_07 = "Textures/Albedo_07.jpg";
+	string normal_07 = "Textures/Albedo_07_NRM.jpg";
+	string albedo_08 = "Textures/Albedo_08.jpg";
+	string normal_08 = "Textures/Albedo_08_NRM.jpg";
+	string albedo_09 = "Textures/Albedo_09.jpg";
+	string normal_09 = "Textures/Albedo_09_NRM.jpg";
+
+
+	/*-----------------DEFINE TEXTURE PATHS----------------*/
+
+
+
+	/*-----------------CREATE MATERIALS----------------*/
+
+	Material material_red     = Material(vec3(1, 0, 0), vec3(1, 1, 1), 32);
+	Material material_green   = Material(vec3(0, 1, 0), vec3(1, 1, 1), 32);
+	Material material_black   = Material(vec3(0, 0, 0), vec3(1, 1, 1), 32);
+	Material material_white   = Material(vec3(1, 1, 1), vec3(1, 1, 1), 32);
+	Material material_blue    = Material(vec3(0, 0, 1), vec3(1, 1, 1), 32);
+	Material material_yellow  = Material(vec3(1, 1, 0), vec3(1, 1, 1), 32);
+	Material material_magenta = Material(vec3(1, 0, 1), vec3(1, 1, 1), 32);
+	Material material_cyan    = Material(vec3(0, 1, 1), vec3(1, 1, 1), 32);
+
+	/*-----------------CREATE MATERIALS----------------*/
+
+
 	GameObject objyn2;
 	for (size_t i = 0; i < (sqrt(OBJECTS_BEGIN_SIZE)); i++)
 	{
@@ -134,9 +197,9 @@ int main(int argc, char **argv) {
 		{
 			string name = "Object_" + to_string(i * sqrt(OBJECTS_BEGIN_SIZE) + j);
 			if ((i + j) % 2 == 0)
-				objyn2 = GameObject(name, pathSphere, GL_TRUE, BlinnPhongShader);
+				objyn2 = GameObject(name, PathDog, GL_TRUE, ToonShader);
 			else
-				objyn2 = GameObject(name, PathCube, GL_TRUE, BlinnPhongShader);
+				objyn2 = GameObject(name, PathDog, GL_TRUE, FlatShader);
 			objyn2.SetupMesh();
 			objyn2.transform.position = vec3(GLfloat(i)*2, 0, GLfloat(j)*2);
 			ObjectsOnScene.push_back(objyn2);
@@ -240,7 +303,7 @@ void Display(void)
 	}
 	
 	glDepthFunc(GL_LEQUAL);
-	mat4 skyView = LookAt(vec3(-75.0868, 2, -38.2421), vec3(-74.3675f, 2, -37.5474), vec3(0, 1, 0));
+	mat4 skyView = LookAt(vec3(-0.000281734, 5.99632, -2.02086), vec3(0.0169055, 6.16997, -1.0362), vec3(0, 1, 0));
 	Skybox.Draw(skyView, mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
 	glDepthFunc(GL_LESS);
 
@@ -264,11 +327,11 @@ void Keyboard(unsigned char key, int x, int y)
 	if (key == 'l')
 		wireframeMode = !wireframeMode;
 	if (key == '7')
-		mainScene.SelectedObject->SwitchShader(FlatShader);
+		mainLight[0].l_Intensity-=.1f;
 	if (key == '8')
-		mainScene.SelectedObject->SwitchShader(ToonShader);
+		mainLight[0].l_Intensity += .1f;
 	if (key == '9')
-		mainScene.SelectedObject->SwitchShader(BlinnPhongShader);
+		mainLight[0].l_AmbientStrenght += .01f;
 	if (key == 'n')
 		bumpMapOn = !bumpMapOn;
 

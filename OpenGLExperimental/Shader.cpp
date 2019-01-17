@@ -37,8 +37,11 @@ void Shader::Load(string vertexPath, string fragmentPath)
 	textureLocation = glGetUniformLocation(program, "Texture");
 	skyboxLocation = glGetUniformLocation(program, "Skybox");
 	UseBumpMapLocation = glGetUniformLocation(program, "useBump");
-	normalMapLocation= glGetUniformLocation(program, "NormalMap");
-	
+	normalMapLocation = glGetUniformLocation(program, "NormalMap");
+	LightAmbientIntensityLocation = glGetUniformLocation(program, "LightAmbientIntensity");
+	LightAmbientLocation = glGetUniformLocation(program, "LightAmbient");
+	LightIntensityLocation = glGetUniformLocation(program, "LightIntensity");
+		
 	sID = program;
 }
 
