@@ -199,9 +199,9 @@ int main(int argc, char **argv) {
 		{
 			string name = "Object_" + to_string(i * sqrt(OBJECTS_BEGIN_SIZE) + j);
 			if ((i + j) % 2 == 0)
-				objyn2 = GameObject(name, PathDog, BlinnPhongShader, material_red);
+				objyn2 = GameObject(name, PathDog, ToonShader, material_red);
 			else
-				objyn2 = GameObject(name, PathDog, BlinnPhongShader, material_cyan);
+				objyn2 = GameObject(name, PathDog, FlatShader, material_cyan);
 			objyn2.SetupMesh();
 			objyn2.transform.position = vec3(GLfloat(i)*2, 0, GLfloat(j)*2);
 			ObjectsOnScene.push_back(objyn2);
@@ -327,7 +327,7 @@ void Keyboard(unsigned char key, int x, int y)
 	if (key == 'l')
 		wireframeMode = !wireframeMode;
 	if (key == '7')
-		mainScene.SelectedObject->go_material.ChangeColor(vec3(.3f,.5f,.7f));
+		mainScene.SelectedObject->go_material.ChangeSpecular(vec3(0.1,1,.1));
 
 	if (key == '8')
 		mainScene.SelectedObject->go_material.m_Smoothness += 1;

@@ -12,6 +12,9 @@ uniform vec3 LightColor[4];
 uniform vec3 LightIntensity[4]; 
 uniform vec3 LightAmbient[4]; 
 uniform vec3 LightAmbientIntensity[4]; 
+uniform vec3 ObjectColor;
+uniform vec3 SpecularColor;
+uniform float Smoothness;
 
 uniform vec3 rotationVector;
 	mat4 rX = mat4(1.0,0.0,0.0,0.0,
@@ -47,11 +50,11 @@ void main()
 			vec3 H = normalize( L + V );  
 	
 			float Kd = max(dot(L, N), 0.0);
-			diffuse += Kd * LightColor[i] *attenuation*LightIntensity[i];
+			diffuse += Kd * LightColor[i] *attenuation*LightIntensity[i]*ObjectColor;
     
 
-			float Ks = pow(max(dot(N, H), 0.0), 32);
-			specular += Ks * vec3(1,1,1)*attenuation;  
+			float Ks = pow(max(dot(N, H), 0.0), Smoothness);
+			specular += Ks * SpecularColor*attenuation;  
 
 			ambient += LightAmbientIntensity[i] * LightAmbient[i];
 	}

@@ -6,10 +6,16 @@ in vec3 LightDir;
 out vec4 fColor;
 int slices=5;
 
+
+uniform vec3 ObjectColor;
+uniform vec3 SpecularColor;
+uniform float Smoothness;
+
+
+
 uniform vec3 LightColor[4];
 void main(){
 
-	vec4 ObjectColor=vec4(1,1,1,1);
 	vec3 N=normalize(Normal);
 	float intensity=max(dot(LightDir,N),0.0);
 	vec4 color;
@@ -28,5 +34,5 @@ void main(){
 		color=vec4(.1,.1,.1,1);
 
 
-		fColor=color*vec4(LightColor[0],1)+ambientIntensity*color;
+		fColor=color*vec4(LightColor[0],1)*ObjectColor+ambientIntensity*color;
 }
