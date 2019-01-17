@@ -41,6 +41,8 @@
 	void Mouse(int x, int y);
 	void Timer(int value);
 	void Idle();
+	void DrawEnviroment();
+	void DrawSkybox();
 	void ExportVertices(vector<GameObject> arr, GLuint times);
 	/*-----------------DEFINITIONS----------------*/
 
@@ -245,7 +247,7 @@ int main(int argc, char **argv) {
 void Display(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); //clear the color buffer and the depth buffer
-	mainScene.MainCamera.Refresh();
+	mainScene.MainCamera.Refresh(*mainScene.SelectedObject);
 	
 	if (wireframeMode)
 	{
@@ -265,8 +267,8 @@ void Display(void)
 		glDisable(GL_DEPTH_TEST);
 		//////
 		//main_console.Update(mainScene.SelectedObject);
-		Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
-		Ground.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
+		DrawEnviroment();
+		
 		glEnable(GL_DEPTH_TEST);
 	
 		for (size_t i = 0; i < OBJECTS_BEGIN_SIZE; i++)
@@ -280,7 +282,8 @@ void Display(void)
 		glDisable(GL_STENCIL_TEST);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
+		DrawEnviroment();
+		//Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
 		glDisable(GL_BLEND);
 	
 
@@ -295,17 +298,14 @@ void Display(void)
 	}
 	else {
 		glDisable(GL_BLEND);
-	//	Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
-		
+		//	Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
+		DrawEnviroment();
 		//Ground.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
 		for (size_t i = 0; i < OBJECTS_BEGIN_SIZE; i++)
 			ObjectsOnScene.at(i).Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
 	}
+	DrawSkybox();
 	
-	glDepthFunc(GL_LEQUAL);
-	mat4 skyView = LookAt(vec3(-0.000281734, 5.99632, -2.02086), vec3(0.0169055, 6.16997, -1.0362), vec3(0, 1, 0));
-	Skybox.Draw(skyView, mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
-	glDepthFunc(GL_LESS);
 
 
 
@@ -327,12 +327,10 @@ void Keyboard(unsigned char key, int x, int y)
 	if (key == 'l')
 		wireframeMode = !wireframeMode;
 	if (key == '7')
-		for (size_t i = 0; i < OBJECTS_BEGIN_SIZE; i++)
-			ObjectsOnScene.at(i).ResetShader();
+		mainScene.SelectedObject->transform.Translate(vec3(0,1,0)* 0.02f);
 
 	if (key == '8')
-		for (size_t i = 0; i < OBJECTS_BEGIN_SIZE; i++)
-			ObjectsOnScene.at(i).SwitchShader(FlatShader);
+		mainScene.SelectedObject->transform.Translate(vec3(1, 0, 1) *0.02f);
 		
 	if (key == '9')
 		for (size_t i = 0; i < OBJECTS_BEGIN_SIZE; i++)
@@ -419,5 +417,19 @@ void ExportVertices(vector<GameObject> arr,GLuint times)
 		outfile.close();
 		
 	}*/
+}
+
+void DrawEnviroment()
+{
+	Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
+	Ground.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
+}
+void DrawSkybox()
+{
+	glDepthFunc(GL_LEQUAL);
+	mat4 skyView = LookAt(vec3(-0.000281734, 5.99632, -2.02086), vec3(0.0169055, 6.16997, -1.0362), vec3(0, 1, 0));
+	Skybox.Draw(skyView, mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
+	glDepthFunc(GL_LESS);
+
 }
 

@@ -1,8 +1,7 @@
 #pragma once
 #include "Camera.h"
-
 vec4 Lerp(vec4 from, vec4 to, GLfloat delta);
-void Camera::Refresh()
+void Camera::Refresh(GameObject &s)
 {
 
 
@@ -22,16 +21,35 @@ void Camera::Refresh()
 	camUp = cross(camRight, camForward);
 	camUp = normalize(-camUp);
 
-	eye = Lerp(eye, transform.position, 0.02f);
-	at = eye + camForward;
-	at.w = 1;
+	
+
+	if (physical_mode==Cameramode::FreeCamera)
+	{
+		at = eye + camForward;
+		at.w = 1;
+		eye = Lerp(eye, transform.position, 0.02f);
+	}
+	else if (physical_mode == Cameramode::LookAtCamera)
+	{
+		at = s.transform.position;
+		at.w = 1;
+		eye = Lerp(eye, transform.position, 0.02f);
+	}
+	else if (physical_mode == Cameramode::FollowCamera)
+	{
+		at = s.transform.position;
+		at.w = 1;
+		transform.position = vec3(at.x,at.y,at.z) + followOffset;
+		eye = Lerp(eye, transform.position, 0.005f);
+	}
+	
 	//eye = transform.position
 }
 
 mat4 Camera::ProjectionMatrix()
 {
 	//matrix interpolation
-	if (mode == ProjectionMode::PerspectiveMode)
+	if (projection_mode == ProjectionMode::PerspectiveMode)
 		return Perspective(FOV, aspect, CameraNear, CameraFar);
 	else
 		return Ortho(-1,1,-1,1, CameraNear, CameraFar);
