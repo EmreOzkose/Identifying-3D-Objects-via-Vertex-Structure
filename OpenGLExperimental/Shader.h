@@ -29,6 +29,6 @@ public:
 	}
 
 	GLuint LocationTime, LightPosLocation, CameraPosLocation, LightColorLocation,RotationLocation,
-		textureLocation,skyboxLocation,UseBumpMapLocation;
+		textureLocation,normalMapLocation,skyboxLocation,UseBumpMapLocation;
 	GLuint sID,ProjectionID,ModelID,ViewID;
 };

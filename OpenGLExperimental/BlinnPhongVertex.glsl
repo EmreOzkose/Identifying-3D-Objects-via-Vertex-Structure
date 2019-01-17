@@ -1,20 +1,26 @@
 #version 330 core
 
+
+//vertex attributes
 in vec4 vPosition;
 in vec3 vNormal;
 in vec2 vTexture;
 in vec3 vTangent;
 in vec3 vBitangent;
 
-out mat3 TBN;
-out vec3 ViewPos;
-uniform mat4 Model,View,Projection;
 
+//data to send fragments
+out mat3 TBN;
+out mat3 rotationModel;
 out vec3 Normal;
 out vec3 FragPos;
 out vec2 vCoords;
 
+
+
 uniform vec3 rotationVector;
+uniform mat4 Model,View,Projection;
+
 	//x/y/z
 	mat4 rX = mat4(1.0,0.0,0.0,0.0,
 				    0.0,cos(radians(rotationVector.x)),sin(radians(rotationVector.x)),0.0,
@@ -34,13 +40,22 @@ uniform vec3 rotationVector;
 
 void main()
 {
-	
+
+ 
+	//vertex uv
 	vCoords=vTexture;
-	//normal+=vec3(0,pos.y,0);
-	Normal = mat3(Model*rZ*rY*rX*inverse(Model)*(inverse(Model))) * vNormal;  
+
+	//calculate tangent space matrix
+	TBN=transpose(mat3(vTangent,vBitangent,vNormal));
+
+	//calculate vertex normal with rotation applied
+	rotationModel=mat3(Model*rZ*rY*rX*inverse(Model));
+	Normal = mat3(Model*rZ*rY*rX*inverse(Model)*(inverse(Model))) * vNormal;
+
+
     FragPos=vec3(Model * vec4(vPosition));
 	gl_Position = Projection*View*Model*rZ*rY*rX*inverse(Model)*Model*vPosition;
-	TBN=transpose(mat3(vTangent,vBitangent,vNormal));
+	
 
 }
 

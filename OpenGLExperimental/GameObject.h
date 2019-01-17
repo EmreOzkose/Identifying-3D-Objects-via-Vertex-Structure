@@ -24,7 +24,7 @@ public:
 	void SwitchShader(Shader &shader);
 	GLuint loadCubemap(vector<string> faces);
 	//remove useshader func and add a shader class
-	GLuint VAO, VBO, EBO,Texture,VBOtexture, VBOnormal,VBOTangent,VBOBitangent;
+	GLuint VAO, VBO, EBO,Texture,NormalMap,VBOtexture, VBOnormal,VBOTangent,VBOBitangent;
 
 	Shader shader;
 	string  texturePath;
@@ -35,7 +35,7 @@ public:
 	vector<vec2> TextureCoordinates;
 
 	vector<vec4> EndVertexPositions;
-	vector<vec3> EndNormals;
+	vector<vec3> EndNormals,EndTangents,EndBitangents;
 	vector<vec2> EndTextureCoordinates;
 
 	vector<vec3> Tangents,Bitangents;

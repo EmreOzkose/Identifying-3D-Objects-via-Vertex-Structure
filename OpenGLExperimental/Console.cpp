@@ -8,7 +8,6 @@ void Console::SetupConsole()
 	new GLUI_StaticText(glui_v_subwindow, "OpenGL Experimental\n");
 	new GLUI_Separator(glui_v_subwindow);
 
-	glui_v_panel_parameters = new GLUI_Panel(glui_v_subwindow, "Parameters", GLUI_PANEL_EMBOSSED);
 
 
 	new GLUI_StaticText(glui_v_subwindow, "Press ESC to exit\n");

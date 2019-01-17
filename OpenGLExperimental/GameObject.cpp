@@ -116,6 +116,45 @@ void GameObject::load_obj(string path, bool includetexandnormals)
 			V3.vIndex = cv; V3.vStr = Z;
 			V3.tIndex = ct; V3.tStr = ZT;
 
+
+			vec4 & v0 = V1.vertexPosition;
+			vec4 & v1 = V2.vertexPosition;
+			vec4 & v2 = V3.vertexPosition;
+
+			// Shortcuts for UVs
+			vec2 & uv0 = V1.vertexUV;
+			vec2 & uv1 = V2.vertexUV;
+			vec2 & uv2 = V3.vertexUV;
+
+			// Edges of the triangle : position delta
+			vec4 deltaPos1 = v1 - v0;
+			vec4 deltaPos2 = v2 - v0;
+
+			// UV delta
+			vec2 deltaUV1 = uv1 - uv0;
+			vec2 deltaUV2 = uv2 - uv0;
+
+			float r = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
+			vec4 tangent = (deltaPos1 * deltaUV2.y - deltaPos2 * deltaUV1.y)*r;
+			vec4 bitangent = (deltaPos2 * deltaUV1.x - deltaPos1 * deltaUV2.x)*r;
+
+			Tangents.push_back(vec3(tangent.x, tangent.y, tangent.z));
+			Tangents.push_back(vec3(tangent.x, tangent.y, tangent.z));
+			Tangents.push_back(vec3(tangent.x, tangent.y, tangent.z));
+
+			// Same thing for bitangents
+			Bitangents.push_back(vec3(bitangent.x, bitangent.y, bitangent.z));
+			Bitangents.push_back(vec3(bitangent.x, bitangent.y, bitangent.z));
+			Bitangents.push_back(vec3(bitangent.x, bitangent.y, bitangent.z));
+
+			V1.vertexBitangent = vec3(bitangent.x, bitangent.y, bitangent.z);
+			V2.vertexBitangent = vec3(bitangent.x, bitangent.y, bitangent.z);
+			V3.vertexBitangent = vec3(bitangent.x, bitangent.y, bitangent.z);
+
+			V1.vertexTangent = vec3(tangent.x, tangent.y, tangent.z);
+			V2.vertexTangent = vec3(tangent.x, tangent.y, tangent.z);
+			V3.vertexTangent = vec3(tangent.x, tangent.y, tangent.z);
+
 			if (V1.Check(vertexList) == -1)
 				vertexList.push_back(V1);
 			if (V2.Check(vertexList) == -1)
@@ -125,6 +164,7 @@ void GameObject::load_obj(string path, bool includetexandnormals)
 			AllVertexList.push_back(V1);
 			AllVertexList.push_back(V2);
 			AllVertexList.push_back(V3);
+
 
 		}
 		else if (line[0] == 'v')
@@ -146,49 +186,31 @@ void GameObject::load_obj(string path, bool includetexandnormals)
 	
 	for (size_t i = 0; i < vertexList.size(); i++)
 	{
-		EndVertexPositions.push_back(vertexList.at(i).vertexPosition);
-		vec4 minus_pos = vertexList.at(i).vertexPosition;
-		ScaledVertices.push_back(vec4(minus_pos.x,-minus_pos.y, minus_pos.z, minus_pos.w));
-		EndNormals.push_back(vertexList.at(i).vertexNormal);
-		EndTextureCoordinates.push_back(vertexList.at(i).vertexUV);
-		
+		vec3 n = vertexList.at(i).vertexNormal;
+		vec4 v = vertexList.at(i).vertexPosition;
+		vec2 uv = vertexList.at(i).vertexUV;
+		vec3 t = vertexList.at(i).vertexTangent;
+		vec3 bt= vertexList.at(i).vertexBitangent;
 
+		EndVertexPositions.push_back(v);
+		ScaledVertices.push_back(vec4(v.x,-v.y, v.z, v.w));
+		EndNormals.push_back(n);
+		EndTextureCoordinates.push_back(uv);
 		
+		EndTangents.push_back(normalize(t - n * dot(n, t)));
+		EndBitangents.push_back(bt);
 
 
 	}
-	for (size_t i = 0; i < vertexList.size(); i+=3)
+	
+	cout << "Tangents :"<<Tangents.size() << endl;
+	cout << "EndTangents :" << EndTangents.size() << endl;
+	for (size_t i = 0; i < Tangents.size(); i++)
 	{
-		vec4 & v0 = vertexList[i + 0].vertexPosition;
-		vec4 & v1 = vertexList[i + 1].vertexPosition;
-		vec4 & v2 = vertexList[i + 2].vertexPosition;
-
-		// Shortcuts for UVs
-		vec2 & uv0 = vertexList[i + 0].vertexUV;
-		vec2 & uv1 = vertexList[i + 1].vertexUV;
-		vec2 & uv2 = vertexList[i + 2].vertexUV;
-
-		// Edges of the triangle : position delta
-		vec4 deltaPos1 = v1 - v0;
-		vec4 deltaPos2 = v2 - v0;
-
-		// UV delta
-		vec2 deltaUV1 = uv1 - uv0;
-		vec2 deltaUV2 = uv2 - uv0;
-
-		float r = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
-		vec4 tangent = (deltaPos1 * deltaUV2.y - deltaPos2 * deltaUV1.y)*r;
-		vec4 bitangent = (deltaPos2 * deltaUV1.x - deltaPos1 * deltaUV2.x)*r;
-
-		Tangents.push_back(vec3(tangent.x, tangent.y, tangent.z));
-		Tangents.push_back(vec3(tangent.x, tangent.y, tangent.z));
-		Tangents.push_back(vec3(tangent.x, tangent.y, tangent.z));
-
-		// Same thing for bitangents
-		Bitangents.push_back(vec3(bitangent.x, bitangent.y, bitangent.z));
-		Bitangents.push_back(vec3(bitangent.x, bitangent.y, bitangent.z));
-		Bitangents.push_back(vec3(bitangent.x, bitangent.y, bitangent.z));
+		//cout << "Tantnete: " << i + 1 << Tangents.at(i)<<endl;
 	}
+
+
 	for (size_t i = 0; i < AllVertexList.size(); i++)
 		VertexIndices.push_back(AllVertexList.at(i).getIndex(vertexList));
 	
@@ -223,8 +245,12 @@ void GameObject::Draw(mat4 view, mat4 pro, GLfloat time, Light Light[4], vec3 Ca
 	vec3 rP = vec3(transform.rotX, transform.rotY, transform.rotZ);
 	glUniform3fv(shader.RotationLocation, 1, &rP[0]);
 
-	glUniform1i(shader.textureLocation, Texture);
-	glUniform1i(shader.skyboxLocation, Texture);
+
+    glUniform1i(shader.skyboxLocation, Texture);
+	glUniform1i(shader.textureLocation, 0);
+
+	glUniform1i(shader.normalMapLocation, 1);
+	
 	glUniform1i(shader.UseBumpMapLocation, usebump);
 
 	glUniform1f(shader.LocationTime, time);
@@ -261,35 +287,35 @@ void GameObject::SetupMesh()
 
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBOTangent);
-	glBufferData(GL_ARRAY_BUFFER, Tangents.size() * sizeof(vec3), &Tangents[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, EndTangents.size() * sizeof(vec3), &EndTangents[0], GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBOBitangent);
-	glBufferData(GL_ARRAY_BUFFER, Bitangents.size() * sizeof(vec3), &Bitangents[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, EndBitangents.size() * sizeof(vec3), &EndBitangents[0], GL_STATIC_DRAW);
 
 	
 	glBindBuffer(GL_ARRAY_BUFFER, VBOtexture);
 	glBufferData(GL_ARRAY_BUFFER, EndTextureCoordinates.size() * sizeof(vec2), &EndTextureCoordinates[0], GL_STATIC_DRAW);
 	int width, height, nrChannels;
-	unsigned char *data = stbi_load("tex.jpg", &width, &height, &nrChannels, 0);
+	unsigned char *data = stbi_load("Textures/Albedo_09.jpg", &width, &height, &nrChannels, 0);
 	if (!data)
 		return;
-	
-
-
+	glActiveTexture(GL_TEXTURE0);
+	glGenTextures(1, &Texture);
+	glBindTexture(GL_TEXTURE_2D, Texture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 	glGenerateMipmap(GL_TEXTURE_2D);
-		
-	glGenTextures(1, &Texture);
 
-	glBindTexture(GL_TEXTURE_2D, Texture);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-
-
+	unsigned char *data2 = stbi_load("Textures/Albedo_09_NRM.jpg", &width, &height, &nrChannels, 0);
+	glActiveTexture(GL_TEXTURE1);
+	glGenTextures(1, &NormalMap);
+	glBindTexture(GL_TEXTURE_2D, NormalMap);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data2);
+	glGenerateMipmap(GL_TEXTURE_2D);
 
 	
 
 	stbi_image_free(data);
+	stbi_image_free(data2);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 }
 void GameObject::SetupMesh(GLboolean cubemap)
@@ -367,8 +393,10 @@ void GameObject::Bind(GLuint program)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
 	glBindTexture(GL_TEXTURE_CUBE_MAP, Texture);
-	glBindTexture(GL_TEXTURE_2D, Texture);
 
+	//glBindTexture(GL_TEXTURE_2D, NormalMap);
+	//glBindTexture(GL_TEXTURE_2D,Texture);
+	
 	glBindBuffer(GL_ARRAY_BUFFER, VBOtexture);
 	GLuint vTex = glGetAttribLocation(program, "vTexture");
 	glVertexAttribPointer(vTex, 2, GL_FLOAT, GL_FALSE, 0, 0);

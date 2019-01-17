@@ -6,7 +6,7 @@ class Vertex {
 	
 public:
 	vec4 vertexPosition;
-	vec3 vertexNormal;
+	vec3 vertexNormal,vertexTangent,vertexBitangent;
 	vec2 vertexUV;
 	GLuint vIndex, nIndex, tIndex;
 	string vStr, nStr, tStr;

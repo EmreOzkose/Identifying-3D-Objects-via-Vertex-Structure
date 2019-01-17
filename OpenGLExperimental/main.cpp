@@ -7,7 +7,7 @@
 	#define WINDOW_WIDTH 1920
 	#define WINDOW_HEIGHT 1080
 	#define WINDOW_NAME "OpenGL"
-	#define OBJECTS_BEGIN_SIZE 36
+	#define OBJECTS_BEGIN_SIZE 4
 	#define MAX_LIGHTS_SIZE 9
 	#define PI 3.14159265359
 
@@ -61,16 +61,16 @@ int main(int argc, char **argv) {
 	main_console = Console(mainWindow);
 	main_console.SetupConsole();
 
-	mainLight[0] = mainScene.CreateMainLight(vec3(229.0 / 255.0, 136.0 / 255.0, 31.0 / 255.0), vec3(0, 0, 1), 2, 0.4f);
-	mainLight[0].transform.position=vec3(20, 60, 20);
+	mainLight[0] = mainScene.CreateMainLight(vec3(1), vec3(0, 0, 1), 2, 0.4f);
+	mainLight[0].transform.position=vec3(0, 60, 0);
 
-	mainLight[1] = mainScene.CreateMainLight(vec3(229.0 / 255.0, 136.0 / 255.0, 31.0 / 255.0), vec3(0, 0, 1), 2, 0.4f);
+	mainLight[1] = mainScene.CreateMainLight(vec3(0,0,0), vec3(0, 0, 1), 2, 0.4f);
 	mainLight[1].transform.position = vec3(-20, 60, -20);
 
-	mainLight[2] = mainScene.CreateMainLight(vec3(229.0 / 255.0, 136.0 / 255.0, 31.0 / 255.0), vec3(0, 0, 1), 2, 0.4f);
+	mainLight[2] = mainScene.CreateMainLight(vec3(0,0,0), vec3(0, 0, 1), 2, 0.4f);
 	mainLight[2].transform.position = vec3(-20, -60, 20);
 
-	mainLight[3] = mainScene.CreateMainLight(vec3(229.0 / 255.0, 136.0 / 255.0, 31.0 / 255.0), vec3(0, 0, 1), 2, 0.4f);
+	mainLight[3] = mainScene.CreateMainLight(vec3(0,0,0), vec3(0, 0, 1), 2, 0.4f);
 	mainLight[3].transform.position = vec3(20, -60, -20);
 
 		
@@ -99,13 +99,13 @@ int main(int argc, char **argv) {
 
 	/*-----------------CREATE ENVIROMENT----------------*/
 
-	//Sea = GameObject("Sea", "Models/Plane.obj", true, WaterShader);
+	Sea = GameObject("Sea", "Models/Plane.obj", true, WaterShader);
 	Skybox = GameObject("Skybox", "Models/Cube.obj", true, SkyboxShader);
-	//Skybox.SetupMesh(GL_TRUE);
-	//Sea.SetupMesh();
+	Skybox.SetupMesh(GL_TRUE);
+	Sea.SetupMesh();
 	cout << "Sea is created." << endl;
- 	Ground = GameObject("Ground", "Models/PlaneLowP.obj", true, BlinnPhongShader);
-	//Ground.SetupMesh();
+ 	Ground = GameObject("Ground", "Models/Ground.obj", true, BlinnPhongShader);
+	Ground.SetupMesh();
 	cout << "Ground is created." << endl;
 	//Sea.transform.Translate(vec3(0, -2, 0));
 
@@ -134,9 +134,9 @@ int main(int argc, char **argv) {
 		{
 			string name = "Object_" + to_string(i * sqrt(OBJECTS_BEGIN_SIZE) + j);
 			if ((i + j) % 2 == 0)
-				objyn2 = GameObject(name, PathCube, GL_TRUE, BlinnPhongShader);
-			else
 				objyn2 = GameObject(name, pathSphere, GL_TRUE, BlinnPhongShader);
+			else
+				objyn2 = GameObject(name, PathCube, GL_TRUE, BlinnPhongShader);
 			objyn2.SetupMesh();
 			objyn2.transform.position = vec3(GLfloat(i)*2, 0, GLfloat(j)*2);
 			ObjectsOnScene.push_back(objyn2);
@@ -232,7 +232,7 @@ void Display(void)
 	}
 	else {
 		glDisable(GL_BLEND);
-		//Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
+		Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
 		
 		Ground.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
 		for (size_t i = 0; i < OBJECTS_BEGIN_SIZE; i++)
