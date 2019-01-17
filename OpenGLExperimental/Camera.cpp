@@ -27,7 +27,7 @@ void Camera::Refresh(GameObject &s)
 	{
 		at = eye + camForward;
 		at.w = 1;
-		eye = Lerp(eye, transform.position, 0.02f);
+		eye = Lerp(eye, transform.position, 0.016f);
 	}
 	else if (physical_mode == Cameramode::LookAtCamera)
 	{

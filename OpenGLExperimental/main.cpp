@@ -22,7 +22,6 @@
 	vector<GameObject> ObjectsOnScene;
 
 	GLfloat time = 0;
-	Shader WaterShader,ToonShader,ParticleShader,FlatShader,BlinnPhongShader,SkyboxShader;
 	
 	
 	int mainWindow;
@@ -43,6 +42,10 @@
 	void Idle();
 	void DrawEnviroment();
 	void DrawSkybox();
+	void DrawNonScaledModels();
+	void DrawModels();
+	void DrawReflections();
+	void DrawScaledModels();
 	void ExportVertices(vector<GameObject> arr, GLuint times);
 	/*-----------------DEFINITIONS----------------*/
 
@@ -91,33 +94,42 @@
 
 	/*-----------------CREATE MATERIALS----------------*/
 
-	Material material_red = Material(vec3(1, 0, 0), vec3(1, 1, 1), 32);
-	Material material_green = Material(vec3(0, 1, 0), vec3(1, 1, 1), 32);
-	Material material_black = Material(vec3(0, 0, 0), vec3(1, 1, 1), 32);
-	Material material_white = Material(vec3(1, 1, 1), vec3(1, 1, 1), 32);
-	Material material_blue = Material(vec3(0, 0, 1), vec3(1, 1, 1), 32);
-	Material material_yellow = Material(vec3(1, 1, 0), vec3(1, 1, 1), 32);
+	Material material_red     = Material(vec3(1, 0, 0), vec3(1, 1, 1), 32);
+	Material material_green   = Material(vec3(0, 1, 0), vec3(1, 1, 1), 32);
+	Material material_black   = Material(vec3(0, 0, 0), vec3(1, 1, 1), 32);
+	Material material_white   = Material(vec3(1, 1, 1), vec3(1, 1, 1), 32);
+	Material material_blue    = Material(vec3(0, 0, 1), vec3(1, 1, 1), 32);
+	Material material_yellow  = Material(vec3(1, 1, 0), vec3(1, 1, 1), 32);
 	Material material_magenta = Material(vec3(1, 0, 1), vec3(1, 1, 1), 32);
-	Material material_cyan = Material(vec3(0, 1, 1), vec3(1, 1, 1), 32);
+	Material material_cyan	  = Material(vec3(0, 1, 1), vec3(1, 1, 1), 32);
 
 	/*-----------------CREATE MATERIALS----------------*/
 
 
+	/*-----------------SETUP SHADERS----------------*/
+
+	Shader shader_flat		 = Shader();
+	Shader shader_blinnphong = Shader();
+	Shader shader_water		 = Shader();
+	Shader shader_toon		 = Shader();
+	Shader shader_particle	 = Shader();
+	Shader shader_skybox	 = Shader();
+	Shader shader_smoothtoon = Shader();
+
+
+	/*-----------------SETUP SHADERS----------------*/
 
 
 int main(int argc, char **argv) {
 	
 	/*-----------------SETUP SCENE----------------*/
 
-	mainScene = Scene();
+	mainScene = Scene(OBJECTS_BEGIN_SIZE);
 	mainScene.Init(argc,argv);
 	unsigned int Mode= GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE |GLUT_STENCIL;
 	mainWindow=mainScene.SetupWindow(Mode,vec2(0,0),vec2(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_NAME);
 
 	/*-----------------SETUP SCENE----------------*/
-
-
-
 
 
 
@@ -127,10 +139,6 @@ int main(int argc, char **argv) {
 	main_console.SetupConsole();
 
 	/*-----------------SETUP CONSOLE----------------*/
-
-
-
-
 
 
 
@@ -159,36 +167,31 @@ int main(int argc, char **argv) {
 
 
 
-	/*-----------------SETUP SHADERS----------------*/
-
-	FlatShader = Shader("FlatVertex.glsl", "FlatFragment.glsl");
-	BlinnPhongShader = Shader("BlinnPhongVertex.glsl", "BlinnPhongFragment.glsl");
-	WaterShader = Shader("WaterVertex.glsl", "WaterFragment.glsl");
-	ToonShader = Shader("ToonVertex.glsl", "ToonFragment.glsl");
-	ParticleShader = Shader("particleVertex.glsl", "particleFragment.glsl");
-	SkyboxShader = Shader("SkyboxVertex.glsl", "SkyboxFragment.glsl");
-	cout << "Shaders are created." << endl;
-
-	/*-----------------SETUP SHADERS----------------*/
 
 
+
+	shader_flat = Shader("FlatVertex.glsl", "FlatFragment.glsl");
+	shader_blinnphong = Shader("BlinnPhongVertex.glsl", "BlinnPhongFragment.glsl");
+	shader_water = Shader("WaterVertex.glsl", "WaterFragment.glsl");
+	shader_toon = Shader("ToonVertex.glsl", "ToonFragment.glsl");
+	shader_particle = Shader("particleVertex.glsl", "particleFragment.glsl");
+	shader_skybox = Shader("SkyboxVertex.glsl", "SkyboxFragment.glsl");
+	shader_smoothtoon = Shader("SmoothedToonVertex.glsl", "SmoothedToonFragment.glsl");
 
 
 	/*-----------------CREATE ENVIROMENT----------------*/
 
-	//Sea = GameObject("Sea", "Models/Plane.obj", true, WaterShader);
-	//Skybox = GameObject("Skybox", "Models/Cube.obj", true, SkyboxShader);
-	//Skybox.SetupMesh(GL_TRUE);
-	//Sea.SetupMesh();
+	Sea = GameObject("Sea", "Models/Plane.obj", shader_water);
+	Skybox = GameObject("Skybox", "Models/Cube.obj", shader_skybox);
+	Skybox.SetupMesh(GL_TRUE);
+	Sea.SetupMesh();
 	cout << "Sea is created." << endl;
- 	//Ground = GameObject("Ground", "Models/Ground.obj", true, BlinnPhongShader);
-	//Ground.SetupMesh();
+ 	Ground = GameObject("Ground", "Models/Ground.obj", shader_blinnphong,material_cyan);
+	Ground.SetupMesh();
 	cout << "Ground is created." << endl;
 	//Sea.transform.Translate(vec3(0, -2, 0));
 
 	/*-----------------CREATE ENVIROMENT----------------*/
-
-
 
 
 
@@ -199,9 +202,9 @@ int main(int argc, char **argv) {
 		{
 			string name = "Object_" + to_string(i * sqrt(OBJECTS_BEGIN_SIZE) + j);
 			if ((i + j) % 2 == 0)
-				objyn2 = GameObject(name, PathDog, ToonShader, material_red);
+				objyn2 = GameObject(name, PathDog, shader_smoothtoon, material_red);
 			else
-				objyn2 = GameObject(name, PathDog, FlatShader, material_cyan);
+				objyn2 = GameObject(name, PathDog, shader_toon, material_cyan);
 			objyn2.SetupMesh();
 			objyn2.transform.position = vec3(GLfloat(i)*2, 0, GLfloat(j)*2);
 			ObjectsOnScene.push_back(objyn2);
@@ -268,41 +271,22 @@ void Display(void)
 		//////
 		//main_console.Update(mainScene.SelectedObject);
 		DrawEnviroment();
-		
 		glEnable(GL_DEPTH_TEST);
-	
-		for (size_t i = 0; i < OBJECTS_BEGIN_SIZE; i++)
-		{
-			//deformdan dolayý kasýyor sureklý -1 scalelý uretmek yerýne en basta yapýlabilir
-			//deform yERINE SCALE FONSKÝYONU
-			ObjectsOnScene.at(i).BindScaledVertexList();
-			ObjectsOnScene.at(i).Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
-
-		}
+		DrawScaledModels;
 		glDisable(GL_STENCIL_TEST);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		DrawEnviroment();
 		//Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
 		glDisable(GL_BLEND);
-	
-
-
-		for (size_t i = 0; i < OBJECTS_BEGIN_SIZE; i++)
-		{
-			ObjectsOnScene.at(i).ResetVertices();
-			ObjectsOnScene.at(i).Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
-
-		}
+		DrawNonScaledModels;
 
 	}
 	else {
 		glDisable(GL_BLEND);
 		//	Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
 		DrawEnviroment();
-		//Ground.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
-		for (size_t i = 0; i < OBJECTS_BEGIN_SIZE; i++)
-			ObjectsOnScene.at(i).Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
+		DrawModels();
 	}
 	DrawSkybox();
 	
@@ -430,4 +414,35 @@ void DrawSkybox()
 	glDepthFunc(GL_LESS);
 
 }
+void DrawModels()
+{
+	for (size_t i = 0; i < mainScene.Object_SIZE; i++)
+		ObjectsOnScene.at(i).Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
+}
+void DrawReflections() {
+
+
+}
+
+void DrawNonScaledModels()
+{
+	for (size_t i = 0; i < mainScene.Object_SIZE; i++)
+	{
+		ObjectsOnScene.at(i).ResetVertices();
+		ObjectsOnScene.at(i).Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
+
+	}
+}
+void DrawScaledModels()
+{
+	for (size_t i = 0; i < mainScene.Object_SIZE; i++)
+	{
+		//deformdan dolayý kasýyor sureklý -1 scalelý uretmek yerýne en basta yapýlabilir
+		//deform yERINE SCALE FONSKÝYONU
+		ObjectsOnScene.at(i).BindScaledVertexList();
+		ObjectsOnScene.at(i).Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
+
+	}
+}
+
 

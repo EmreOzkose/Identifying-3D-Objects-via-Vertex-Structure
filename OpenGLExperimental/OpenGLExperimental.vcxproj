@@ -183,6 +183,8 @@
     <None Include="BlinnPhongFragment.glsl" />
     <None Include="SkyboxFragment.glsl" />
     <None Include="SkyboxVertex.glsl" />
+    <None Include="SmoothedToonFragment.glsl" />
+    <None Include="SmoothedToonVertex.glsl" />
     <None Include="WaterFragment.glsl" />
     <None Include="WaterVertex.glsl" />
     <None Include="particleFragment.glsl" />

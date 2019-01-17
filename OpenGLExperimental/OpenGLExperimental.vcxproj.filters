@@ -181,5 +181,11 @@
     <None Include="SkyboxFragment.glsl">
       <Filter>Source Files\Shaders</Filter>
     </None>
+    <None Include="SmoothedToonVertex.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="SmoothedToonFragment.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
