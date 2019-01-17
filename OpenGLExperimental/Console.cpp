@@ -5,12 +5,13 @@
 void Console::SetupConsole()
 {
 	glui_v_subwindow = GLUI_Master.create_glui_subwindow(*application_window, GLUI_SUBWINDOW_LEFT);
-	new GLUI_StaticText(glui_v_subwindow, "Identifying 3D Objects via Vertex Structure\nConsole");
+	new GLUI_StaticText(glui_v_subwindow, "OpenGL Experimental\n");
 	new GLUI_Separator(glui_v_subwindow);
 
 	glui_v_panel_parameters = new GLUI_Panel(glui_v_subwindow, "Parameters", GLUI_PANEL_EMBOSSED);
-	glui_v_panel_command = new GLUI_Panel(glui_v_subwindow, "Enter the Command", GLUI_PANEL_EMBOSSED);
-	glui_v_panel_features = new GLUI_Panel(glui_v_subwindow, "Features", GLUI_PANEL_EMBOSSED);
+
+
+	new GLUI_StaticText(glui_v_subwindow, "Press ESC to exit\n");
 
 	/*SelectedObject = new GLUI_StaticText(glui_v_panel_parameters, selectedText.c_str());
     GLUI_EditText *counter_edittext = new GLUI_EditText(glui_v_subwindow, "Count:", 5);

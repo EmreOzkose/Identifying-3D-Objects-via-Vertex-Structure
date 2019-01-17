@@ -10,9 +10,6 @@ public:
 
 	int soundCheck();
 	void sound_background();
-	void sound_airplane_departure();
-	void sound_robot();
-
 
 };
 

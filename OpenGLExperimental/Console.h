@@ -10,8 +10,6 @@ public:
 	//GLUI* glui_window;
 	GLUI* glui_v_subwindow; 
 	GLUI_Panel* glui_v_panel_parameters;
-	GLUI_Panel* glui_v_panel_command;
-	GLUI_Panel* glui_v_panel_features;
 
 
 	string selectedText;
