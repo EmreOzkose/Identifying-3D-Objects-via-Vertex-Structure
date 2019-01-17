@@ -441,6 +441,15 @@ void GameObject::Draw(mat4 view, mat4 pro, GLfloat time, Light Light[4], vec3 Ca
 	vec3 rP = vec3(transform.rotX, transform.rotY, transform.rotZ);
 	glUniform3fv(CurrentShader.RotationLocation, 1, &rP[0]);
 
+	vec3 mC =go_material.m_Color;
+	glUniform3fv(CurrentShader.material_color, 1, &mC[0]);
+
+
+	vec3 sC = go_material.m_Specular;
+	glUniform3fv(CurrentShader.material_specular, 1, &sC[0]);
+
+
+	glUniform1f(CurrentShader.material_smoothness, go_material.m_Smoothness);
 
     glUniform1i(CurrentShader.skyboxLocation, Texture);
 	glUniform1i(CurrentShader.textureLocation, 0);
@@ -448,6 +457,7 @@ void GameObject::Draw(mat4 view, mat4 pro, GLfloat time, Light Light[4], vec3 Ca
 	glUniform1i(CurrentShader.normalMapLocation, 1);
 	
 	glUniform1i(CurrentShader.UseBumpMapLocation, usebump);
+
 
 	glUniform1f(CurrentShader.LocationTime, time);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -657,6 +667,11 @@ void GameObject::SwitchShader(Shader &shader)
 void GameObject::ResetShader()
 {
 	CurrentShader = BaseShader;
+}
+
+void GameObject::ChangeMaterial(Material mat)
+{
+	go_material = mat;
 }
 
 vector<string> split(string strToSplit, char delimeter)

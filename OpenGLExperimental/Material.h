@@ -6,6 +6,9 @@ public:
 	vec3 m_Color,m_Emission,m_Specular;
 	GLfloat m_Smoothness;
 
+	void ChangeSmoothness(GLfloat change);
+	void ChangeSpecular(vec3 spec);
+	void ChangeColor(vec3 color);
 
 	Material(vec3 color, vec3 specular)
 	{

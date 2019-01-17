@@ -19,7 +19,7 @@ public:
 
 
 	ProjectionMode projection_mode = ProjectionMode::PerspectiveMode;
-	Cameramode physical_mode = Cameramode::FollowCamera;
+	Cameramode physical_mode = Cameramode::FreeCamera;
 
 	GLfloat FOV=75, CameraNear=0.01, CameraFar=1000,aspect= 1;
 

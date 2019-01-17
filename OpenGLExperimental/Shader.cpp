@@ -41,7 +41,11 @@ void Shader::Load(string vertexPath, string fragmentPath)
 	LightAmbientIntensityLocation = glGetUniformLocation(program, "LightAmbientIntensity");
 	LightAmbientLocation = glGetUniformLocation(program, "LightAmbient");
 	LightIntensityLocation = glGetUniformLocation(program, "LightIntensity");
-		
+	
+	material_color = glGetUniformLocation(program, "ObjectColor");
+	material_smoothness = glGetUniformLocation(program, "Smoothness");
+	material_specular = glGetUniformLocation(program, "SpecularColor");
+
 	sID = program;
 }
 

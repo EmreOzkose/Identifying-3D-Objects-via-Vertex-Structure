@@ -24,6 +24,9 @@ public:
 	void ResetVertices();
 	void SwitchShader(Shader &shader);
 	void ResetShader();
+	void ChangeMaterial(Material mat);
+
+
 
 	GLuint loadCubemap(vector<string> faces);
 	//remove useshader func and add a shader class
@@ -53,24 +56,35 @@ public:
 	vector<GLuint> VertexIndices;
 
 	vec3 pivot = vec3(0,0,0);
+	Material go_material;
 
 
 	//constructors
+	GameObject(string name, string modelPath, Shader shader, Material mat) : Object(name)
+	{
+		load_obj(modelPath);
+		BaseShader = shader;
+		CurrentShader = shader;
+		go_material = mat;
+	}
 	GameObject(string name, string modelPath, Shader shader) : Object(name)
 	{
 		load_obj(modelPath);
 		BaseShader = shader;
+		go_material = Material(vec3(1),vec3(1),32);
 		CurrentShader = shader;
 	}
 	GameObject(string name,string modelPath, bool hastextureandnormals,string vShader,string fShader): Object(name)
 	{
 		load_obj(modelPath, hastextureandnormals);
 		BaseShader =  Shader(vShader, fShader);
+		go_material = Material(vec3(1), vec3(1), 32);
 		CurrentShader = BaseShader;
 	}GameObject(string name, string modelPath, bool hastextureandnormals, Shader shader) : Object(name)
 	{
 		load_obj(modelPath, hastextureandnormals);
 		BaseShader = shader;
+		go_material = Material(vec3(1), vec3(1), 32);
 		CurrentShader = shader;
 	}GameObject() : Object()
 	{
