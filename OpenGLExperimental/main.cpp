@@ -4,11 +4,10 @@
 	/*-----------------DEPENDENCIES AND MACROS----------------*/
 	#include "Scene.h"
 	#include "InputManager.h"
-	#include "SoundManager.h"
 	#define WINDOW_WIDTH 1920
 	#define WINDOW_HEIGHT 1080
 	#define WINDOW_NAME "OpenGL"
-	#define OBJECTS_BEGIN_SIZE 4
+	#define OBJECTS_BEGIN_SIZE 36
 	#define MAX_LIGHTS_SIZE 9
 	#define PI 3.14159265359
 
@@ -20,7 +19,6 @@
 	Console main_console;
 	Light mainLight[MAX_LIGHTS_SIZE];
 	InputManager inputManager;
-	SoundManager soundManager;
 	vector<GameObject> ObjectsOnScene;
 
 	GLfloat time = 0;
@@ -44,15 +42,15 @@
 	void Timer(int value);
 	void Idle();
 	void ExportVertices(vector<GameObject> arr, GLuint times);
-	void control_cb(int control);
 	/*-----------------DEFINITIONS----------------*/
 
 
 
 
-int main(int argc, char **argv) {
-	soundManager.sound_background();
 
+
+
+int main(int argc, char **argv) {
 	
 	/*-----------------SETUP SCENE----------------*/
 
@@ -66,7 +64,7 @@ int main(int argc, char **argv) {
 	mainLight[0] = mainScene.CreateMainLight(vec3(229.0 / 255.0, 136.0 / 255.0, 31.0 / 255.0), vec3(0, 0, 1), 2, 0.4f);
 	mainLight[0].transform.position=vec3(20, 60, 20);
 
-	/*mainLight[1] = mainScene.CreateMainLight(vec3(229.0 / 255.0, 136.0 / 255.0, 31.0 / 255.0), vec3(0, 0, 1), 2, 0.4f);
+	mainLight[1] = mainScene.CreateMainLight(vec3(229.0 / 255.0, 136.0 / 255.0, 31.0 / 255.0), vec3(0, 0, 1), 2, 0.4f);
 	mainLight[1].transform.position = vec3(-20, 60, -20);
 
 	mainLight[2] = mainScene.CreateMainLight(vec3(229.0 / 255.0, 136.0 / 255.0, 31.0 / 255.0), vec3(0, 0, 1), 2, 0.4f);
@@ -74,7 +72,7 @@ int main(int argc, char **argv) {
 
 	mainLight[3] = mainScene.CreateMainLight(vec3(229.0 / 255.0, 136.0 / 255.0, 31.0 / 255.0), vec3(0, 0, 1), 2, 0.4f);
 	mainLight[3].transform.position = vec3(20, -60, -20);
-	*/
+
 		
 	
 	mainLight->transform.position = vec3(10,30,4);
@@ -106,7 +104,7 @@ int main(int argc, char **argv) {
 	//Skybox.SetupMesh(GL_TRUE);
 	//Sea.SetupMesh();
 	cout << "Sea is created." << endl;
- 	//Ground = GameObject("Ground", "Models/PlaneLowP.obj", true, BlinnPhongShader);
+ 	Ground = GameObject("Ground", "Models/PlaneLowP.obj", true, BlinnPhongShader);
 	//Ground.SetupMesh();
 	cout << "Ground is created." << endl;
 	//Sea.transform.Translate(vec3(0, -2, 0));
@@ -170,17 +168,6 @@ int main(int argc, char **argv) {
 	//glutIdleFunc(Idle);
 	GLUI_Master.set_glutReshapeFunc(Reshape);
 	GLUI_Master.set_glutDisplayFunc(Display);
-
-	/*-----------------Console Design----------------*/
-	main_console.text_scene = new GLUI_EditText(main_console.glui_v_panel_parameters, "Scene:", main_console.command_text, 4, &control_cb);
-	main_console.text_num_of_light = new GLUI_EditText(main_console.glui_v_panel_parameters, "#of Light:", main_console.command_text, 5, &control_cb);
-	main_console.text_command = new GLUI_EditText(main_console.glui_v_subwindow, "Command:", main_console.command_text, 3, &control_cb);
-	main_console.checkbox_wireframe = new GLUI_Checkbox(main_console.glui_v_subwindow, "Wireframe: ", &main_console.wireframe, 6, &control_cb);
-	main_console.checkbox_bumpmap = new GLUI_Checkbox(main_console.glui_v_subwindow, "Bump Map: ", &main_console.bumpmap, 6, &control_cb);
-
-	/*-----------------Console Design----------------*/
-
-
 	GLUI_Master.set_glutIdleFunc(Idle);
 	//GLUI_Master.set_glutKeyboardFunc();
 	glutKeyboardFunc(Keyboard);
@@ -188,7 +175,7 @@ int main(int argc, char **argv) {
 	glutMainLoop();
 
 	/*-----------------CALLBACKS----------------*/
-	return 0;
+	return EXIT_SUCCESS;
 }
 
 #pragma region callbacks
@@ -253,8 +240,8 @@ void Display(void)
 	}
 	
 	glDepthFunc(GL_LEQUAL);
-	//mat4 skyView = LookAt(vec3(-75.0868, 2, -38.2421), vec3(-74.3675f, 2, -37.5474), vec3(0, 1, 0));
-	//Skybox.Draw(skyView, mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
+	mat4 skyView = LookAt(vec3(-75.0868, 2, -38.2421), vec3(-74.3675f, 2, -37.5474), vec3(0, 1, 0));
+	Skybox.Draw(skyView, mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
 	glDepthFunc(GL_LESS);
 
 
@@ -366,45 +353,3 @@ void ExportVertices(vector<GameObject> arr,GLuint times)
 	}*/
 }
 
-
-void control_cb(int control) {
-
-	/* Command Text */
-	if (control == 3) {
-		string command = main_console.text_command->get_text();
-		cout << "Command: " << command << endl; ;
-
-		char char_array[20 + 1]; strcpy(char_array, command.c_str());
-		char *  pch = strtok(char_array, " ,.-");
-
-		if (!strcmp(pch, "wireframe")) {
-			pch = strtok(NULL, " ");
-
-			if (!strcmp(pch, "on"))	wireframeMode = GL_TRUE;
-			else if (!strcmp(pch, "off")) wireframeMode = GL_FALSE;
-		}
-	}
-	/* Scene */
-	else if (control == 4) {
-
-	}
-	/* Num of Light */
-	else if (control == 5) {
-		string command = main_console.text_command->get_text();
-		cout << "Command: " << command << endl; ;
-
-		int num = atoi(command.c_str());
-
-	}
-	/* Wireframe checkbox */
-	else if (control == 6) {
-		if (main_console.wireframe) wireframeMode = GL_TRUE;
-		else wireframeMode = GL_FALSE;
-
-	}
-	/* Bump Map */
-	else if (control == 7) {
-		if (main_console.bumpmap) bumpMapOn = GL_TRUE;
-		else bumpMapOn = GL_FALSE;
-	}
-}

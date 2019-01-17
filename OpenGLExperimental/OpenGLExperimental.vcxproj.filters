@@ -87,9 +87,6 @@
     <ClCompile Include="Vertex.cpp">
       <Filter>Source Files\Objects\Classes</Filter>
     </ClCompile>
-    <ClCompile Include="SoundManager.cpp">
-      <Filter>Source Files\Classes</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\Desktop\OpenGLStuff\Angel_commons\Angel.h">
@@ -145,9 +142,6 @@
     </ClInclude>
     <ClInclude Include="Vertex.h">
       <Filter>Source Files\Objects\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="SoundManager.h">
-      <Filter>Source Files\Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
