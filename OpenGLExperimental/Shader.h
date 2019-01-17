@@ -14,6 +14,9 @@ public:
 	GLuint getProjectionID();
 	GLuint getViewID();
 
+
+	string v_path, f_path;
+
 	void Load(string vertexPath, string fragmentPath);
 	void Use();
 
@@ -23,7 +26,8 @@ public:
 		LightPosLocation= glGetUniformLocation(sID, "LightPos");
 		CameraPosLocation = glGetUniformLocation(sID, "ViewPos");
 		LightColorLocation = glGetUniformLocation(sID, "LightColor");
-	
+		v_path = vertexPath;
+		f_path = fragmentPath;
 		
 	}Shader() {
 	}

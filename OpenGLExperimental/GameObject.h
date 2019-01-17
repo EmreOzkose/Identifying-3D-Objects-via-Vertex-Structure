@@ -13,6 +13,7 @@ public:
 
 	
 	void load_obj(string path, bool includetexandnormals);
+	void load_obj(string path);
 	void Draw(mat4 view, mat4 pro, GLfloat time, Light Light[4], vec3 Camerapos, GLuint &usebump);
 	void SetupMesh(GLboolean cubemap);
 	void SetupMesh();
@@ -22,11 +23,13 @@ public:
 	void PrintRandomVertex();
 	void ResetVertices();
 	void SwitchShader(Shader &shader);
+	void ResetShader();
+
 	GLuint loadCubemap(vector<string> faces);
 	//remove useshader func and add a shader class
 	GLuint VAO, VBO, EBO,Texture,NormalMap,VBOtexture, VBOnormal,VBOTangent,VBOBitangent;
 
-	Shader shader;
+	Shader BaseShader,CurrentShader;
 	string  texturePath;
 
 	//base values
@@ -53,14 +56,22 @@ public:
 
 
 	//constructors
+	GameObject(string name, string modelPath, Shader shader) : Object(name)
+	{
+		load_obj(modelPath);
+		BaseShader = shader;
+		CurrentShader = shader;
+	}
 	GameObject(string name,string modelPath, bool hastextureandnormals,string vShader,string fShader): Object(name)
 	{
 		load_obj(modelPath, hastextureandnormals);
-		shader =  Shader(vShader, fShader);
+		BaseShader =  Shader(vShader, fShader);
+		CurrentShader = BaseShader;
 	}GameObject(string name, string modelPath, bool hastextureandnormals, Shader shader) : Object(name)
 	{
 		load_obj(modelPath, hastextureandnormals);
-		this->shader = shader;
+		BaseShader = shader;
+		CurrentShader = shader;
 	}GameObject() : Object()
 	{
 	}

@@ -122,12 +122,12 @@ int main(int argc, char **argv) {
 	/*-----------------CREATE ENVIROMENT----------------*/
 
 	//Sea = GameObject("Sea", "Models/Plane.obj", true, WaterShader);
-	Skybox = GameObject("Skybox", "Models/Cube.obj", true, SkyboxShader);
-	Skybox.SetupMesh(GL_TRUE);
+	//Skybox = GameObject("Skybox", "Models/Cube.obj", true, SkyboxShader);
+	//Skybox.SetupMesh(GL_TRUE);
 	//Sea.SetupMesh();
 	cout << "Sea is created." << endl;
- 	Ground = GameObject("Ground", "Models/Ground.obj", true, BlinnPhongShader);
-	Ground.SetupMesh();
+ 	//Ground = GameObject("Ground", "Models/Ground.obj", true, BlinnPhongShader);
+	//Ground.SetupMesh();
 	cout << "Ground is created." << endl;
 	//Sea.transform.Translate(vec3(0, -2, 0));
 
@@ -197,9 +197,9 @@ int main(int argc, char **argv) {
 		{
 			string name = "Object_" + to_string(i * sqrt(OBJECTS_BEGIN_SIZE) + j);
 			if ((i + j) % 2 == 0)
-				objyn2 = GameObject(name, PathDog, GL_TRUE, ToonShader);
+				objyn2 = GameObject(name, PathDog, ToonShader);
 			else
-				objyn2 = GameObject(name, PathDog, GL_TRUE, FlatShader);
+				objyn2 = GameObject(name, PathDog, FlatShader);
 			objyn2.SetupMesh();
 			objyn2.transform.position = vec3(GLfloat(i)*2, 0, GLfloat(j)*2);
 			ObjectsOnScene.push_back(objyn2);
@@ -295,9 +295,9 @@ void Display(void)
 	}
 	else {
 		glDisable(GL_BLEND);
-		Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
+	//	Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
 		
-		Ground.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
+		//Ground.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
 		for (size_t i = 0; i < OBJECTS_BEGIN_SIZE; i++)
 			ObjectsOnScene.at(i).Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
 	}
@@ -327,11 +327,16 @@ void Keyboard(unsigned char key, int x, int y)
 	if (key == 'l')
 		wireframeMode = !wireframeMode;
 	if (key == '7')
-		mainLight[0].l_Intensity-=.1f;
+		for (size_t i = 0; i < OBJECTS_BEGIN_SIZE; i++)
+			ObjectsOnScene.at(i).ResetShader();
+
 	if (key == '8')
-		mainLight[0].l_Intensity += .1f;
+		for (size_t i = 0; i < OBJECTS_BEGIN_SIZE; i++)
+			ObjectsOnScene.at(i).SwitchShader(FlatShader);
+		
 	if (key == '9')
-		mainLight[0].l_AmbientStrenght += .01f;
+		for (size_t i = 0; i < OBJECTS_BEGIN_SIZE; i++)
+			ObjectsOnScene.at(i).SwitchShader(BlinnPhongShader);
 	if (key == 'n')
 		bumpMapOn = !bumpMapOn;
 
