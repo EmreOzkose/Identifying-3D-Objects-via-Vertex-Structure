@@ -4,7 +4,7 @@ in vec4 vPosition;
 in vec3 vNormal;
 uniform mat4 Model,Projection,View;
 uniform float time;
-vec3 init_vel=vec3(0,10,0);
+vec3 init_vel=vec3(0,1,0);
 float g=-.2;
 void main()
 {

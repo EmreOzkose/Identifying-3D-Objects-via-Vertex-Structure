@@ -14,7 +14,7 @@ public:
 	
 	void load_obj(string path, bool includetexandnormals);
 	void load_obj(string path);
-	void Draw(mat4 view, mat4 pro, GLfloat time, Light Light[4], vec3 Camerapos, GLuint &usebump);
+	void Draw(mat4 view, mat4 pro, GLfloat time, Light Light[4], vec3 Camerapos, GLuint &usebump, GLuint &usetexture);
 	void SetupMesh(GLboolean cubemap);
 	void SetupMesh();
 	void Deform(vec3 ScaleModifier, GLfloat deformModifier);

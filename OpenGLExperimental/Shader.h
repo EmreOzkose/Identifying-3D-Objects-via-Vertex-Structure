@@ -34,7 +34,7 @@ public:
 
 	GLuint LocationTime, LightPosLocation, CameraPosLocation, LightColorLocation, LightIntensityLocation,LightAmbientLocation
 		,LightAmbientIntensityLocation,RotationLocation,
-		textureLocation,normalMapLocation,skyboxLocation,UseBumpMapLocation;
+		textureLocation,normalMapLocation,skyboxLocation,UseBumpMapLocation, UseTextureLocation;
 	GLuint material_color, material_smoothness, material_specular;
 	GLuint sID,ProjectionID,ModelID,ViewID;
 };

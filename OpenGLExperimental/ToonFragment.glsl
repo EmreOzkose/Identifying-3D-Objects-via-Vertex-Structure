@@ -3,7 +3,6 @@
 in vec3 Normal;
 in vec3 LightDir;
 out vec4 fColor;
-int slices=5;
 
 
 uniform vec3 ObjectColor;

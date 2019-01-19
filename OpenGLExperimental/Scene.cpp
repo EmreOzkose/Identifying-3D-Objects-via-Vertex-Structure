@@ -42,5 +42,14 @@ Light Scene::CreateMainLight(vec3 color, vec3 ambient, GLfloat intensity, GLfloa
 	return Light(color, ambient, intensity, ambientIntensity);
 }
 
+GameObject Scene::CreateNew(string path, Shader shader, vec3 pos)
+{
+	GameObject obj = GameObject("New GameObject",path, shader);
+	obj.SetupMesh();
+	obj.transform.Translate(pos);
+	Object_SIZE++;
+	return obj;
+}
+
 
 

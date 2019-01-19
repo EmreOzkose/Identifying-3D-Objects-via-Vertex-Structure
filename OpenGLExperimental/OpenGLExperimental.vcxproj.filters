@@ -187,5 +187,11 @@
     <None Include="SmoothedToonFragment.glsl">
       <Filter>Source Files\Shaders</Filter>
     </None>
+    <None Include="PBRVertex.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
+    <None Include="PBRFragment.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

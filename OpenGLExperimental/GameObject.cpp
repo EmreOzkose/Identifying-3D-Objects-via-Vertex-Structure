@@ -404,7 +404,7 @@ void GameObject::load_obj(string path)
 		VertexIndices.push_back(AllVertexList.at(i).getIndex(vertexList));
 
 }
-void GameObject::Draw(mat4 view, mat4 pro, GLfloat time, Light Light[4], vec3 Camerapos,GLuint &usebump)
+void GameObject::Draw(mat4 view, mat4 pro, GLfloat time, Light Light[4], vec3 Camerapos,GLuint &usebump, GLuint &usetexture)
 {
 	CurrentShader.Use();
 	Bind(CurrentShader.getShaderID());
@@ -457,8 +457,8 @@ void GameObject::Draw(mat4 view, mat4 pro, GLfloat time, Light Light[4], vec3 Ca
 	glUniform1i(CurrentShader.normalMapLocation, 1);
 	
 	glUniform1i(CurrentShader.UseBumpMapLocation, usebump);
-
-
+	glUniform1i(CurrentShader.UseTextureLocation, usetexture);
+	
 	glUniform1f(CurrentShader.LocationTime, time);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glDrawElements(GL_TRIANGLES, VertexIndices.size(), GL_UNSIGNED_INT, 0);
@@ -502,7 +502,7 @@ void GameObject::SetupMesh()
 	glBindBuffer(GL_ARRAY_BUFFER, VBOtexture);
 	glBufferData(GL_ARRAY_BUFFER, EndTextureCoordinates.size() * sizeof(vec2), &EndTextureCoordinates[0], GL_STATIC_DRAW);
 	int width, height, nrChannels;
-	unsigned char *data = stbi_load("Textures/Albedo_09.jpg", &width, &height, &nrChannels, 0);
+	unsigned char *data = stbi_load("Textures/Albedo_06.jpg", &width, &height, &nrChannels, 0);
 	if (!data)
 		return;
 	glActiveTexture(GL_TEXTURE0);
@@ -511,7 +511,7 @@ void GameObject::SetupMesh()
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
-	unsigned char *data2 = stbi_load("Textures/Albedo_09_NRM.jpg", &width, &height, &nrChannels, 0);
+	unsigned char *data2 = stbi_load("Textures/Albedo_06_NRM.jpg", &width, &height, &nrChannels, 0);
 	glActiveTexture(GL_TEXTURE1);
 	glGenTextures(1, &NormalMap);
 	glBindTexture(GL_TEXTURE_2D, NormalMap);

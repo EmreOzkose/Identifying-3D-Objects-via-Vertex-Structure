@@ -19,7 +19,13 @@ void main(){
 	vec3 N=normalize(Normal);
 	float intensity=max(dot(LightDir,N),0.0);
 	intensity*=2;
-	float ambientIntensity=.4f;
-	fColor=clamp(intensity,0,1)*vec4(LightColor[0],1)*ObjectColor
-	+ambientIntensity*ObjectColor*vec4(LightColor[0],1);
+	float ambientIntensity=.1f;
+
+	float floo=intensity*15;
+	float n=floor(floo);
+	n/=15;
+	if(n>0.8f)
+		n-=(1-(n));
+	fColor=(n)*vec4(LightColor[0],1)*ObjectColor
+				+ambientIntensity*ObjectColor*vec4(LightColor[0],1);
 }

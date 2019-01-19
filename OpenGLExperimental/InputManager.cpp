@@ -5,7 +5,7 @@ void InputManager::Process(unsigned char key,Scene &mainScene, vector<GameObject
 	
 
 	if (key == '1')
-		mainScene.SelectedObject->transform.rotX += 1;
+		mainScene.SelectedObject->transform.rotX +=1;
 	if (key == '2')
 		mainScene.SelectedObject->transform.rotX -= 1;
 
@@ -20,13 +20,13 @@ void InputManager::Process(unsigned char key,Scene &mainScene, vector<GameObject
 		mainScene.SelectedObject->transform.rotZ -= 1;
 
 	if (key == 'w')
-		mainScene.MainCamera.transform.Translate(mainScene.MainCamera.camForward);
+		mainScene.MainCamera.transform.Translate(mainScene.MainCamera.camForward*.3f);
 	if (key == 's')
-		mainScene.MainCamera.transform.Translate(-mainScene.MainCamera.camForward);
-	if (key == 'd')
-		mainScene.MainCamera.transform.Translate(mainScene.MainCamera.camRight);
+		mainScene.MainCamera.transform.Translate(-mainScene.MainCamera.camForward*.3f);
 	if (key == 'a')
-		mainScene.MainCamera.transform.Translate(-mainScene.MainCamera.camRight);
+		mainScene.MainCamera.transform.Translate(mainScene.MainCamera.camRight*.3f);
+	if (key == 'd')
+		mainScene.MainCamera.transform.Translate(-mainScene.MainCamera.camRight*.3f);
 
 	
 
@@ -34,9 +34,9 @@ void InputManager::Process(unsigned char key,Scene &mainScene, vector<GameObject
 		std::exit(0);
 
 
-	if (key == 'q')
-		mainScene.MainCamera.transform.Translate(vec3(0,1,0));
 	if (key == 'e')
+		mainScene.MainCamera.transform.Translate(vec3(0,1,0));
+	if (key == 'q')
 		mainScene.MainCamera.transform.Translate(-vec3(0, 1, 0));
 
 
@@ -47,11 +47,7 @@ void InputManager::Process(unsigned char key,Scene &mainScene, vector<GameObject
 
 	if (key == 'k')
 	{
-		/*GLuint modulo = 5;
-		GLfloat x = rand() % modulo + 1;
-		GLfloat y = rand() % modulo + 1;
-		GLfloat z = rand() % modulo + 1;
-		mainScene.SelectedObject->Deform(vec3(x, y, z), 1.0f);*/
+		
 		GLuint r = rand() % ObjectsOnScene.size();
 		mainScene.SelectedObject = &ObjectsOnScene.at(r);
 	}

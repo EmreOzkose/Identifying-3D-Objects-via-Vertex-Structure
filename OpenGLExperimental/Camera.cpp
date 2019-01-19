@@ -25,22 +25,25 @@ void Camera::Refresh(GameObject &s)
 
 	if (physical_mode==Cameramode::FreeCamera)
 	{
+		eye = Lerp(eye, transform.position, 0.02f);
 		at = eye + camForward;
 		at.w = 1;
-		eye = Lerp(eye, transform.position, 0.016f);
+	
 	}
 	else if (physical_mode == Cameramode::LookAtCamera)
 	{
+		eye = Lerp(eye, transform.position, 0.02f);
 		at = s.transform.position;
 		at.w = 1;
-		eye = Lerp(eye, transform.position, 0.02f);
+		
 	}
 	else if (physical_mode == Cameramode::FollowCamera)
 	{
+		transform.position = vec3(at.x, at.y, at.z) + followOffset;
+		eye = Lerp(eye, transform.position, 0.005f);
 		at = s.transform.position;
 		at.w = 1;
-		transform.position = vec3(at.x,at.y,at.z) + followOffset;
-		eye = Lerp(eye, transform.position, 0.005f);
+		
 	}
 	
 	//eye = transform.position

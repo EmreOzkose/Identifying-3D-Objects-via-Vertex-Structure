@@ -18,6 +18,8 @@ uniform vec3 ObjectColor;
 uniform vec3 SpecularColor;
 uniform float Smoothness;
 
+uniform int useTexture;
+
 
 uniform sampler2D Texture,NormalMap;
 uniform int useBump;
@@ -71,7 +73,7 @@ void main()
     
 
 			float Ks = pow(max(dot(N, H), 0.0), Smoothness);
-			specular += Ks * SpecularColor*attenuation;  
+			specular += Ks * SpecularColor*attenuation*LightIntensity[i];  
 	
 	}
 	
@@ -83,11 +85,14 @@ void main()
 
 
 	//*LightColor
+	
 	vec3 result = (diffuse+specular)+ambient;
 	
 	vec3 tex=texture(Texture,vCoords).xyz;
-	
-    FragColor = vec4(result*tex, 1.0);
+	if(useTexture==1)
+		FragColor = vec4(result*tex, 1.0);
+	else
+		FragColor = vec4(result, 1.0);
 
 
 } 
