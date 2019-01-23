@@ -25,12 +25,13 @@ public:
 	void SwitchShader(Shader &shader);
 	void ResetShader();
 	void ChangeMaterial(Material mat);
-
+	void Morph(GameObject obj);
 
 
 	GLuint loadCubemap(vector<string> faces);
 	//remove useshader func and add a shader class
-	GLuint VAO, VBO, EBO,Texture,NormalMap,VBOtexture, VBOnormal,VBOTangent,VBOBitangent;
+	GLuint VAO, VBO, EBO,Texture,NormalMap,VBOtexture, VBOnormal,VBOTangent,VBOBitangent,
+		Roughness,Metallic,Skybox;
 
 	Shader BaseShader,CurrentShader;
 	string  texturePath;

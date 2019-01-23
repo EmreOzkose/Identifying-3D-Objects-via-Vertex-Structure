@@ -44,6 +44,7 @@ void Shader::Load(string vertexPath, string fragmentPath)
 	LightAmbientLocation = glGetUniformLocation(program, "LightAmbient");
 	LightIntensityLocation = glGetUniformLocation(program, "LightIntensity");
 	
+	
 
 
 

@@ -5,7 +5,7 @@ in vec3 vNormal;
 uniform mat4 Model,Projection,View;
 
 flat out vec4 vColor;
-uniform vec3 viewPos; 
+uniform vec3 ViewPos; 
 
 uniform vec3 LightPos[4]; 
 uniform vec3 LightColor[4]; 
@@ -37,20 +37,20 @@ void main()
 	vec3 FragPos= (Model * vPosition).xyz;
 	vec3 diffuse,specular,ambient;
 	vec3 N=normalize(mat3(Model*rZ*rY*rX*inverse(Model)*(inverse(Model))) * vNormal).xyz;
-	vec3 V=normalize(viewPos),L;
+	vec3 V=normalize(ViewPos),L;
 	for(int i=0;i<4;i++)
 	{
 
 			float dist=length(LightPos[i]-FragPos);
 			float attenuation=1.0/(.1+.01*dist+.001*dist*dist);
 
-			V=normalize(viewPos-FragPos);
+			V=normalize(ViewPos-FragPos);
 			L=normalize(LightPos[i]-FragPos);
 			
 			vec3 H = normalize( L + V );  
 	
 			float Kd = max(dot(L, N), 0.0);
-			diffuse += Kd * LightColor[i] *attenuation*LightIntensity[i]*ObjectColor;
+			diffuse += Kd * LightColor[i] *attenuation*LightIntensity[i];
     
 
 			float Ks = pow(max(dot(N, H), 0.0), Smoothness);
@@ -77,6 +77,7 @@ void main()
 
 	vColor=vec4(result,1);
 	//normal+=vec3(0,pos.y,0);
+	vColor*=ObjectColor;
 gl_Position = Projection*View*Model*rZ*rY*rX*inverse(Model)*Model*vPosition;
 	
 

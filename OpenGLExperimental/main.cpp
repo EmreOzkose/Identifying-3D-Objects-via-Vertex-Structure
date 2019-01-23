@@ -97,6 +97,7 @@
 
 	/*-----------------CREATE MATERIALS----------------*/
 
+	//main colors
 	Material material_red     = Material(vec3(1, 0, 0), vec3(1, 1, 1), 32);
 	Material material_green   = Material(vec3(0, 1, 0), vec3(1, 1, 1), 32);
 	Material material_black   = Material(vec3(0, 0, 0), vec3(1, 1, 1), 32);
@@ -106,6 +107,13 @@
 	Material material_magenta = Material(vec3(1, 0, 1), vec3(1, 1, 1), 32);
 	Material material_cyan	  = Material(vec3(0, 1, 1), vec3(1, 1, 1), 32);
 
+	//metals
+	Material material_iron = Material(vec3(.560f, .570f, .580f), vec3(1, 1, 1), 128);
+	Material material_silver = Material(vec3(.972f, .960f, .915f), vec3(1, 1, 1), 128);
+	Material material_aliminum = Material(vec3(.913, .921f, .925f), vec3(1, 1, 1), 128);
+	Material material_gold = Material(vec3(1.0f, .766f, .336f), vec3(1, 1, 1), 128);
+	Material material_copper = Material(vec3(.955f, .637f, .538f), vec3(1, 1, 1), 128);
+	Material material_titanium = Material(vec3(.542f, .497f, .449f), vec3(1, 1, 1), 128);
 	/*-----------------CREATE MATERIALS----------------*/
 
 
@@ -119,6 +127,7 @@
 	Shader shader_skybox	 = Shader();
 	Shader shader_smoothtoon = Shader();
 	Shader shader_pbr = Shader();
+	Shader shader_morph = Shader();
 
 	/*-----------------SETUP SHADERS----------------*/
 
@@ -149,7 +158,7 @@ int main(int argc, char **argv) {
 
 
 	mainLight[0] = mainScene.CreateMainLight(vec3(1), vec3(1, 1, 1), 2, 0.25f);
-	mainLight[0].transform.position=vec3(0, 60, 0);
+	mainLight[0].transform.position=vec3(20, 60, 20);
 
 	mainLight[1] = mainScene.CreateMainLight(vec3(1,1,0), vec3(1, 1, 0), 2, 0.2f);
 	mainLight[2].transform.position = vec3(-20, 2, 0);
@@ -180,19 +189,20 @@ int main(int argc, char **argv) {
 	shader_particle = Shader("particleVertex.glsl", "particleFragment.glsl");
 	shader_skybox = Shader("SkyboxVertex.glsl", "SkyboxFragment.glsl");
 	shader_smoothtoon = Shader("SmoothedToonVertex.glsl", "SmoothedToonFragment.glsl");
-	shader_pbr = Shader("PBRVertex.glsl","PBRFragment.glsl");
-
+	shader_pbr = Shader("PBRVertex.glsl", "PBRFragment.glsl");
+	shader_morph = Shader("Morphvertex.glsl", "Morphfragment.glsl");
+	
 	/*-----------------CREATE ENVIROMENT----------------*/
 
-	//Sea = GameObject("Sea", "Models/Plane.obj", shader_water);
+	Sea = GameObject("Sea", "Models/Plane.obj", shader_pbr);
 	Skybox = GameObject("Skybox", "Models/Cube.obj", shader_skybox);
-	Skybox.SetupMesh(GL_TRUE);/*
+	Skybox.SetupMesh(GL_TRUE);
 	Sea.SetupMesh();
 	cout << "Sea is created." << endl;
- 	Ground = GameObject("Ground", "Models/Ground.obj", shader_blinnphong,material_cyan);
+ 	Ground = GameObject("Ground", "Models/Ground.obj", shader_pbr,material_cyan);
 	Ground.SetupMesh();
 	cout << "Ground is created." << endl;
-	//Sea.transform.Translate(vec3(0, -2, 0));*/
+	Sea.transform.Translate(vec3(0, -2, 0));
 
 	/*-----------------CREATE ENVIROMENT----------------*/
 
@@ -205,11 +215,11 @@ int main(int argc, char **argv) {
 		{
 			string name = "Object_" + to_string(i * sqrt(OBJECTS_BEGIN_SIZE) + j);
 			if ((i + j) % 2 == 0)
-				objyn2 = GameObject(name, pathSphere, shader_pbr, material_white);
+				objyn2 = GameObject(name, PathCube, shader_blinnphong, material_titanium);
 			else
-				objyn2 = GameObject(name, pathSphere, shader_flat, material_cyan);
+				objyn2 = GameObject(name, PathWolf, shader_blinnphong, material_titanium);
 			objyn2.SetupMesh();
-			objyn2.transform.position = vec3(GLfloat(i)*10, 0, GLfloat(j)*10);
+			objyn2.transform.position = vec3(GLfloat(i)*2, 0, GLfloat(j)*2);
 			ObjectsOnScene.push_back(objyn2);
 
 			//can be deleted
@@ -323,7 +333,9 @@ void Keyboard(unsigned char key, int x, int y)
 	}
 		
 	if (key == 'l')
-		wireframeMode = !wireframeMode;
+	{
+		ObjectsOnScene.at(0).Morph(ObjectsOnScene.at(1));
+	}
 	if (key == '7')
 		mainScene.SelectedObject->ResetShader();
 
@@ -365,7 +377,7 @@ void MouseMotion(int x, int y)
 #pragma endregion
 void ExportVertices(vector<GameObject> arr,GLuint times)
 {
-	/*//680 is max
+	//680 is max
 	for (size_t x = 0; x < arr.size(); x++)
 	{
 		string s = std::to_string(x+1);
@@ -378,15 +390,15 @@ void ExportVertices(vector<GameObject> arr,GLuint times)
 			
 			outfile << "Echo "+to_string(i+1)  << std::endl;
 			//considering ofc vertex size is more than 680
-			GLuint difference = arr[x].BaseVertices.size() - 680,Jump=0;
+			GLuint difference = arr[x].EndVertexPositions.size() - 680,Jump=0;
 
 			GLuint ind ;
 			if (difference != 0)
-				ind = arr[x].BaseVertices.size() / difference;
+				ind = arr[x].EndVertexPositions.size() / difference;
 			//outfile << "Difference is : " << to_string(difference) << "\n";
 			//outfile << "Vertex size is : " << to_string(arr[x].BaseVertices.size()) << "\n";
 			//outfile << "Index is : " << to_string(ind) << "\n";
-			for (size_t j = 0; j < arr[x].BaseVertices.size(); j++)
+			for (size_t j = 0; j < arr[x].EndVertexPositions.size(); j++)
 			{
 				
 				GLuint modulo = 5;
@@ -412,7 +424,7 @@ void ExportVertices(vector<GameObject> arr,GLuint times)
 		}
 		outfile.close();
 		
-	}*/
+	}
 }
 
 void DrawEnviroment()
@@ -430,7 +442,7 @@ void DrawSkybox()
 }
 void DrawModels()
 {
-	for (size_t i = 0; i < mainScene.Object_SIZE; i++)
+	for (size_t i = 0; i < mainScene.Object_SIZE-1; i++)
 		ObjectsOnScene.at(i).Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn, textureOn);
 }
 void DrawReflections() {

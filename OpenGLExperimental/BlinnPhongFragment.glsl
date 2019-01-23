@@ -3,7 +3,7 @@ out vec4 FragColor;
 
 in vec3 Normal;  
 in vec3 FragPos;  
-uniform vec3 viewPos; 
+uniform vec3 ViewPos; 
 in vec2 vCoords;
 in mat3 TBN;
 in mat3 rotationModel;
@@ -39,13 +39,16 @@ void main()
 
 		
 		float dist=length(LightPos[i]-FragPos);
+		//lesser attenuation
 		float attenuation=1.0/(.1+.01*dist+.001*dist*dist);
+		//alternative
+		//float attenuation=1.0/(1+.1*dist+.01*dist*dist);
 
 
 		if(useBump==1)
 		{
 			vec3 TextureNormal_tangentspace = normalize(rotationModel*texture( NormalMap, vCoords ).rgb*2.0 - 1.0);
-			V=TBN * normalize(viewPos-FragPos);
+			V=TBN * normalize(ViewPos-FragPos);
 			L=TBN * normalize(LightPos[i]-FragPos);
 	 
 			vec3 H = normalize( L + V );  
@@ -53,7 +56,7 @@ void main()
 	
 
 			float Kd = max(dot(L, TextureNormal_tangentspace), 0.0);
-			diffuse += Kd * LightColor[i] *attenuation*LightIntensity[i]*ObjectColor;
+			diffuse += Kd * LightColor[i] *attenuation*LightIntensity[i];
     
 
 			float Ks = pow(max(dot(TextureNormal_tangentspace, H), 0.0), Smoothness);
@@ -63,13 +66,13 @@ void main()
 
 		else{
 	
-			V=normalize(viewPos-FragPos);
+			V=normalize(ViewPos-FragPos);
 			L=normalize(LightPos[i]-FragPos);
 			
 			vec3 H = normalize( L + V );  
 	
 			float Kd = max(dot(L, N), 0.0);
-			diffuse += Kd * LightColor[i] *attenuation*LightIntensity[i]*ObjectColor;
+			diffuse += Kd * LightColor[i] *attenuation*LightIntensity[i];
     
 
 			float Ks = pow(max(dot(N, H), 0.0), Smoothness);
@@ -94,5 +97,5 @@ void main()
 	else
 		FragColor = vec4(result, 1.0);
 
-
+		FragColor*=ObjectColor;
 } 
