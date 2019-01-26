@@ -187,16 +187,10 @@
     <None Include="SmoothedToonFragment.glsl">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="PBRVertex.glsl">
+    <None Include="BphongSimpFragment.glsl">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="PBRFragment.glsl">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="Morphvertex.glsl">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="Morphfragment.glsl">
+    <None Include="BphongSimpVertex.glsl">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>

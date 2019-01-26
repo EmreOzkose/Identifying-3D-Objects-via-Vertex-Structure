@@ -90,6 +90,17 @@
 	string albedo_09 = "Textures/Albedo_09.jpg";
 	string normal_09 = "Textures/Albedo_09_NRM.jpg";
 
+	GameObject texturehelper;
+	struct GameObject::Texture texture_01 = texturehelper.CreateTexture(albedo_01, normal_01);
+	struct GameObject::Texture texture_02 = texturehelper.CreateTexture(albedo_02, normal_02);
+	struct GameObject::Texture texture_03 = texturehelper.CreateTexture(albedo_03, normal_03);
+	struct GameObject::Texture texture_04 = texturehelper.CreateTexture(albedo_04, normal_04);
+	struct GameObject::Texture texture_05 = texturehelper.CreateTexture(albedo_05, normal_05);
+	struct GameObject::Texture texture_06 = texturehelper.CreateTexture(albedo_06, normal_06);
+	struct GameObject::Texture texture_07 = texturehelper.CreateTexture(albedo_07, normal_07);
+	struct GameObject::Texture texture_08 = texturehelper.CreateTexture(albedo_08, normal_08);
+	struct GameObject::Texture texture_09 = texturehelper.CreateTexture(albedo_09, normal_09);
+
 
 	/*-----------------DEFINE TEXTURE PATHS----------------*/
 
@@ -121,13 +132,13 @@
 
 	Shader shader_flat		 = Shader();
 	Shader shader_blinnphong = Shader();
+	Shader shader_bphongsimp = Shader();
 	Shader shader_water		 = Shader();
 	Shader shader_toon		 = Shader();
 	Shader shader_particle	 = Shader();
 	Shader shader_skybox	 = Shader();
 	Shader shader_smoothtoon = Shader();
-	Shader shader_pbr = Shader();
-	Shader shader_morph = Shader();
+	
 
 	/*-----------------SETUP SHADERS----------------*/
 
@@ -157,16 +168,16 @@ int main(int argc, char **argv) {
 	/*-----------------SETUP LIGHTS----------------*/
 
 
-	mainLight[0] = mainScene.CreateMainLight(vec3(1), vec3(1, 1, 1), 2, 0.25f);
-	mainLight[0].transform.position=vec3(20, 60, 20);
+	mainLight[0] = mainScene.CreateMainLight(vec3(1), vec3(1, 1, 1), 1, 0);
+	mainLight[0].transform.position=vec3(0, 20, 0);
 
-	mainLight[1] = mainScene.CreateMainLight(vec3(1,1,0), vec3(1, 1, 0), 2, 0.2f);
-	mainLight[2].transform.position = vec3(-20, 2, 0);
+	mainLight[1] = mainScene.CreateMainLight(vec3(1), vec3(1), 2, 0.1f);
+	mainLight[2].transform.position = vec3(-20, 20, 110);
 
-	mainLight[2] = mainScene.CreateMainLight(vec3(0,1,1), vec3(0, 1, 1), 2, 0.3f);
-	mainLight[2].transform.position = vec3(20, 2, 0);
+	mainLight[2] = mainScene.CreateMainLight(vec3(1), vec3(1), .5, 0.1f);
+	mainLight[2].transform.position = vec3(50, -20,10);
 
-	mainLight[3] = mainScene.CreateMainLight(vec3(1,0,1), vec3(1, 0, 1), 2, 0.4f);
+	mainLight[3] = mainScene.CreateMainLight(vec3(1), vec3(1), 2, 0.1f);
 	mainLight[3].transform.position = vec3(20,-40, -20);
 	cout << "Scene and Light created." << endl;
 	/*-----------------SETUP LIGHTS----------------*/
@@ -184,23 +195,22 @@ int main(int argc, char **argv) {
 
 	shader_flat = Shader("FlatVertex.glsl", "FlatFragment.glsl");
 	shader_blinnphong = Shader("BlinnPhongVertex.glsl", "BlinnPhongFragment.glsl");
+	shader_bphongsimp = Shader("BphongSimpVertex.glsl", "BphongSimpFragment.glsl");
 	shader_water = Shader("WaterVertex.glsl", "WaterFragment.glsl");
 	shader_toon = Shader("ToonVertex.glsl", "ToonFragment.glsl");
 	shader_particle = Shader("particleVertex.glsl", "particleFragment.glsl");
 	shader_skybox = Shader("SkyboxVertex.glsl", "SkyboxFragment.glsl");
 	shader_smoothtoon = Shader("SmoothedToonVertex.glsl", "SmoothedToonFragment.glsl");
-	shader_pbr = Shader("PBRVertex.glsl", "PBRFragment.glsl");
-	shader_morph = Shader("Morphvertex.glsl", "Morphfragment.glsl");
 	
 	/*-----------------CREATE ENVIROMENT----------------*/
 
-	Sea = GameObject("Sea", "Models/Plane.obj", shader_pbr);
-	Skybox = GameObject("Skybox", "Models/Cube.obj", shader_skybox);
+	Sea = GameObject("Sea", "Models/Plane.obj", shader_water,material_cyan,1);
+	Skybox = GameObject("Skybox", "Models/Cube.obj", shader_skybox,1);
 	Skybox.SetupMesh(GL_TRUE);
 	Sea.SetupMesh();
-	cout << "Sea is created." << endl;
- 	Ground = GameObject("Ground", "Models/Ground.obj", shader_pbr,material_cyan);
-	Ground.SetupMesh();
+ 	cout << "Sea is created." << endl;
+ 	//Ground = GameObject("Ground", "Models/Ground.obj", shader_blinnphong, material_iron);
+	//Ground.SetupMesh();
 	cout << "Ground is created." << endl;
 	Sea.transform.Translate(vec3(0, -2, 0));
 
@@ -214,12 +224,19 @@ int main(int argc, char **argv) {
 		for (size_t j = 0; j < (sqrt(OBJECTS_BEGIN_SIZE)); j++)
 		{
 			string name = "Object_" + to_string(i * sqrt(OBJECTS_BEGIN_SIZE) + j);
+			//deletthis
+			GLfloat size = (rand()%8)/10.0;
+
+			//deletthis
 			if ((i + j) % 2 == 0)
-				objyn2 = GameObject(name, PathCube, shader_blinnphong, material_titanium);
+				objyn2 = GameObject(name, PathCube, shader_blinnphong, material_silver,texture_05, 1);
 			else
-				objyn2 = GameObject(name, PathWolf, shader_blinnphong, material_titanium);
+				objyn2 = GameObject(name, PathCube, shader_blinnphong, material_silver, texture_01, 1);
 			objyn2.SetupMesh();
-			objyn2.transform.position = vec3(GLfloat(i)*2, 0, GLfloat(j)*2);
+			//deletthis
+
+			//delettis
+			objyn2.transform.position = vec3(size,GLfloat(i)*2, GLfloat(j)*2);
 			ObjectsOnScene.push_back(objyn2);
 
 			//can be deleted
@@ -323,19 +340,9 @@ void Keyboard(unsigned char key, int x, int y)
 		textureOn = !textureOn;
 	if (key == 'c')
 	{
-		GameObject obj = GameObject("New GameObject", PathDog, shader_flat);
-		GLfloat randa = rand()%10;
-		vec3 po = vec3(0,randa,0);
-		obj.SetupMesh();
-		obj.transform.Translate(po);
-		ObjectsOnScene.push_back(obj);
-		mainScene.Object_SIZE++;
+		mainScene.SelectedObject->go_texture = texture_06;
 	}
-		
-	if (key == 'l')
-	{
-		ObjectsOnScene.at(0).Morph(ObjectsOnScene.at(1));
-	}
+
 	if (key == '7')
 		mainScene.SelectedObject->ResetShader();
 
@@ -442,7 +449,7 @@ void DrawSkybox()
 }
 void DrawModels()
 {
-	for (size_t i = 0; i < mainScene.Object_SIZE-1; i++)
+	for (size_t i = 0; i < mainScene.Object_SIZE; i++)
 		ObjectsOnScene.at(i).Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn, textureOn);
 }
 void DrawReflections() {

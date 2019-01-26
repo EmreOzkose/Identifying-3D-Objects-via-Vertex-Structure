@@ -37,14 +37,14 @@ void main()
 	vec3 FragPos= (Model * vPosition).xyz;
 	vec3 diffuse,specular,ambient;
 	vec3 N=normalize(mat3(Model*rZ*rY*rX*inverse(Model)*(inverse(Model))) * vNormal).xyz;
-	vec3 V=normalize(ViewPos),L;
+	vec3 V=normalize(-FragPos),L;
 	for(int i=0;i<4;i++)
 	{
 
 			float dist=length(LightPos[i]-FragPos);
 			float attenuation=1.0/(.1+.01*dist+.001*dist*dist);
 
-			V=normalize(ViewPos-FragPos);
+			
 			L=normalize(LightPos[i]-FragPos);
 			
 			vec3 H = normalize( L + V );  

@@ -179,12 +179,10 @@
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="BphongSimpFragment.glsl" />
+    <None Include="BphongSimpVertex.glsl" />
     <None Include="FlatFragment.glsl" />
     <None Include="BlinnPhongFragment.glsl" />
-    <None Include="Morphfragment.glsl" />
-    <None Include="Morphvertex.glsl" />
-    <None Include="PBRFragment.glsl" />
-    <None Include="PBRVertex.glsl" />
     <None Include="SkyboxFragment.glsl" />
     <None Include="SkyboxVertex.glsl" />
     <None Include="SmoothedToonFragment.glsl" />

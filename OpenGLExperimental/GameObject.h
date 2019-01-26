@@ -3,17 +3,18 @@
 #include "Shader.h"
 #include "Light.h"
 #include "Vertex.h"
-
 using namespace std;
 class GameObject :public Object {
 
+	
 
 public:
-	
+	struct Texture {
+		string albedo;
+		string nrm;
+	};
 
-	
-	void load_obj(string path, bool includetexandnormals);
-	void load_obj(string path);
+	void load_obj(string path, GLfloat scale);
 	void Draw(mat4 view, mat4 pro, GLfloat time, Light Light[4], vec3 Camerapos, GLuint &usebump, GLuint &usetexture);
 	void SetupMesh(GLboolean cubemap);
 	void SetupMesh();
@@ -25,8 +26,14 @@ public:
 	void SwitchShader(Shader &shader);
 	void ResetShader();
 	void ChangeMaterial(Material mat);
-	void Morph(GameObject obj);
-
+	void Scale(GLfloat val);
+ Texture CreateTexture(string base,string nrm) {
+		struct Texture tex ;
+		tex.albedo = base;
+		tex.nrm = nrm;
+		return tex;
+	};
+	Texture go_texture;
 
 	GLuint loadCubemap(vector<string> faces);
 	//remove useshader func and add a shader class
@@ -61,16 +68,25 @@ public:
 
 
 	//constructors
-	GameObject(string name, string modelPath, Shader shader, Material mat) : Object(name)
+	GameObject(string name, string modelPath, Shader shader, Material mat,GLfloat scale) : Object(name)
 	{
-		load_obj(modelPath);
+		load_obj(modelPath, scale);
 		BaseShader = shader;
 		CurrentShader = shader;
 		go_material = mat;
 	}
-	GameObject(string name, string modelPath, Shader shader) : Object(name)
+	GameObject(string name, string modelPath, Shader shader, Material mat,struct Texture tex, GLfloat scale) : Object(name)
 	{
-		load_obj(modelPath);
+		load_obj(modelPath, scale);
+		BaseShader = shader;
+		CurrentShader = shader;
+		go_material = mat;
+		go_texture.albedo=tex.albedo;
+		go_texture.nrm = tex.nrm;
+	}
+	GameObject(string name, string modelPath, Shader shader, GLfloat scale) : Object(name)
+	{
+		load_obj(modelPath, scale);
 		BaseShader = shader;
 		go_material = Material(vec3(1),vec3(1),32);
 		CurrentShader = shader;
@@ -89,7 +105,9 @@ public:
 		CurrentShader = shader;
 	}GameObject() : Object()
 	{
+
 	}
+
 
 	
 };

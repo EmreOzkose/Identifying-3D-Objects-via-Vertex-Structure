@@ -40,15 +40,15 @@ void main()
 		
 		float dist=length(LightPos[i]-FragPos);
 		//lesser attenuation
-		float attenuation=1.0/(.1+.01*dist+.001*dist*dist);
-		//alternative
+		float attenuation=1.0/(1+.1*dist+.01*dist*dist);
+		//alternative1
 		//float attenuation=1.0/(1+.1*dist+.01*dist*dist);
 
 
 		if(useBump==1)
 		{
 			vec3 TextureNormal_tangentspace = normalize(rotationModel*texture( NormalMap, vCoords ).rgb*2.0 - 1.0);
-			V=TBN * normalize(ViewPos-FragPos);
+			V=TBN * normalize(-FragPos);
 			L=TBN * normalize(LightPos[i]-FragPos);
 	 
 			vec3 H = normalize( L + V );  
@@ -60,13 +60,13 @@ void main()
     
 
 			float Ks = pow(max(dot(TextureNormal_tangentspace, H), 0.0), Smoothness);
-			specular += Ks * SpecularColor*attenuation;  
+			specular += Ks * SpecularColor*attenuation*LightIntensity[i];  
 	
 		}
 
 		else{
 	
-			V=normalize(ViewPos-FragPos);
+			V=normalize(-FragPos);
 			L=normalize(LightPos[i]-FragPos);
 			
 			vec3 H = normalize( L + V );  
