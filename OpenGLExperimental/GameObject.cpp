@@ -1,13 +1,13 @@
 #include "GameObject.h"
 #include <fstream>
 #include <string>
-
+#include <algorithm> 
 #include <sstream>
 #include <set> 
 #include <iterator> 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
-
+using namespace std;
 
 vector<string> split(string strToSplit, char delimeter);
 GLfloat LengthofVec(vec4 vect);
@@ -248,11 +248,12 @@ void GameObject::Draw(mat4 view, mat4 pro, GLfloat time, Light Light[4], vec3 Ca
 
 	glUniform1f(CurrentShader.material_smoothness, go_material.m_Smoothness);
 
-
+	
+	glUniform1i(CurrentShader.textureLocation, 0);
+	glUniform1i(CurrentShader.normalMapLocation, 2);
 
 	glUniform1i(CurrentShader.skyboxLocation, Skybox);
-	glUniform1i(CurrentShader.textureLocation, 0);
-	glUniform1i(CurrentShader.normalMapLocation, 1);
+	
 
 
 
@@ -260,12 +261,11 @@ void GameObject::Draw(mat4 view, mat4 pro, GLfloat time, Light Light[4], vec3 Ca
 
 	glUniform1i(CurrentShader.UseBumpMapLocation, usebump);
 	glUniform1i(CurrentShader.UseTextureLocation, usetexture);
-
+	RefreshPos(Camerapos);
 	glUniform1f(CurrentShader.LocationTime, time);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glDrawElements(GL_TRIANGLES, VertexIndices.size(), GL_UNSIGNED_INT, 0);
 }
-
 void GameObject::SetupMesh()
 {
 	
@@ -314,21 +314,35 @@ void GameObject::SetupMesh()
 	unsigned char *data = stbi_load(go_texture.albedo.c_str(), &width, &height, &nrChannels, 0);
 	if (!data)
 		return;
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, Texture);
+
+
+	glActiveTexture(GL_TEXTURE0+0);
 	glGenTextures(1, &Texture);
+	glBindTexture(GL_TEXTURE_2D, Texture);
+	
+
+
+
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 	glGenerateMipmap(GL_TEXTURE_2D);
-
 	//normal
+
+
 	unsigned char *data2 = stbi_load(go_texture.nrm.c_str() , &width, &height, &nrChannels, 0);
-	glActiveTexture(GL_TEXTURE1);
+
+
+
+	glActiveTexture(GL_TEXTURE0+2);
 	glGenTextures(1, &NormalMap);
 	glBindTexture(GL_TEXTURE_2D, NormalMap);
+
+
+
+
+
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data2);
 	glGenerateMipmap(GL_TEXTURE_2D);
-
 
 
 	stbi_image_free(data);
@@ -409,9 +423,11 @@ void GameObject::Bind(GLuint program)
 {
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-
-	glBindTexture(GL_TEXTURE_CUBE_MAP, Texture);
-
+	//glBindTexture(GL_TEXTURE_CUBE_MAP, Texture);
+	glActiveTexture(GL_TEXTURE0 + 0);
+	glBindTexture(GL_TEXTURE_2D, Texture);
+	glActiveTexture(GL_TEXTURE0 + 2);
+	glBindTexture(GL_TEXTURE_2D, NormalMap);
 	//glBindTexture(GL_TEXTURE_2D, NormalMap);
 	//glBindTexture(GL_TEXTURE_2D,Texture);
 
@@ -548,4 +564,27 @@ GLuint GameObject::loadCubemap(vector<string> faces)
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
 	return Skybox;
+}
+
+void GameObject::RefreshPos(vec3 cam)
+{
+	GLdouble dist = DistTo(cam);
+	GLdouble threshold = 15.0;
+	//meaning when distance is 5 target willl be assigned.
+	vec3 vector = normalize(assignedPosition-transform.position);
+	if (dist >= 100+ threshold)
+		dist = 100+ threshold;
+	if (dist <= threshold)
+		dist = threshold;
+	dist /= 100;
+	dist -= threshold /100.0;
+	dist = 1 - dist;
+	dist /= 100;
+	transform.position = transform.position * (1- dist) + assignedPosition * (dist);
+
+} 
+
+GLfloat GameObject::DistTo(vec3 v)
+{
+	return sqrt(pow(assignedPosition.x-v.x, 2));
 }

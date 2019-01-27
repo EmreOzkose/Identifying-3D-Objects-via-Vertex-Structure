@@ -38,7 +38,6 @@
 	void KeyboardUp(unsigned char key, int x, int y);
 	void MouseMotion(int x, int y);
 	void Mouse(int x, int y);
-	void Timer(int value);
 	void Idle();
 	void DrawEnviroment();
 	void DrawSkybox();
@@ -46,6 +45,7 @@
 	void DrawModels();
 	void DrawReflections();
 	void DrawScaledModels();
+	void control_cb(int control);
 	void ExportVertices(vector<GameObject> arr, GLuint times);
 	/*-----------------DEFINITIONS----------------*/
 
@@ -100,7 +100,9 @@
 	struct GameObject::Texture texture_07 = texturehelper.CreateTexture(albedo_07, normal_07);
 	struct GameObject::Texture texture_08 = texturehelper.CreateTexture(albedo_08, normal_08);
 	struct GameObject::Texture texture_09 = texturehelper.CreateTexture(albedo_09, normal_09);
-
+	vector<struct GameObject::Texture> txtreList{ texture_01,texture_02,texture_03,texture_04,
+		texture_05,texture_06,texture_07,texture_08,texture_09
+};
 
 	/*-----------------DEFINE TEXTURE PATHS----------------*/
 
@@ -125,6 +127,8 @@
 	Material material_gold = Material(vec3(1.0f, .766f, .336f), vec3(1, 1, 1), 128);
 	Material material_copper = Material(vec3(.955f, .637f, .538f), vec3(1, 1, 1), 128);
 	Material material_titanium = Material(vec3(.542f, .497f, .449f), vec3(1, 1, 1), 128);
+
+	vector<Material> selectedObj_colors_vec = { material_aliminum,material_gold,material_copper };
 	/*-----------------CREATE MATERIALS----------------*/
 
 
@@ -160,7 +164,45 @@ int main(int argc, char **argv) {
 
 	main_console = Console(mainWindow);
 	main_console.SetupConsole();
+	new GLUI_StaticText(main_console.glui_v_panel_intro, "Applied commands or features will be printed here: ");
+	main_console.text_command_result = new GLUI_StaticText(main_console.glui_v_panel_intro, "...");
 
+	main_console.text_scene = new GLUI_EditText(main_console.glui_v_panel_parameters, "Scene:", main_console.command_text, 4, &control_cb);
+	main_console.text_num_of_light = new GLUI_EditText(main_console.glui_v_panel_parameters, "#of Light:", main_console.command_text, 5, &control_cb);
+
+	main_console.spinner_l_intensity = new GLUI_Spinner(main_console.glui_v_panel_parameters, "Light Intensity:", &main_console.spinner_value_l_intensity, 14, &control_cb);
+	main_console.spinner_l_intensity->set_int_limits(0.0, 1.0);
+
+	main_console.text_command = new GLUI_EditText(main_console.glui_v_panel_command, "", main_console.command_text, 3, &control_cb);
+	main_console.text_command->set_w(300);
+
+	main_console.checkbox_wireframe = new GLUI_Checkbox(main_console.glui_v_panel_features, "Wireframe: ", &main_console.wireframe, 6, &control_cb);
+	main_console.checkbox_bumpmap = new GLUI_Checkbox(main_console.glui_v_panel_features, "Bump Map: ", &main_console.bumpmap, 7, &control_cb);
+	main_console.checkbox_reflection = new GLUI_Checkbox(main_console.glui_v_panel_features, "Reflection: ", &main_console.reflection, 8, &control_cb);
+	// main_console.checkbox_backgroundmusic = new GLUI_Checkbox(main_console.glui_v_panel_features, "Background Music: ", &main_console.backgroundmusic, 9, &control_cb);
+
+	main_console.list_shader = new GLUI_Listbox(main_console.glui_v_panel_selectedobject, "Shader options: ", &main_console.list_current_text, 12, &control_cb);
+	for (int i = 0; i < 3; i++) main_console.list_shader->add_item(i, main_console.list_shader_txt[i]);
+
+	main_console.list_color = new GLUI_Listbox(main_console.glui_v_panel_selectedobject, "Color options: ", &main_console.list_selectedobj_color, 13, &control_cb);
+	for (int i = 0; i < 4; i++)	main_console.list_color->add_item(i, main_console.selectedObj_colors[i]);
+
+	main_console.text_command_move = main_console.text_selectedobject_translation = new GLUI_EditText(main_console.glui_v_panel_selectedobject, "Move to:", main_console.command_move_text, 10, &control_cb);
+	main_console.rotation_selectedobject = new GLUI_Rotation(main_console.glui_v_panel_selectedobject, "Object Rotation", main_console.rotation_matrix, 11, &control_cb);
+
+	new GLUI_StaticText(main_console.glui_v_panel_selectedobject, "Selected Object is predicted as: ");
+	main_console.text_predicted = new GLUI_StaticText(main_console.glui_v_panel_selectedobject, "...");
+
+	new GLUI_StaticText(main_console.glui_v_subwindow, "Press ESC to exit\n");
+
+	main_console.spinner_l_intensity->set_w(300);
+	main_console.text_command->set_w(300);
+	main_console.text_num_of_light->set_w(300);
+	main_console.text_scene->set_w(300);
+
+	main_console.spinner_l_intensity->set_alignment(GLUI_ALIGN_RIGHT);
+	main_console.list_shader->set_alignment(GLUI_ALIGN_RIGHT);
+	main_console.list_color->set_alignment(GLUI_ALIGN_RIGHT);
 	/*-----------------SETUP CONSOLE----------------*/
 
 
@@ -219,33 +261,34 @@ int main(int argc, char **argv) {
 
 
 	GameObject objyn2;
-	for (size_t i = 0; i < (sqrt(OBJECTS_BEGIN_SIZE)); i++)
-	{
-		for (size_t j = 0; j < (sqrt(OBJECTS_BEGIN_SIZE)); j++)
+	GLuint rowIndex = 1,modul0=2;
+		for (size_t j = 0; j < ((OBJECTS_BEGIN_SIZE)); j++)
 		{
-			string name = "Object_" + to_string(i * sqrt(OBJECTS_BEGIN_SIZE) + j);
+			string name = "Object_0" + to_string(j);
 			//deletthis
 			GLfloat size = (rand()%8)/10.0;
-
-			//deletthis
-			if ((i + j) % 2 == 0)
-				objyn2 = GameObject(name, PathCube, shader_blinnphong, material_silver,texture_05, 1);
-			else
-				objyn2 = GameObject(name, PathCube, shader_blinnphong, material_silver, texture_01, 1);
+			objyn2 = GameObject(name, pathPlayer, shader_blinnphong, material_copper, texturehelper.GetRandomTexture(txtreList), 1);
 			objyn2.SetupMesh();
 			//deletthis
 
 			//delettis
-			objyn2.transform.position = vec3(size,GLfloat(i)*2, GLfloat(j)*2);
+			objyn2.assignedPosition= vec3(25+rowIndex * 2, size, (j % modul0) * 2);
+			GLfloat zMod;
+			if (j%modul0 == 0)
+				zMod = -1;
+			else
+				zMod = 1;
+			GLuint ranZ = rand()*8;
+			GLuint ranY = rand() *10;
+			objyn2.startPos = vec3(rowIndex * 2, 100* ranY, 100 * zMod*ranZ);
+			objyn2.transform.position = vec3(rowIndex * 2,100* ranY, 100 * zMod*ranZ);
+			if (j % modul0 == 0)
+				rowIndex++;
 			ObjectsOnScene.push_back(objyn2);
-
 			//can be deleted
-			GLfloat percantage = i * sqrt(OBJECTS_BEGIN_SIZE) + j+1;
+			GLfloat percantage =  j+1;
 			cout << "Model loading : %" << (percantage)*100 / OBJECTS_BEGIN_SIZE << endl;
 		}
-		
-		
-	}
 
 	mainScene.MainCamera.transform.position = vec3(0,1,-2);
 	mainScene.SelectedObject = &ObjectsOnScene.at(0);
@@ -267,6 +310,7 @@ int main(int argc, char **argv) {
 	GLUI_Master.set_glutReshapeFunc(Reshape);
 	GLUI_Master.set_glutDisplayFunc(Display);
 	GLUI_Master.set_glutIdleFunc(Idle);
+	//GLUI_Master.set_glutIdleFunc(Display);
 	GLUI_Master.set_glutKeyboardFunc(Keyboard);
 	//GLUI_Master.set_glutKeyboardFunc();
     //	glutTimerFunc(1, Timer, 0);
@@ -343,8 +387,12 @@ void Keyboard(unsigned char key, int x, int y)
 		mainScene.SelectedObject->go_texture = texture_06;
 	}
 
-	if (key == '7')
-		mainScene.SelectedObject->ResetShader();
+	if (key == '1')
+		mainScene.SelectedObject->transform.Translate(vec3(1, 0, 0));
+	if (key == '2')
+		mainScene.SelectedObject->transform.Translate(vec3(0, 1, 0));
+	if (key == '3')
+		mainScene.SelectedObject->transform.Translate(vec3(0,0, 1));
 
 	if (key == '8')
 		mainScene.SelectedObject->SwitchShader(shader_flat);
@@ -479,3 +527,356 @@ void DrawScaledModels()
 }
 
 
+void control_cb(int control) {
+	//main_console.callback_back(contol);
+	stringstream message;
+
+
+	/* Command Text */
+	if (control == 3) {
+		string command = main_console.text_command->get_text();
+		cout << "Command: " << command << endl; ;
+
+		char char_array[20 + 1]; strcpy(char_array, command.c_str());
+		char *  pch = strtok(char_array, " ,.-");
+
+		if (!strcmp(pch, "settings")) {
+			pch = strtok(NULL, " ");
+
+			if (!strcmp(pch, "wireframe")) {
+				pch = strtok(NULL, " ");
+				if (!strcmp(pch, "on"))	wireframeMode = GL_TRUE;
+				else if (!strcmp(pch, "off")) wireframeMode = GL_FALSE;
+
+				message << "Wireframe is " << pch << endl;
+				main_console.text_command_result->set_text(message.str().c_str());
+			}
+			else if (!strcmp(pch, "bump")) {
+				pch = strtok(NULL, " ");
+				if (!strcmp(pch, "on"))	bumpMapOn = GL_TRUE;
+				else if (!strcmp(pch, "off")) bumpMapOn = GL_FALSE;
+
+				message << "Bump map is " << pch << endl;
+				main_console.text_command_result->set_text(message.str().c_str());
+			}
+			else if (!strcmp(pch, "reflection")) {
+				pch = strtok(NULL, " ");
+				if (!strcmp(pch, "on"))	reflectionIsOn = GL_TRUE;
+				else if (!strcmp(pch, "off")) reflectionIsOn = GL_FALSE;
+
+				message << "Reflection is " << pch << endl;
+				main_console.text_command_result->set_text(message.str().c_str());
+			}
+			else if (!strcmp(pch, "aspect")) {
+				pch = strtok(NULL, " "); GLfloat x = atof(pch);
+				pch = strtok(NULL, " "); GLfloat y = atof(pch);
+
+				message << "Aspect is now : (" << x << ", " << y << ")" << endl;
+				main_console.text_command_result->set_text(message.str().c_str());
+			}
+		}
+		else if (!strcmp(pch, "camera")) {
+			pch = strtok(NULL, " ");
+
+			if (!strcmp(pch, "move")) {
+				pch = strtok(NULL, " "); GLfloat x = atof(pch);
+				pch = strtok(NULL, " "); GLfloat y = atof(pch);
+				pch = strtok(NULL, " "); GLfloat z = atof(pch);
+
+				message << "Object is moved to (" << x << ", " << y << ", " << z << ")" << endl;
+				main_console.text_command_result->set_text(message.str().c_str());
+			}
+			else if (!strcmp(pch, "projection")) {
+				pch = strtok(NULL, " ");
+				if (!strcmp(pch, "perspective")) {
+
+					message << "Projection is set to perspective" << endl;
+					main_console.text_command_result->set_text(message.str().c_str());
+				}
+				else if (!strcmp(pch, "orto")) {
+
+					message << "Projection is set to ortoghraphic" << endl;
+					main_console.text_command_result->set_text(message.str().c_str());
+				}
+			}
+			else if (!strcmp(pch, "mode")) {
+				pch = strtok(NULL, " ");
+				if (!strcmp(pch, "lookat")) {
+
+					message << "Lookat Mode!" << endl;
+					main_console.text_command_result->set_text(message.str().c_str());
+				}
+				else if (!strcmp(pch, "free")) {
+
+					message << "Free Mode!" << endl;
+					main_console.text_command_result->set_text(message.str().c_str());
+				}
+				else if (!strcmp(pch, "follow")) {
+
+					message << "Follow Mode!" << endl;
+					main_console.text_command_result->set_text(message.str().c_str());
+				}
+			}
+			else if (!strcmp(pch, "fov")) {
+				pch = strtok(NULL, " "); GLfloat fov_num = atof(pch);
+				message << "fov -> " << fov_num << endl;
+				main_console.text_command_result->set_text(message.str().c_str());
+			}
+			else if (!strcmp(pch, "offset")) {
+				pch = strtok(NULL, " "); GLfloat x = atof(pch);
+				pch = strtok(NULL, " "); GLfloat y = atof(pch);
+				pch = strtok(NULL, " "); GLfloat z = atof(pch);
+
+				message << "Offset is set to (" << x << ", " << y << ", " << z << ")" << endl;
+				main_console.text_command_result->set_text(message.str().c_str());
+			}
+		}
+		else if (!strcmp(pch, "light")) {
+			pch = strtok(NULL, " "); GLint light_source_id = atoi(pch);
+			//buraya 4 ten buyýk sayýlar ýýcn hata eklenecek
+			pch = strtok(NULL, " ");
+			if (!strcmp(pch, "intensity")) {
+				pch = strtok(NULL, " "); GLfloat intensity = atof(pch);
+				mainLight[light_source_id].ChangeIntensity(intensity);
+				message << "light " << light_source_id << " intensity is set to " << intensity << endl;
+				main_console.text_command_result->set_text(message.str().c_str());
+				
+			}
+			else if (!strcmp(pch, "ambienti")) {
+				pch = strtok(NULL, " "); GLfloat intensity = atof(pch);
+				mainLight[light_source_id].ChangeAmbientIntensity(intensity);
+				message << "light " << light_source_id << " ambient Intensity is set to " << intensity << endl;
+				main_console.text_command_result->set_text(message.str().c_str());
+			}
+			else if (!strcmp(pch, "ambient")) {
+				pch = strtok(NULL, " "); GLfloat x = atof(pch);
+				pch = strtok(NULL, " "); GLfloat y = atof(pch);
+				pch = strtok(NULL, " "); GLfloat z = atof(pch);
+				mainLight[light_source_id].SetAmbientColor(vec3(x,y,z));
+				message << "light " << light_source_id << " ambient is set to (" << x << ", " << y << ", " << z << ")" << endl;
+				main_console.text_command_result->set_text(message.str().c_str());
+			}
+			else if (!strcmp(pch, "color")) {
+				pch = strtok(NULL, " "); GLfloat r = atof(pch);
+				pch = strtok(NULL, " "); GLfloat g = atof(pch);
+				pch = strtok(NULL, " "); GLfloat b = atof(pch);
+				mainLight[light_source_id].SetColor(vec3(r, g, b));
+				message << "light " << light_source_id << " color is set to (" << r << ", " << g << ", " << b << ")" << endl;
+				main_console.text_command_result->set_text(message.str().c_str());
+			}
+			else if (!strcmp(pch, "move")) {
+				pch = strtok(NULL, " "); GLfloat x = atof(pch);
+				pch = strtok(NULL, " "); GLfloat y = atof(pch);
+				pch = strtok(NULL, " "); GLfloat z = atof(pch);
+				mainLight[light_source_id].transform.Translate(vec3(x,y,z));
+				message << "light " << light_source_id << " is moved to (" << x << ", " << y << ", " << z << ")" << endl;
+				main_console.text_command_result->set_text(message.str().c_str());
+			}
+		}
+		/* SELECTED OBJECT COMMANDS */
+		else if (!strcmp(pch, "rotate")) {
+			pch = strtok(NULL, " "); GLfloat angle = atof(pch);
+
+			mainScene.SelectedObject->transform.rotX += angle;
+
+			message << "Selected object is rotated by angle " << angle << endl;
+			main_console.text_command_result->set_text(message.str().c_str());
+		}
+		else if (!strcmp(pch, "move")) {
+			pch = strtok(NULL, " "); GLfloat x = atof(pch);
+			pch = strtok(NULL, " "); GLfloat y = atof(pch);
+			pch = strtok(NULL, " "); GLfloat z = atof(pch);
+
+			mainScene.SelectedObject->transform.Translate(vec3(x, y, z));
+
+			message << "Selected object is translated by (" << x << ", " << y << ", " << z << ")" << endl;
+			main_console.text_command_result->set_text(message.str().c_str());
+		}
+		else if (!strcmp(pch, "shader")) {
+			pch = strtok(NULL, " "); GLfloat x = atof(pch);
+
+			if (!strcmp(pch, "flat")) {
+				mainScene.SelectedObject->SwitchShader(shader_flat);
+				message << "Selected object shader is now: Flat" << endl;
+				main_console.text_command_result->set_text(message.str().c_str());
+			}
+			else if (!strcmp(pch, "toon")) {
+				mainScene.SelectedObject->SwitchShader(shader_toon);
+				message << "Selected object shader is now: Toon" << endl;
+				main_console.text_command_result->set_text(message.str().c_str());
+			}
+			else if (!strcmp(pch, "phong")) {
+				mainScene.SelectedObject->SwitchShader(shader_blinnphong);
+				message << "Selected object shader is now: Phong" << endl;
+				main_console.text_command_result->set_text(message.str().c_str());
+
+			}
+			else if (!strcmp(pch, "simplephong")) {
+				mainScene.SelectedObject->SwitchShader(shader_bphongsimp);
+				message << "Selected object shader is now: SimplePhong" << endl;
+				main_console.text_command_result->set_text(message.str().c_str());
+
+			}
+			else if (!strcmp(pch, "smoothtoon")) {
+				mainScene.SelectedObject->SwitchShader(shader_smoothtoon);
+				message << "Selected object shader is now: Smoothtoon" << endl;
+				main_console.text_command_result->set_text(message.str().c_str());
+
+			}
+			else if (!strcmp(pch, "reset")) {
+				mainScene.SelectedObject->ResetShader();
+				message << "Selected object shader is now initial shader" << endl;
+				main_console.text_command_result->set_text(message.str().c_str());
+			}
+		}
+		else if (!strcmp(pch, "identify")) {
+
+			message << "identfy message" << endl;
+			main_console.text_command_result->set_text(message.str().c_str());
+		}
+		else if (!strcmp(pch, "deform")) {
+
+			message << "Selected object is deformed as ..." << endl;
+			main_console.text_command_result->set_text(message.str().c_str());
+		}
+		else if (!strcmp(pch, "reset")) {
+
+			message << "Selected object is reseted" << endl;
+			main_console.text_command_result->set_text(message.str().c_str());
+		}
+		else if (!strcmp(pch, "material")) {
+			pch = strtok(NULL, " ");
+
+			if (!strcmp(pch, "color")) {
+				
+					pch = strtok(NULL, " "); GLfloat x = atof(pch);
+					pch = strtok(NULL, " "); GLfloat y = atof(pch);
+					pch = strtok(NULL, " "); GLfloat z = atof(pch);
+					mainScene.SelectedObject->go_material.ChangeColor(vec3(x,y,z));
+					message << "Selected object is color to (" << x << ", " << y << ", " << z << ")" << endl;
+					main_console.text_command_result->set_text(message.str().c_str());
+				}
+				
+			
+			else if (!strcmp(pch, "specular")) {
+				pch = strtok(NULL, " "); GLfloat x = atof(pch);
+				pch = strtok(NULL, " "); GLfloat y = atof(pch);
+				pch = strtok(NULL, " "); GLfloat z = atof(pch);
+				mainScene.SelectedObject->go_material.ChangeSpecular(vec3(x, y, z));
+				message << "Selected object is specular color to (" << x << ", " << y << ", " << z << ")" << endl;
+				main_console.text_command_result->set_text(message.str().c_str());
+			}
+			else if (!strcmp(pch, "smoothness")) {
+				pch = strtok(NULL, " "); GLfloat x = atof(pch);
+				mainScene.SelectedObject->go_material.ChangeSmoothness(x);
+				message << "Selected object smoothness is set to " << x << endl;
+				main_console.text_command_result->set_text(message.str().c_str());
+			}
+
+		}
+		else if (!strcmp(pch, "predict")) {
+			//cout << mainScene.SelectedObject->VertexPositions.size() << endl;
+
+				// model->forward(mainScene.SelectedObject->VertexPositions);
+			main_console.text_predicted->set_text("f");
+		}
+		else main_console.text_command_result->set_text("Wrong start command");
+	}
+	/* Scene */
+	else if (control == 4) {
+		// ...
+	}
+	/* Num of Light */
+	else if (control == 5) {
+		string command = main_console.text_command->get_text();
+		cout << "Command: " << command << endl; ;
+
+		int num = atoi(command.c_str());
+
+		// ...
+
+	}
+	else if (control == 6) {
+		if (main_console.wireframe) wireframeMode = GL_TRUE;
+		else wireframeMode = GL_FALSE;
+	}
+	else if (control == 7) {
+		if (main_console.bumpmap) bumpMapOn = GL_TRUE;
+		else bumpMapOn = GL_FALSE;
+	}
+	else if (control == 8) {
+		if (main_console.checkbox_reflection) reflectionIsOn = GL_TRUE;
+		else reflectionIsOn = GL_FALSE;
+	}
+/*	else if (control == 9) {
+		if (main_console.checkbox_backgroundmusic) soundManager.background_music = soundManager.sound_background();
+		else { soundManager.background_music->stop(); soundManager.background_music->drop(); }
+	}*/
+	/* translate selected object */
+	else if (control == 10) {
+		string command = main_console.text_command_move->get_text();
+
+		char char_array[20 + 1]; strcpy(char_array, command.c_str());
+		char *  pch = strtok(char_array, " ,");
+
+		GLfloat x = atof(pch);
+		pch = strtok(NULL, " ,"); GLfloat y = atof(pch);
+		pch = strtok(NULL, " ,"); GLfloat z = atof(pch);
+
+		mainScene.SelectedObject->transform.Translate(vec3(x, y, z));
+
+		message << "Selected object is translated by (" << x << ", " << y << ", " << z << ")" << endl;
+		main_console.text_command_result->set_text(message.str().c_str());
+	}
+	else if (control == 11) {
+
+		float * rot_mat2 = main_console.rotation_matrix;
+
+		float x = rot_mat2[0];
+		float y = rot_mat2[5];
+		float z = rot_mat2[10];
+
+		mainScene.SelectedObject->transform.rotX = x * 360;
+		mainScene.SelectedObject->transform.rotY = y * 360;
+		mainScene.SelectedObject->transform.rotZ = z * 360;
+
+		message << "Selected object is rotated by (" << x << ", " << y << ", " << z << ")" << endl;
+		main_console.text_command_result->set_text(message.str().c_str());
+
+	}
+	else if (control == 12) {
+		if (main_console.list_current_text == 2) {
+			mainScene.SelectedObject->SwitchShader(shader_flat);
+			message << "Selected object is in Flat Shader mode! " << endl;
+		}
+		else if (main_console.list_current_text == 1) {
+			mainScene.SelectedObject->SwitchShader(shader_toon);
+			message << "Selected object is in Toon Shader mode! " << endl;
+		}
+		else if (main_console.list_current_text == 0) {
+			mainScene.SelectedObject->SwitchShader(shader_blinnphong);
+			message << "Selected object is in Blinn Phong Shader mode! " << endl;
+		}
+
+
+		main_console.text_command_result->set_text(message.str().c_str());
+
+	}
+	else if (control == 13) {
+
+		/* Sanýrým texture bind edildiði için renk deðiþmiyor. */
+
+		mainScene.SelectedObject->ChangeMaterial(selectedObj_colors_vec.at(main_console.list_selectedobj_color));
+		message << "Selected object is colored to " << main_console.selectedObj_colors[main_console.list_selectedobj_color] << endl;
+	
+
+		main_console.text_command_result->set_text(message.str().c_str());
+
+	}
+	else if (control == 14) {
+		mainLight[0].ChangeIntensity(main_console.spinner_value_l_intensity);
+		message << "Light Intensith is changed to: " << main_console.spinner_value_l_intensity << endl;
+		main_console.text_command_result->set_text(message.str().c_str());
+	}
+
+}

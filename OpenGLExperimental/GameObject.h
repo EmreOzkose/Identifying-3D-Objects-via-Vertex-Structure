@@ -27,19 +27,27 @@ public:
 	void ResetShader();
 	void ChangeMaterial(Material mat);
 	void Scale(GLfloat val);
+	void RefreshPos(vec3 cam);
+	GLfloat DistTo(vec3 v);
+
  Texture CreateTexture(string base,string nrm) {
 		struct Texture tex ;
 		tex.albedo = base;
 		tex.nrm = nrm;
 		return tex;
 	};
+ Texture GetRandomTexture(vector<Texture> lst1)
+ {
+	 size_t t = lst1.size();
+	 GLuint rnd = rand() % (t-1);
+	 return lst1.at(rnd);
+ }
 	Texture go_texture;
 
 	GLuint loadCubemap(vector<string> faces);
 	//remove useshader func and add a shader class
 	GLuint VAO, VBO, EBO,Texture,NormalMap,VBOtexture, VBOnormal,VBOTangent,VBOBitangent,
 		Roughness,Metallic,Skybox;
-
 	Shader BaseShader,CurrentShader;
 	string  texturePath;
 
@@ -64,6 +72,8 @@ public:
 	vector<GLuint> VertexIndices;
 
 	vec3 pivot = vec3(0,0,0);
+	vec3 assignedPosition = transform.position;
+	vec3 startPos = transform.position;
 	Material go_material;
 
 

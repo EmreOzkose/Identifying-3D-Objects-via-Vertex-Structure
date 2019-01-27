@@ -10,6 +10,8 @@
 #include <iostream>
 #include <fstream>
 #include "Console.h"
+#include <string>       // std::string
+#include <sstream>    
 class Scene {
 
 public:
