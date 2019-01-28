@@ -7,7 +7,7 @@
 	#define WINDOW_WIDTH 1920
 	#define WINDOW_HEIGHT 1080
 	#define WINDOW_NAME "OpenGL"
-	#define OBJECTS_BEGIN_SIZE 4
+	#define OBJECTS_BEGIN_SIZE 5
 	#define MAX_LIGHTS_SIZE 4
 	#define PI 3.14159265359
 
@@ -27,8 +27,10 @@
 	int mainWindow;
 	GameObject Sea,Ground,Skybox;
 	/*-----------------GLOBAL VARIABLES----------------*/
-	GLboolean wireframeMode = GL_FALSE, reflectionIsOn = GL_FALSE;
-	GLuint bumpMapOn = 1, textureOn = 1;
+	GLboolean wireframeMode = GL_FALSE;
+	GLboolean reflectionIsOn = GL_FALSE;
+	GLuint bumpMapOn = 1;
+	GLuint textureOn = 1;
 
 
 	/*-----------------DEFINITIONS----------------*/
@@ -43,7 +45,6 @@
 	void DrawSkybox();
 	void DrawNonScaledModels();
 	void DrawModels();
-	void DrawReflections();
 	void DrawScaledModels();
 	void control_cb(int control);
 	void ExportVertices(vector<GameObject> arr, GLuint times);
@@ -53,17 +54,66 @@
 
 	/*-----------------DEFINE MODEL PATHS----------------*/
 
-	string pathSphere = "Models/Sphere.obj";
-	string pathPlayer = "Models/Human.obj";
-	string pathCar = "Models/Car.obj";
-	string pathDragon = "Models/Dragon.obj";
-	string pathTree = "Models/Tree.obj";
-	string PathDog = "Models/DogN.obj";
-	string PathMonkey = "Models/Monkey.obj";
-	string PathCube = "Models/Cube.obj";
-	string PathWolf = "Models/Wolf.obj";
-	string PathParticle = "Models/Particle.obj";
-	string PathB = "Models/Building.obj";
+
+	//class 1_humanoids
+	string humanoids_path = "Models/Humanoids";
+
+	string path_human = humanoids_path + "/Human.obj";
+	string path_cyborg = humanoids_path + "/Cyborg.obj";
+	string path_skeleton = humanoids_path + "/Skeleton.obj";
+	string path_vampire = humanoids_path + "/Vampire.obj";
+	string path_goblin = humanoids_path + "/Goblin.obj";
+	
+	vector<string> humanoids_paths_all = { path_goblin ,path_skeleton,path_vampire,path_cyborg ,path_human };
+
+	//class 2_quadripedals
+	string quadripedals_path = "Models/Quadripedals";
+
+	string path_deer = quadripedals_path + "/Deer.obj";
+	string path_bear = quadripedals_path + "/Bear.obj";
+	string path_dog = quadripedals_path + "/Dog.obj";
+	string path_wolf = quadripedals_path + "/Wolf.obj";
+	string path_elephant = quadripedals_path + "/Elephant.obj";
+
+	vector<string> quadripedal_paths_all = { path_deer ,path_bear,path_dog,path_wolf ,path_elephant };
+
+
+	//class 3_vehicles
+	string vehicles_path = "Models/Vehicles";
+
+	string path_veha = vehicles_path + "/MonsterVehicle.obj";
+	string path_van = vehicles_path + "/Van.obj";
+	string path_car = vehicles_path + "/Car.obj";
+	string path_lpcar = vehicles_path + "/LowPcar.obj";
+	string path_futcar = vehicles_path + "/FuturisticCar.obj";
+	
+
+	vector<string> vehicles_paths_all = { path_veha ,path_van,path_car,path_lpcar,path_futcar };
+
+
+
+
+	//class 4_trees
+	string trees_path = "Models/Trees";
+
+	string path_tree0 = trees_path + "/Tree_1.obj";
+	string path_tree1 = trees_path + "/Tree_2.obj";
+	string path_tree2 = trees_path + "/Tree_3.obj";
+	string path_tree3 = trees_path + "/Tree_4.obj";
+	string path_tree4 = trees_path + "/Tree_5.obj";
+
+	vector<string> trees_paths_all = { path_tree0 ,path_tree1,path_tree2,path_tree3,path_tree4 };
+
+
+
+
+
+	string path_ground ="Models/Ground.obj";
+	string path_sea = "Models/Plane.obj";
+	string path_cube = "Models/Cube.obj";
+	string path_sphere = "Models/SphereA.obj";
+	string path_ico = "Models/SphereB.obj";
+
 
 	/*-----------------DEFINE MODEL PATHS----------------*/
 
@@ -89,6 +139,9 @@
 	string normal_08 = "Textures/Albedo_08_NRM.jpg";
 	string albedo_09 = "Textures/Albedo_09.jpg";
 	string normal_09 = "Textures/Albedo_09_NRM.jpg";
+	string albedo_10 = "Textures/Albedo_10.jpg";
+	string normal_10 = "Textures/Albedo_10_NRM.jpg";
+
 
 	GameObject texturehelper;
 	struct GameObject::Texture texture_01 = texturehelper.CreateTexture(albedo_01, normal_01);
@@ -100,8 +153,10 @@
 	struct GameObject::Texture texture_07 = texturehelper.CreateTexture(albedo_07, normal_07);
 	struct GameObject::Texture texture_08 = texturehelper.CreateTexture(albedo_08, normal_08);
 	struct GameObject::Texture texture_09 = texturehelper.CreateTexture(albedo_09, normal_09);
+	struct GameObject::Texture texture_10 = texturehelper.CreateTexture(albedo_10, normal_10);
+	
 	vector<struct GameObject::Texture> txtreList{ texture_01,texture_02,texture_03,texture_04,
-		texture_05,texture_06,texture_07,texture_08,texture_09
+		texture_05,texture_06,texture_07,texture_08,texture_09,texture_10
 };
 
 	/*-----------------DEFINE TEXTURE PATHS----------------*/
@@ -128,7 +183,15 @@
 	Material material_copper = Material(vec3(.955f, .637f, .538f), vec3(1, 1, 1), 128);
 	Material material_titanium = Material(vec3(.542f, .497f, .449f), vec3(1, 1, 1), 128);
 
-	vector<Material> selectedObj_colors_vec = { material_aliminum,material_gold,material_copper };
+	//misc
+	Material material_mulberry = Material(vec3(.549f, 0.0f, .294f), vec3(1, 1, 1), 128);
+	Material material_skyblue = Material(vec3(.588f, .784f, .980f), vec3(1, 1, 1), 128);
+	Material material_bloodred = Material(vec3(.745f, 0.0f, 0.0f), vec3(1, 1, 1), 128);
+
+
+
+	vector<Material> selectedObj_colors_vec = { material_aliminum,material_gold,material_copper,material_iron,
+	material_silver ,material_titanium ,material_mulberry,material_skyblue,material_bloodred };
 	/*-----------------CREATE MATERIALS----------------*/
 
 
@@ -176,16 +239,18 @@ int main(int argc, char **argv) {
 	main_console.text_command = new GLUI_EditText(main_console.glui_v_panel_command, "", main_console.command_text, 3, &control_cb);
 	main_console.text_command->set_w(300);
 
-	main_console.checkbox_wireframe = new GLUI_Checkbox(main_console.glui_v_panel_features, "Wireframe: ", &main_console.wireframe, 6, &control_cb);
+	main_console.checkbox_reflection = new GLUI_Checkbox(main_console.glui_v_panel_features, "Texturing: ", &main_console.texture, 9, &control_cb);
 	main_console.checkbox_bumpmap = new GLUI_Checkbox(main_console.glui_v_panel_features, "Bump Map: ", &main_console.bumpmap, 7, &control_cb);
+	main_console.checkbox_wireframe = new GLUI_Checkbox(main_console.glui_v_panel_features, "Wireframe: ", &main_console.wireframe, 6, &control_cb);
 	main_console.checkbox_reflection = new GLUI_Checkbox(main_console.glui_v_panel_features, "Reflection: ", &main_console.reflection, 8, &control_cb);
+	
 	// main_console.checkbox_backgroundmusic = new GLUI_Checkbox(main_console.glui_v_panel_features, "Background Music: ", &main_console.backgroundmusic, 9, &control_cb);
 
 	main_console.list_shader = new GLUI_Listbox(main_console.glui_v_panel_selectedobject, "Shader options: ", &main_console.list_current_text, 12, &control_cb);
 	for (int i = 0; i < 3; i++) main_console.list_shader->add_item(i, main_console.list_shader_txt[i]);
 
 	main_console.list_color = new GLUI_Listbox(main_console.glui_v_panel_selectedobject, "Color options: ", &main_console.list_selectedobj_color, 13, &control_cb);
-	for (int i = 0; i < 4; i++)	main_console.list_color->add_item(i, main_console.selectedObj_colors[i]);
+	for (int i = 0; i < 9; i++)	main_console.list_color->add_item(i, main_console.selectedObj_colors[i]);
 
 	main_console.text_command_move = main_console.text_selectedobject_translation = new GLUI_EditText(main_console.glui_v_panel_selectedobject, "Move to:", main_console.command_move_text, 10, &control_cb);
 	main_console.rotation_selectedobject = new GLUI_Rotation(main_console.glui_v_panel_selectedobject, "Object Rotation", main_console.rotation_matrix, 11, &control_cb);
@@ -234,6 +299,7 @@ int main(int argc, char **argv) {
 
 
 
+	/*-----------------CREATE SHADERS----------------*/
 
 	shader_flat = Shader("FlatVertex.glsl", "FlatFragment.glsl");
 	shader_blinnphong = Shader("BlinnPhongVertex.glsl", "BlinnPhongFragment.glsl");
@@ -243,15 +309,19 @@ int main(int argc, char **argv) {
 	shader_particle = Shader("particleVertex.glsl", "particleFragment.glsl");
 	shader_skybox = Shader("SkyboxVertex.glsl", "SkyboxFragment.glsl");
 	shader_smoothtoon = Shader("SmoothedToonVertex.glsl", "SmoothedToonFragment.glsl");
+
+	/*-----------------CREATE SHADERS----------------*/
+
+
 	
 	/*-----------------CREATE ENVIROMENT----------------*/
 
-	Sea = GameObject("Sea", "Models/Plane.obj", shader_water,material_cyan,1);
-	Skybox = GameObject("Skybox", "Models/Cube.obj", shader_skybox,1);
+	Sea = GameObject("Sea", path_sea, shader_water,material_cyan,1);
+	Skybox = GameObject("Skybox", path_cube, shader_skybox,1);
 	Skybox.SetupMesh(GL_TRUE);
 	Sea.SetupMesh();
  	cout << "Sea is created." << endl;
- 	//Ground = GameObject("Ground", "Models/Ground.obj", shader_blinnphong, material_iron);
+ 	//Ground = GameObject("Ground", path_ground, shader_blinnphong, material_iron);
 	//Ground.SetupMesh();
 	cout << "Ground is created." << endl;
 	Sea.transform.Translate(vec3(0, -2, 0));
@@ -264,24 +334,22 @@ int main(int argc, char **argv) {
 	GLuint rowIndex = 1,modul0=2;
 		for (size_t j = 0; j < ((OBJECTS_BEGIN_SIZE)); j++)
 		{
-			string name = "Object_0" + to_string(j);
 			//deletthis
 			GLfloat size = (rand()%8)/10.0;
-			objyn2 = GameObject(name, pathPlayer, shader_blinnphong, material_copper, texturehelper.GetRandomTexture(txtreList), 1);
+			//objyn2 = GameObject(name, PathCube, shader_blinnphong, material_copper, texture_10, 1);
+			objyn2 = GameObject(trees_paths_all.at(j), trees_paths_all.at(j), shader_blinnphong, material_copper, texturehelper.GetRandomTexture(txtreList), 2);
 			objyn2.SetupMesh();
 			//deletthis
 
 			//delettis
-			objyn2.assignedPosition= vec3(25+rowIndex * 2, size, (j % modul0) * 2);
 			GLfloat zMod;
 			if (j%modul0 == 0)
-				zMod = -1;
+				zMod = -2;
 			else
-				zMod = 1;
+				zMod = 2;
 			GLuint ranZ = rand()*8;
 			GLuint ranY = rand() *10;
-			objyn2.startPos = vec3(rowIndex * 2, 100* ranY, 100 * zMod*ranZ);
-			objyn2.transform.position = vec3(rowIndex * 2,100* ranY, 100 * zMod*ranZ);
+			objyn2.transform.position = vec3(j * 2, 2,  j*2);
 			if (j % modul0 == 0)
 				rowIndex++;
 			ObjectsOnScene.push_back(objyn2);
@@ -293,7 +361,7 @@ int main(int argc, char **argv) {
 	mainScene.MainCamera.transform.position = vec3(0,1,-2);
 	mainScene.SelectedObject = &ObjectsOnScene.at(0);
 	
-	//ExportVertices(ObjectsOnScene,250),
+    ExportVertices(ObjectsOnScene,250),
 	
 	/*-----------------CALLBACKS----------------*/
 	
@@ -358,16 +426,10 @@ void Display(void)
 	}
 	else {
 		glDisable(GL_BLEND);
-		//	Sea.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn);
 		DrawEnviroment();
 		DrawModels();
 	}
 	DrawSkybox();
-	
-
-
-
-/*	*/
 
 	glutSwapBuffers();
 }
@@ -385,6 +447,10 @@ void Keyboard(unsigned char key, int x, int y)
 	if (key == 'c')
 	{
 		mainScene.SelectedObject->go_texture = texture_06;
+	}if (key == 'k')
+	{
+		mainScene.SelectedObject->Deform();
+		
 	}
 
 	if (key == '1')
@@ -430,57 +496,9 @@ void MouseMotion(int x, int y)
 }
 
 #pragma endregion
-void ExportVertices(vector<GameObject> arr,GLuint times)
-{
-	//680 is max
-	for (size_t x = 0; x < arr.size(); x++)
-	{
-		string s = std::to_string(x+1);
-		string name= "Vertices/Model " + s + ".txt";
-		char const *pchar = name.c_str();
-		ofstream outfile(pchar);
-		mainScene.SelectedObject = &arr[x];
-		for (size_t i = 0; i < times; i++)
-		{
-			
-			outfile << "Echo "+to_string(i+1)  << std::endl;
-			//considering ofc vertex size is more than 680
-			GLuint difference = arr[x].EndVertexPositions.size() - 680,Jump=0;
+#pragma region DrawFunctions
 
-			GLuint ind ;
-			if (difference != 0)
-				ind = arr[x].EndVertexPositions.size() / difference;
-			//outfile << "Difference is : " << to_string(difference) << "\n";
-			//outfile << "Vertex size is : " << to_string(arr[x].BaseVertices.size()) << "\n";
-			//outfile << "Index is : " << to_string(ind) << "\n";
-			for (size_t j = 0; j < arr[x].EndVertexPositions.size(); j++)
-			{
-				
-				GLuint modulo = 5;
-				GLfloat a = rand() % modulo + 1;
-				GLfloat b = rand() % modulo + 1;
-				GLfloat c = rand() % modulo + 1;
-				
-				mainScene.SelectedObject->Deform(vec3(a, b, c), 1.0f);
-				if (Jump < difference) {
-					if (j%ind == 0)
-					{
-						//cout << "Skippped at" << to_string(j)<<"\n";
-						Jump++;
-						continue;
-					}
-				}
-				outfile << mainScene.SelectedObject->DeformedVertices.at(j).x << " "
-						<< mainScene.SelectedObject->DeformedVertices.at(j).y << " "
-						<< mainScene.SelectedObject->DeformedVertices.at(j).z << " "
-						<< std::endl;
-			}
-			
-		}
-		outfile.close();
-		
-	}
-}
+
 
 void DrawEnviroment()
 {
@@ -499,10 +517,6 @@ void DrawModels()
 {
 	for (size_t i = 0; i < mainScene.Object_SIZE; i++)
 		ObjectsOnScene.at(i).Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn, textureOn);
-}
-void DrawReflections() {
-
-
 }
 
 void DrawNonScaledModels()
@@ -525,8 +539,8 @@ void DrawScaledModels()
 
 	}
 }
-
-
+#pragma endregion
+#pragma region HelperFunctions
 void control_cb(int control) {
 	//main_console.callback_back(contol);
 	stringstream message;
@@ -808,6 +822,10 @@ void control_cb(int control) {
 		if (main_console.checkbox_reflection) reflectionIsOn = GL_TRUE;
 		else reflectionIsOn = GL_FALSE;
 	}
+	else if (control == 9) {
+	if (main_console.texture) textureOn = GL_TRUE;
+	else textureOn = GL_FALSE;
+	}
 /*	else if (control == 9) {
 		if (main_console.checkbox_backgroundmusic) soundManager.background_music = soundManager.sound_background();
 		else { soundManager.background_music->stop(); soundManager.background_music->drop(); }
@@ -867,7 +885,7 @@ void control_cb(int control) {
 		/* Sanýrým texture bind edildiði için renk deðiþmiyor. */
 
 		mainScene.SelectedObject->ChangeMaterial(selectedObj_colors_vec.at(main_console.list_selectedobj_color));
-		message << "Selected object is colored to " << main_console.selectedObj_colors[main_console.list_selectedobj_color] << endl;
+		message << "Selected object material is changed to " << main_console.selectedObj_colors[main_console.list_selectedobj_color] << endl;
 	
 
 		main_console.text_command_result->set_text(message.str().c_str());
@@ -880,3 +898,59 @@ void control_cb(int control) {
 	}
 
 }
+void ExportVertices(vector<GameObject> arr, GLuint times)
+{
+	//680 is max
+	for (size_t x = 0; x < arr.size(); x++)
+	{
+		string s = std::to_string(x + 1);
+		cout << arr.at(x).GetName() << endl;
+		string name = "Vertices/Model"+to_string(x)+".txt";
+		char const *pchar = name.c_str();
+		ofstream outfile(pchar);
+		mainScene.SelectedObject = &arr[x];
+		for (size_t i = 0; i < times; i++)
+		{
+			if (i %10==0)
+				cout << "10 for "<< arr.at(x).GetName() << endl;
+			outfile << "Echo " + to_string(i + 1) << std::endl;
+			//considering ofc vertex size is more than 680
+			GLuint difference = arr[x].EndVertexPositions.size() - 680, Jump = 0;
+
+			GLuint ind;
+			if (difference != 0)
+				ind = arr[x].EndVertexPositions.size() / difference;
+			//outfile << "Difference is : " << to_string(difference) << "\n";
+			//outfile << "Vertex size is : " << to_string(arr[x].BaseVertices.size()) << "\n";
+			//outfile << "Index is : " << to_string(ind) << "\n";
+			for (size_t j = 0; j < arr[x].EndVertexPositions.size(); j++)
+			{
+
+				GLuint modulo = 10;
+				GLfloat a = rand() % modulo + 1;
+				GLfloat b = rand() % modulo + 1;
+				GLfloat c = rand() % modulo + 1;
+
+				GLfloat x= rand() % modulo + 1;
+				mainScene.SelectedObject->Deform();
+				if (Jump < difference) {
+					if (j%ind == 0)
+					{
+						j += ind-1;
+						Jump++;
+						continue;
+					}
+				}
+				outfile << mainScene.SelectedObject->DeformedVertices.at(j).x << " "
+					<< mainScene.SelectedObject->DeformedVertices.at(j).y << " "
+					<< mainScene.SelectedObject->DeformedVertices.at(j).z << " "
+					<< std::endl;
+			}
+
+		}
+		cout << "Done - " << x + 1 << " out of " << arr.size()<<endl;
+		outfile.close();
+
+	}
+}
+#pragma endregion

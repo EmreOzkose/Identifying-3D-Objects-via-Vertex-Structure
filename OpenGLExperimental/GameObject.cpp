@@ -261,7 +261,7 @@ void GameObject::Draw(mat4 view, mat4 pro, GLfloat time, Light Light[4], vec3 Ca
 
 	glUniform1i(CurrentShader.UseBumpMapLocation, usebump);
 	glUniform1i(CurrentShader.UseTextureLocation, usetexture);
-	RefreshPos(Camerapos);
+	//RefreshPos(Camerapos);
 	glUniform1f(CurrentShader.LocationTime, time);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glDrawElements(GL_TRIANGLES, VertexIndices.size(), GL_UNSIGNED_INT, 0);
@@ -392,26 +392,29 @@ void GameObject::SetupMesh(GLboolean cubemap)
 
 
 
-void GameObject::Deform(vec3 ScaleModifier, GLfloat deformModifier) {
-	GLfloat x, y, z, randomize = float(rand() % 10) / 10, cont;
-	vec4 deformedVertex, normalizedVectorfromOrigin;
+void GameObject::Deform() {
+	GLfloat x, y, z, randomize = float(rand() % 10) / 10, cont, deform;
+	vec3 deformedVertex;
 	DeformedVertices.clear();
-	deformModifier *= randomize;
 	for (size_t i = 0; i < EndVertexPositions.size(); i++)
 	{
-		cont = rand() % 2;
-		if (cont == 0)
-		{
-			DeformedVertices.push_back(EndVertexPositions.at(i));
-			continue;
-		}
+	
+		//cout << normalizedVectorfromOrigin << endl;
+		x = 0.0f, y = 0.0f, z = 0.0;
 
-		x = EndVertexPositions.at(i).x;
-		y = EndVertexPositions.at(i).y;
-		z = EndVertexPositions.at(i).z;
+		x += (rand() % 10) / 10.0f;
+		x += (rand() % 100) / 100.0f;
+		y += (rand() % 10) / 10.0f;
+		y += (rand() % 100) / 100.0f;
+		z += (rand() % 10) / 10.0f;
+		z += (rand() % 100) / 100.0f;
+		deform = ((rand() % 10 + 1))/15.0;
+		
 
-		deformedVertex = EndVertexPositions.at(i)* ScaleModifier + vec4(Direction(vec3(x, y, z)), 0) / 10;
-		DeformedVertices.push_back(deformedVertex);
+
+		//deformedVertex = vec3(x,y,z)*deformModifier;
+		deformedVertex = vec3(EndVertexPositions.at(i).x, EndVertexPositions.at(i).y, EndVertexPositions.at(i).z) ;
+		DeformedVertices.push_back(vec4(vec3(deformedVertex+ deform *Direction(vec3(EndVertexPositions.at(i).x*x, EndVertexPositions.at(i).y*y , EndVertexPositions.at(i).z*z))),1.0f));
 	}
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);

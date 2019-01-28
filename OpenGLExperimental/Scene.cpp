@@ -12,11 +12,11 @@ int Scene::SetupWindow(unsigned int mode, vec2 windowPosition, vec2 windowSize, 
 {
 	Window window;
 	window.Init(mode, windowPosition, windowSize);
-	int a=window.Show(name);
+	
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
-
+	int a = window.Show(name);
 	glEnable(GL_CULL_FACE); //enable culling. make it faster.
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LINE_SMOOTH);
@@ -29,7 +29,7 @@ int Scene::SetupWindow(unsigned int mode, vec2 windowPosition, vec2 windowSize, 
 	glEnable(GL_NORMALIZE); //enable automatic normalization
 	glCullFace(GL_BACK);//remove the back of objects
 	
-
+	
 
 
 	return a;

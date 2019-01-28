@@ -18,7 +18,7 @@ public:
 	void Draw(mat4 view, mat4 pro, GLfloat time, Light Light[4], vec3 Camerapos, GLuint &usebump, GLuint &usetexture);
 	void SetupMesh(GLboolean cubemap);
 	void SetupMesh();
-	void Deform(vec3 ScaleModifier, GLfloat deformModifier);
+	void Deform();
 	void Bind(GLuint program);
 	void BindScaledVertexList();
 	void PrintRandomVertex();

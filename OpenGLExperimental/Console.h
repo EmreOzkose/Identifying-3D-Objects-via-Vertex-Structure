@@ -35,6 +35,7 @@ public:
 	int wireframe = 0;
 	int bumpmap = 1;
 	int reflection = 0;
+	int texture = 1;
 	int backgroundmusic = 0;
 	float float_live = 0.0;
 	int list_current_text = 0;
@@ -53,6 +54,7 @@ public:
 	GLUI_Checkbox *checkbox_wireframe;
 	GLUI_Checkbox *checkbox_bumpmap;
 	GLUI_Checkbox *checkbox_reflection;
+	GLUI_Checkbox *checkbox_texture;
 	GLUI_Checkbox *checkbox_backgroundmusic;
 
 	GLUI_Listbox *list_shader;
@@ -65,8 +67,7 @@ public:
 	GLUI_StaticText *text_predicted;
 
 	const char* list_shader_txt[5] = { "Blinn Phong", "Flat", "Blinn Phong","Toon","Smoothed Toon" };
-	const char* selectedObj_colors[4] = { "Aliminum", "Gold", "Copper", "Blue" };
-	
+	const char* selectedObj_colors[9] = { "Aliminum", "Gold", "Copper", "Iron","Silver","Titanium","Mulberry","Skyblue","Bloodred" };
 
 	GLUI_Spinner *spinner_l_intensity;
 
