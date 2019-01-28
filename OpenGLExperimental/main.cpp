@@ -3,6 +3,7 @@
 
 	/*-----------------DEPENDENCIES AND MACROS----------------*/
 	#include "Scene.h"
+	#include "InputManager.h"
 	#define WINDOW_WIDTH 1920
 	#define WINDOW_HEIGHT 1080
 	#define WINDOW_NAME "OpenGL"
@@ -17,8 +18,8 @@
 	Scene mainScene;
 	Console main_console;
 	Light mainLight[MAX_LIGHTS_SIZE];
+	InputManager inputManager;
 	vector<GameObject> ObjectsOnScene;
-	Soundm
 
 	GLfloat time = 0;
 	
@@ -467,6 +468,7 @@ void Keyboard(unsigned char key, int x, int y)
 		bumpMapOn = !bumpMapOn;
 
 	
+	inputManager.Process(key,mainScene, ObjectsOnScene, mainLight);
 	
 }
 
