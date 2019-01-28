@@ -20,7 +20,7 @@
 	Light mainLight[MAX_LIGHTS_SIZE];
 	InputManager inputManager;
 	vector<GameObject> ObjectsOnScene;
-
+	SoundManager sound_manager;
 	GLfloat time = 0;
 	
 	
@@ -223,6 +223,11 @@ int main(int argc, char **argv) {
 
 
 
+	/*-----------------SETUP SOUND----------------*/
+	sound_manager.sound_background();
+	/*-----------------SETUP SOUND----------------*/
+
+
 	/*-----------------SETUP CONSOLE----------------*/
 
 	main_console = Console(mainWindow);
@@ -361,7 +366,7 @@ int main(int argc, char **argv) {
 	mainScene.MainCamera.transform.position = vec3(0,1,-2);
 	mainScene.SelectedObject = &ObjectsOnScene.at(0);
 	
-    ExportVertices(ObjectsOnScene,250),
+  //  ExportVertices(ObjectsOnScene,250),
 	
 	/*-----------------CALLBACKS----------------*/
 	

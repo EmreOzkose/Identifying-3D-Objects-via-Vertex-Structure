@@ -1,6 +1,7 @@
 #pragma once
 #include <Angel_commons/Angel.h>
 #include "Window.h"
+#include "SoundManager.h"
 #include "Object.h"
 #include "GameObject.h"
 #include "Camera.h"

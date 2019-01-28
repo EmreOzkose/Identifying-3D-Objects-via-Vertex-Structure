@@ -14,15 +14,15 @@ int SoundManager::soundCheck() {
 }
 
 ISound *SoundManager::sound_background() {
-	return engine->play2D("audio/background.mp3", true, false, true);
+	return engine->play2D("Sounds/background.mp3", true, false, true);
 }
 
 void SoundManager::sound_airplane_departure() {
-	engine->play2D("audio/airplane_departure.mp3", false);
+	engine->play2D("Sounds/airplane_departure.mp3", false);
 }
 
 void SoundManager::sound_robot() {
-	engine->play2D("audio/robot.mp3", false);
+	engine->play2D("Sounds/robot.mp3", false);
 }
 
 void SoundManager::stopAllSounds() {
