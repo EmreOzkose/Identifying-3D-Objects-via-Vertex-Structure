@@ -151,7 +151,10 @@
 	string normal_11 = "Textures/Albedo_11_NRM.jpg";
 	string albedo_12 = "Textures/Albedo_12.jpg";
 	string normal_12 = "Textures/Albedo_12_NRM.jpg";
-
+	string albedo_13 = "Textures/Albedo_13.jpg";
+	string normal_13 = "Textures/Albedo_13_NRM.jpg";
+	string albedo_14 = "Textures/Albedo_14.jpg";
+	string normal_14 = "Textures/Albedo_14_NRM.jpg";
 
 	GameObject texturehelper;
 	struct GameObject::Texture texture_01 = texturehelper.CreateTexture(albedo_01, normal_01);
@@ -166,6 +169,8 @@
 	struct GameObject::Texture texture_10 = texturehelper.CreateTexture(albedo_10, normal_10);
 	struct GameObject::Texture texture_11 = texturehelper.CreateTexture(albedo_11, normal_11);
 	struct GameObject::Texture texture_12 = texturehelper.CreateTexture(albedo_12, normal_12);
+	struct GameObject::Texture texture_13 = texturehelper.CreateTexture(albedo_13, normal_13);
+	struct GameObject::Texture texture_14 = texturehelper.CreateTexture(albedo_14, normal_14);
 	
 	vector<struct GameObject::Texture> txtreList{ texture_01,texture_02,texture_03,texture_04,
 		texture_05,texture_06,texture_07,texture_08,texture_09,texture_10
@@ -410,7 +415,7 @@ int main(int argc, char **argv) {
 			//deletthis
 			GLfloat size = (rand()%8)/10.0;
 			//objyn2 = GameObject(name, PathCube, shader_blinnphong, material_copper, texture_10, 1);
-			objyn2 = GameObject(all_models.at(j), some_models.at(j), shader_blinnphong, material_aliminum, texture_12, 1);
+			objyn2 = GameObject(all_models.at(j), some_models.at(j), shader_blinnphong, material_aliminum, texture_14, 1);
 			objyn2.SetupMesh();
 			//deletthis
 
