@@ -68,6 +68,7 @@ public:
 	//other vertex formations
 	vector<vec4> DeformedVertices;
 	vector<vec4> ScaledVertices;
+	vector<vec4> chosen_Vertices;
 
 	vector<GLuint> VertexIndices;
 

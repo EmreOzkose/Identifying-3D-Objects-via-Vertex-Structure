@@ -2,7 +2,6 @@
 #include <glui.h>
 #include "GameObject.h"
 #include <string>
-#include "Material.h"
 using namespace std;
 class Console {
 
@@ -11,10 +10,14 @@ public:
 	//GLUI* glui_window;
 	GLUI* glui_v_subwindow;
 	GLUI_Panel* glui_v_panel_intro;
-	GLUI_Panel* glui_v_panel_parameters;
+	//GLUI_Panel* glui_v_panel_parameters;
 	GLUI_Panel* glui_v_panel_command;
 	GLUI_Panel* glui_v_panel_features;
 	GLUI_Panel* glui_v_panel_selectedobject;
+	GLUI_Panel* glui_v_panel_selectedobject_translate;
+
+	/* Command Help Panels */
+
 
 
 	string selectedText;
@@ -23,7 +26,8 @@ public:
 	void SetupConsole();
 	void Update(GameObject *current);
 
-	Console(int &window) { application_window = &window; }
+	Console(int &window) { application_window = &window;
+	}
 	Console() {}
 
 	// live variables
@@ -36,10 +40,14 @@ public:
 	int bumpmap = 1;
 	int reflection = 0;
 	int texture = 1;
-	int backgroundmusic = 0;
+	int sub2panel = 0;
+	int backgroundmusic = 1;
 	float float_live = 0.0;
 	int list_current_text = 0;
 	int list_selectedobj_color = 0;
+	float obj_pos_x;
+	float obj_pos_y;
+	float obj_pos_z;
 
 	float spinner_value_l_intensity = 1.0;
 
@@ -53,9 +61,10 @@ public:
 	GLUI_EditText *text_scene;
 	GLUI_Checkbox *checkbox_wireframe;
 	GLUI_Checkbox *checkbox_bumpmap;
-	GLUI_Checkbox *checkbox_reflection;
 	GLUI_Checkbox *checkbox_texture;
+	GLUI_Checkbox *checkbox_reflection;
 	GLUI_Checkbox *checkbox_backgroundmusic;
+	GLUI_Checkbox *checkbox_sub2panel;
 
 	GLUI_Listbox *list_shader;
 	GLUI_Listbox *list_color;
@@ -66,10 +75,22 @@ public:
 	GLUI_StaticText *text_command_result;
 	GLUI_StaticText *text_predicted;
 
-	const char* list_shader_txt[5] = { "Blinn Phong", "Flat", "Blinn Phong","Toon","Smoothed Toon" };
+	GLUI_Translation *trans_x;
+	GLUI_Translation *trans_y;
+	GLUI_Translation *trans_z;
+
+	const char* list_shader_txt[5] = { "Blinn Phong","Simple Phong", "Flat","Toon","Smoothed Toon" };
 	const char* selectedObj_colors[9] = { "Aliminum", "Gold", "Copper", "Iron","Silver","Titanium","Mulberry","Skyblue","Bloodred" };
+	vec3 selectedObj_colors_vec[4] = { vec3(1.0, 0.0, 0.0), vec3(1.0, 1.0, 1.0), vec3(0.0, 1.0, 0.0), vec3(0.0, 0.0, 1.0) };
 
 	GLUI_Spinner *spinner_l_intensity;
 
+	GLUI_Button *button_selectRandom;
+	GLUI_Button *button_light_color_inc;
+	GLUI_Button *button_light_color_dec;
 
+
+	GLUI_Panel* nextprev;
+	GLUI_Button *button_next_obj;
+	GLUI_Button *button_prev_obj;
 };

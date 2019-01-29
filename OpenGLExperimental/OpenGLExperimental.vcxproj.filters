@@ -60,9 +60,6 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\Objects\Classes</Filter>
     </ClCompile>
-    <ClCompile Include="InputManager.cpp">
-      <Filter>Source Files\Classes</Filter>
-    </ClCompile>
     <ClCompile Include="Scene.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
@@ -81,14 +78,14 @@
     <ClCompile Include="Console.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
-    <ClCompile Include="Model.cpp">
-      <Filter>Source Files\V2L</Filter>
-    </ClCompile>
     <ClCompile Include="Vertex.cpp">
       <Filter>Source Files\Objects\Classes</Filter>
     </ClCompile>
     <ClCompile Include="SoundManager.cpp">
       <Filter>Source Files\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="vtoL.cpp">
+      <Filter>Source Files\V2L</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -113,9 +110,6 @@
     <ClInclude Include="Camera.h">
       <Filter>Source Files\Objects\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="InputManager.h">
-      <Filter>Source Files\Headers</Filter>
-    </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>Source Files\Headers</Filter>
     </ClInclude>
@@ -134,9 +128,6 @@
     <ClInclude Include="Console.h">
       <Filter>Source Files\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Model.h">
-      <Filter>Source Files\V2L</Filter>
-    </ClInclude>
     <ClInclude Include="parameters.h">
       <Filter>Source Files\V2L</Filter>
     </ClInclude>
@@ -148,6 +139,9 @@
     </ClInclude>
     <ClInclude Include="SoundManager.h">
       <Filter>Source Files\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="vtoL.h">
+      <Filter>Source Files\V2L</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

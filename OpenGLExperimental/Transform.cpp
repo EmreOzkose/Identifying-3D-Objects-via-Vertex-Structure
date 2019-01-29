@@ -24,8 +24,17 @@ void Transform::Translate(vec3 vec)
 {
 	position += vec ;
 }
-void Transform::Rotate()
+void Transform::Rotate(GLfloat x,GLfloat y,GLfloat z)
 {
+	rotX += x;
+	rotY += y;
+	rotZ += z;
+}
+void Transform::ResetRotation()
+{
+	rotX = 0;
+	rotY = 0;
+	rotZ = 0;
 }
 void Transform::Scale()
 {
