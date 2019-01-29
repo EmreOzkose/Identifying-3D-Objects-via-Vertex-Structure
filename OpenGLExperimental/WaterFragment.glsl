@@ -4,6 +4,8 @@
 flat in vec3 Normal;  
 flat in vec3 FragPos;  
 in vec3 ViewPos;
+
+uniform vec3 LightDir[4]; 
 uniform vec3 LightPos[4]; 
 uniform vec3 LightColor[4]; 
 uniform vec3 LightIntensity[4]; 
@@ -24,10 +26,10 @@ void main()
 
 		ambient += LightAmbientIntensity[i] * LightAmbient[i];
 		float dist=length(LightPos[i]-FragPos);
-		float attenuation=1.0/(1+.1*dist+.01*dist*dist);
+		float attenuation=1.0/(.1+.01*dist+.001*dist*dist);
 
 		V=normalize(-FragPos);
-		L=normalize(LightPos[i]-FragPos);
+		L=normalize(-LightDir[i]);
 			
 		H  = normalize( L + V );  
 	

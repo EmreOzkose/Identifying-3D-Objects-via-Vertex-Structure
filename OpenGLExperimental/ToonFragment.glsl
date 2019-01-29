@@ -1,7 +1,7 @@
 #version 330 core
 
 in vec3 Normal;
-in vec3 LightDir;
+in vec3 light_dir;
 out vec4 fColor;
 
 
@@ -15,7 +15,7 @@ uniform vec3 LightColor[4];
 void main(){
 
 	vec3 N=normalize(Normal);
-	float intensity=max(dot(LightDir,N),0.0);
+	float intensity=max(dot(light_dir,N),0.0);
 	vec4 color;
 
 	float ambientIntensity=.4f;

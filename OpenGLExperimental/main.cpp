@@ -9,6 +9,7 @@
 	#define WINDOW_NAME "OpenGL"
 	#define OBJECTS_BEGIN_SIZE 1
 	#define MAX_LIGHTS_SIZE 4
+	#define CONSOLE_WIDTH 325
 	#define PI 3.14159265359
 
 	/*-----------------DEPENDENCIES AND MACROS----------------*/
@@ -241,7 +242,7 @@ int main(int argc, char **argv) {
 
 	/*-----------------Console Design----------------*/
 
-	int width = 325;
+	
 	new GLUI_StaticText(main_console.glui_v_panel_intro, "Applied commands / features will be printed (below line): ");
 	main_console.text_command_result = new GLUI_StaticText(main_console.glui_v_panel_intro, "...");
 
@@ -250,7 +251,7 @@ int main(int argc, char **argv) {
 
 
 	main_console.text_command = new GLUI_EditText(main_console.glui_v_panel_command, "", main_console.command_text, 3, &control_cb);
-	main_console.text_command->set_w(width);
+	main_console.text_command->set_w(CONSOLE_WIDTH);
 
 	main_console.checkbox_wireframe = new GLUI_Checkbox(main_console.glui_v_panel_features, "Wireframe: ", &main_console.wireframe, 6, &control_cb);
 	main_console.checkbox_bumpmap = new GLUI_Checkbox(main_console.glui_v_panel_features, "Bump Map: ", &main_console.bumpmap, 7, &control_cb);
@@ -262,26 +263,26 @@ int main(int argc, char **argv) {
 
 
 	main_console.button_prev_obj = new GLUI_Button(main_console.nextprev, "Prev Obj", 23, &control_cb);
-	main_console.button_prev_obj->set_w((width - 20) / 2);
+	main_console.button_prev_obj->set_w((CONSOLE_WIDTH - 20) / 2);
 
 	new GLUI_Column(main_console.nextprev);
 
 	main_console.button_next_obj = new GLUI_Button(main_console.nextprev, "Next Object", 22, &control_cb);
-	main_console.button_next_obj->set_w((width - 20) / 2);
+	main_console.button_next_obj->set_w((CONSOLE_WIDTH - 20) / 2);
 
 
 
 
 	main_console.button_light_color_inc = new GLUI_Button(main_console.glui_v_panel_features, "Light Color ++", 19, &control_cb);
-	main_console.button_light_color_inc->set_w(width);
+	main_console.button_light_color_inc->set_w(CONSOLE_WIDTH);
 
 	main_console.button_light_color_dec = new GLUI_Button(main_console.glui_v_panel_features, "Light Color --", 20, &control_cb);
-	main_console.button_light_color_dec->set_w(width);
+	main_console.button_light_color_dec->set_w(CONSOLE_WIDTH);
 
 	new GLUI_Separator(main_console.glui_v_panel_features);
 
 	main_console.button_selectRandom = new GLUI_Button(main_console.glui_v_panel_features, "Select an Object Randomly", 18, &control_cb);
-	main_console.button_selectRandom->set_w(width);
+	main_console.button_selectRandom->set_w(CONSOLE_WIDTH);
 
 
 	// main_console.checkbox_backgroundmusic = new GLUI_Checkbox(main_console.glui_v_panel_features, "Background Music: ", &main_console.backgroundmusic, 9, &control_cb);
@@ -308,6 +309,9 @@ int main(int argc, char **argv) {
 	main_console.rotation_selectedobject = new GLUI_Rotation(main_console.glui_v_panel_selectedobject_translate, "Rotate", main_console.rotation_matrix, 11, &control_cb);
 
 
+	main_console.rot_light0 = new GLUI_Rotation(main_console.glui_v_panel_selectedobject_translate, "light 0", main_console.rotation_matrix, 24, &control_cb);
+
+
 	main_console.trans_x->set_speed(.0005);
 	main_console.trans_y->set_speed(.0005);
 	main_console.trans_z->set_speed(.0005);
@@ -319,10 +323,10 @@ int main(int argc, char **argv) {
 
 
 
-	main_console.text_command->set_w(width);
+	main_console.text_command->set_w(CONSOLE_WIDTH);
 	//main_console.text_num_of_light->set_w(width);
 	//main_console.text_scene->set_w(width);
-	main_console.text_command_move->set_w(width);
+	main_console.text_command_move->set_w(CONSOLE_WIDTH);
 
 	main_console.spinner_l_intensity->set_alignment(GLUI_ALIGN_RIGHT);
 	main_console.list_shader->set_alignment(GLUI_ALIGN_RIGHT);
@@ -337,16 +341,16 @@ int main(int argc, char **argv) {
 	/*-----------------SETUP LIGHTS----------------*/
 
 
-	mainLight[0] = mainScene.CreateMainLight(vec3(1), vec3(1, 1, 1), 1, 0);
-	mainLight[0].transform.position=vec3(0, 20, 0);
+	mainLight[0] = mainScene.CreateMainLight(vec3(1), vec3(1, 1, 1), 1, 0.2);
+	mainLight[0].l_direction =vec3 (1.43215e+09, -5.19914e+09, -2.70591e+09);
 
-	mainLight[1] = mainScene.CreateMainLight(vec3(1), vec3(1), 2, 0.1f);
-	mainLight[2].transform.position = vec3(-20, 20, 110);
+	mainLight[1] = mainScene.CreateMainLight(vec3(1), vec3(1), 1, 0.2f);
+	mainLight[2].transform.position = vec3(-20, 20, 10);
 
-	mainLight[2] = mainScene.CreateMainLight(vec3(1), vec3(1), .5, 0.1f);
+	mainLight[2] = mainScene.CreateMainLight(vec3(1), vec3(1), 1, 0.1f);
 	mainLight[2].transform.position = vec3(50, -20,10);
 
-	mainLight[3] = mainScene.CreateMainLight(vec3(1), vec3(1), 2, 0.1f);
+	mainLight[3] = mainScene.CreateMainLight(vec3(1), vec3(1), 1,.1);
 	mainLight[3].transform.position = vec3(20,-40, -20);
 	cout << "Scene and Light created." << endl;
 	/*-----------------SETUP LIGHTS----------------*/
@@ -399,7 +403,7 @@ int main(int argc, char **argv) {
 			//deletthis
 			GLfloat size = (rand()%8)/10.0;
 			//objyn2 = GameObject(name, PathCube, shader_blinnphong, material_copper, texture_10, 1);
-			objyn2 = GameObject(trees_paths_all.at(j), path_bear, shader_blinnphong, material_copper, texturehelper.GetRandomTexture(txtreList), 2);
+			objyn2 = GameObject(trees_paths_all.at(j), path_dog, shader_flat, material_copper, texturehelper.GetRandomTexture(txtreList), 2);
 			objyn2.SetupMesh();
 			//deletthis
 
@@ -423,7 +427,6 @@ int main(int argc, char **argv) {
 	mainScene.MainCamera.transform.position = vec3(0,1,-2);
 	mainScene.SelectedObject = &ObjectsOnScene.at(0);
 	
-  //  ExportVertices(ObjectsOnScene,250),
 	
 	/*-----------------CALLBACKS----------------*/
 	
@@ -433,7 +436,7 @@ int main(int argc, char **argv) {
 	//glutReshapeFunc(Reshape);
 	//glutMouseFunc(Mouse);
 	//glutPassiveMotionFunc(Mouse);
-	//glutMotionFunc(MouseMotion);
+	glutMotionFunc(MouseMotion);
 	//glutKeyboardFunc();
 	//glutKeyboardUpFunc(KeyboardUp);
 	//glutIdleFunc(Idle);
@@ -496,23 +499,12 @@ void Display(void)
 	glutSwapBuffers();
 }
 void Reshape(int w, int h) {
-	if (h == 0) h = 1; // Prevent a divide by zero
-	mainScene.MainCamera.aspect = 16.0/9.0;
 	GLUI_Master.auto_set_viewport();
-
 }
 void Keyboard(unsigned char key, int x, int y)
 {
-	if (key == 'b')
-		textureOn = !textureOn;
-	if (key == 'c')
-	{
-		mainScene.SelectedObject->go_texture = texture_06;
-	}if (key == 'k')
-	{
+	if (key == 'k')
 		mainScene.SelectedObject->Deform();
-		
-	}
 
 	if (key == '1')
 		mainScene.SelectedObject->transform.Translate(vec3(1, 0, 0));
@@ -521,12 +513,10 @@ void Keyboard(unsigned char key, int x, int y)
 	if (key == '3')
 		mainScene.SelectedObject->transform.Translate(vec3(0,0, 1));
 
-	if (key == '8')
-		mainScene.SelectedObject->SwitchShader(shader_flat);
-	if (key == '9')
-		mainScene.SelectedObject->SwitchShader(shader_smoothtoon);
-	if (key == 'n')
-		bumpMapOn = !bumpMapOn;
+
+
+
+	mainScene.MainCamera.cam_keyboard_cb(key,'E','Q','D','A','W','S');
 
 	
 }
@@ -552,6 +542,22 @@ void Mouse(int x, int y)
 
 void MouseMotion(int x, int y)
 {
+	
+	int vx, vy, vw, vh;
+	GLUI_Master.get_viewport_area(&vx, &vy, &vw, &vh);
+
+
+
+	//int w = glutGet(GLUT_WINDOW_WIDTH),h=glutGet(GLUT_WINDOW_HEIGHT);
+	int currentXPosition = x - vx;
+	int currentYPosition = y;
+
+	int XPostoMid = currentXPosition - (vw / 2);
+	int YPostoMid = (vh / 2) - currentYPosition;
+
+
+	mainScene.MainCamera.cam_mouse_cb(XPostoMid,YPostoMid);
+
 }
 
 #pragma endregion
@@ -651,7 +657,7 @@ void control_cb(int control) {
 				pch = strtok(NULL, " "); GLfloat x = atof(pch);
 				pch = strtok(NULL, " "); GLfloat y = atof(pch);
 				pch = strtok(NULL, " "); GLfloat z = atof(pch);
-				mainScene.MainCamera.transform.Translate(vec3(x,y,z));
+				mainScene.MainCamera.transform.Moveto(vec3(x,y,z));
 				message << "Object is moved to (" << x << ", " << y << ", " << z << ")" << endl;
 				main_console.text_command_result->set_text(message.str().c_str());
 			}
@@ -669,6 +675,7 @@ void control_cb(int control) {
 					main_console.text_command_result->set_text(message.str().c_str());
 				}
 			}
+
 			else if (!strcmp(pch, "mode")) {
 				pch = strtok(NULL, " ");
 				if (!strcmp(pch, "lookat")) {
@@ -696,6 +703,12 @@ void control_cb(int control) {
 				pch = strtok(NULL, " "); GLfloat fov_num = atof(pch);
 				mainScene.MainCamera.ChangeFov(fov_num);
 				message << "fov -> " << fov_num << endl;
+				main_console.text_command_result->set_text(message.str().c_str());
+			}
+			else if (!strcmp(pch, "speed")) {
+				pch = strtok(NULL, " "); GLfloat speed = atof(pch);
+				mainScene.MainCamera.ChangeSpeed(speed);
+				message << "Speed -> " << speed << endl;
 				main_console.text_command_result->set_text(message.str().c_str());
 			}
 			else if (!strcmp(pch, "offset")) {
@@ -733,6 +746,17 @@ void control_cb(int control) {
 				
 
 			pch = strtok(NULL, " ");
+
+			if (!strcmp(pch, "rotate")) {
+				pch = strtok(NULL, " "); GLfloat x = atof(pch);
+				pch = strtok(NULL, " "); GLfloat y = atof(pch);
+				//pch = strtok(NULL, " "); GLfloat z = atof(pch);
+
+				mainLight[light_source_id].ComputeForwardVector();
+				message << "light " << light_source_id << " is rotated by "<<vec3(x,y) << endl;
+				main_console.text_command_result->set_text(message.str().c_str());
+
+			}
 			if (!strcmp(pch, "intensity")) {
 				pch = strtok(NULL, " "); GLfloat intensity = atof(pch);
 				mainLight[light_source_id].ChangeIntensity(intensity);
@@ -744,7 +768,7 @@ void control_cb(int control) {
 				pch = strtok(NULL, " "); GLfloat x = atof(pch);
 				pch = strtok(NULL, " "); GLfloat y = atof(pch);
 				pch = strtok(NULL, " "); GLfloat z = atof(pch);
-				mainLight[light_source_id].transform.Translate(vec3(x, y, z));
+				mainLight[light_source_id].transform.Moveto(vec3(x, y, z));
 				message << "light " << light_source_id << " is moved to (" << x << ", " << y << ", " << z << ")" << endl;
 				main_console.text_command_result->set_text(message.str().c_str());
 			}
@@ -790,6 +814,20 @@ void control_cb(int control) {
 		mainScene.SelectedObject->transform.ResetRotation();
 		message << "Selected object rotation reset!"<<endl;
 		main_console.text_command_result->set_text(message.str().c_str());
+		}
+		else if (!strcmp(pch, "move")) {
+		pch = strtok(NULL, " ,");  GLfloat x = atof(pch);
+		pch = strtok(NULL, " ,");  GLfloat y = atof(pch);
+		pch = strtok(NULL, " ,");  GLfloat z = atof(pch);
+		mainScene.SelectedObject->transform.Moveto(vec3(x, y, z));
+		message << "Selected object is moved to (" << x << ", " << y << ", " << z << ")" << endl;
+		}
+		else if (!strcmp(pch, "translate")) {
+		pch = strtok(NULL, " ,");  GLfloat x = atof(pch);
+		pch = strtok(NULL, " ,");  GLfloat y = atof(pch);
+		pch = strtok(NULL, " ,");  GLfloat z = atof(pch);
+		mainScene.SelectedObject->transform.Translate(vec3(x, y, z));
+		message << "Selected object is translated by (" << x << ", " << y << ", " << z << ")" << endl;
 		}
 		
 
@@ -941,18 +979,27 @@ void control_cb(int control) {
 	/* translate selected object */
 	else if (control == 10) {
 		string command = main_console.text_command_move->get_text();
-
-		char char_array[20 + 1]; strcpy(char_array, command.c_str());
+		GLfloat x = .0f, y = .0f, z = .0f;
+		char char_array[40 + 1]; strcpy(char_array, command.c_str());
 		char *  pch = strtok(char_array, " ,");
 
-		GLfloat x = atof(pch);
-		pch = strtok(NULL, " ,"); GLfloat y = atof(pch);
-		pch = strtok(NULL, " ,"); GLfloat z = atof(pch);
 
-		mainScene.SelectedObject->transform.Translate(vec3(x, y, z));
-
-		message << "Selected object is translated by (" << x << ", " << y << ", " << z << ")" << endl;
+		try {
+			
+			
+			x = atof(pch);
+			pch = strtok(NULL, " ,");  y = atof(pch);
+			pch = strtok(NULL, " ,");  z = atof(pch);
+			mainScene.SelectedObject->transform.Moveto(vec3(x, y, z));
+			message << "Selected object is translated by (" << x << ", " << y << ", " << z << ")" << endl;
+			
+		}
+		catch (runtime_error& e) {
+			message << "Invalid input!" << endl;
+		}
+		
 		main_console.text_command_result->set_text(message.str().c_str());
+	
 	}
 	else if (control == 11) {
 
@@ -1056,8 +1103,21 @@ void control_cb(int control) {
 		message << "Next object is  selected" << endl;
 		main_console.text_command_result->set_text(message.str().c_str());
 	}
-		else if (control == 23) {
+	else if (control == 23) {
 		message << "Previous object is selected" << endl;
+		main_console.text_command_result->set_text(message.str().c_str());
+	}
+	else if (control == 24) {
+
+		float * rot_mat2 = main_console.rotation_matrix;
+
+		float x = rot_mat2[0];
+		float y = rot_mat2[5];
+		float z = rot_mat2[10];
+
+		mainLight[0].transform.Rotate(z*360,x*360,y*360);
+		mainLight[0].ComputeForwardVector();
+		message << "Light 0 is rotated by (" << x << ", " << y << ", " << z << ")" << endl;
 		main_console.text_command_result->set_text(message.str().c_str());
 	}
 }

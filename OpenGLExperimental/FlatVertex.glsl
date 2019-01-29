@@ -6,7 +6,7 @@ uniform mat4 Model,Projection,View;
 
 flat out vec4 vColor;
 uniform vec3 ViewPos; 
-
+uniform vec3 LightDir[4]; 
 uniform vec3 LightPos[4]; 
 uniform vec3 LightColor[4]; 
 uniform vec3 LightIntensity[4]; 
@@ -45,7 +45,7 @@ void main()
 			float attenuation=1.0/(.1+.01*dist+.001*dist*dist);
 
 			
-			L=normalize(LightPos[i]-FragPos);
+			L=normalize(-LightDir[i]);
 			
 			vec3 H = normalize( L + V );  
 	

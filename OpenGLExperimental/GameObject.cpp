@@ -219,6 +219,9 @@ void GameObject::Draw(mat4 view, mat4 pro, GLfloat time, Light Light[4], vec3 Ca
 	vec3 lP[4] = { Light[0].transform.position, Light[1].transform.position, Light[2].transform.position, Light[3].transform.position };
 	glUniform3fv(CurrentShader.LightPosLocation, 4, lP[0]);
 
+	vec3 lD[4] = { Light[0].l_direction, Light[1].l_direction, Light[2].l_direction, Light[3].l_direction };
+	glUniform3fv(CurrentShader.LightDirLocation, 4, lD[0]);
+
 	vec3 coP[4] = { Light[0].l_LightColor, Light[1].l_LightColor, Light[2].l_LightColor, Light[3].l_LightColor };
 	glUniform3fv(CurrentShader.LightColorLocation, 4, coP[0]);
 

@@ -71,6 +71,7 @@ public:
 
 	GLUI_EditText *text_selectedobject_translation;
 	GLUI_Rotation *rotation_selectedobject;
+	GLUI_Rotation *rot_light0;
 
 	GLUI_StaticText *text_command_result;
 	GLUI_StaticText *text_predicted;

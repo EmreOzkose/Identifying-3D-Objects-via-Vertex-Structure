@@ -24,11 +24,21 @@ void Transform::Translate(vec3 vec)
 {
 	position += vec ;
 }
+void Transform::Moveto(vec3 vec)
+{
+	position = vec;
+}
 void Transform::Rotate(GLfloat x,GLfloat y,GLfloat z)
 {
 	rotX += x;
 	rotY += y;
 	rotZ += z;
+}
+void Transform::Rotate(vec3 rot)
+{
+	rotX = rot.x;
+	rotY = rot.y;
+	rotZ = rot.z;
 }
 void Transform::ResetRotation()
 {

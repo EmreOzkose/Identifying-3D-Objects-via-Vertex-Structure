@@ -9,6 +9,7 @@ in mat3 TBN;
 in mat3 rotationModel;
 
 uniform vec3 LightPos[4]; 
+uniform vec3 LightDir[4]; 
 uniform vec3 LightColor[4]; 
 uniform vec3 LightIntensity[4]; 
 uniform vec3 LightAmbient[4]; 
@@ -49,7 +50,7 @@ void main()
 		{
 			vec3 TextureNormal_tangentspace = normalize(rotationModel*texture( NormalMap, vCoords ).rgb*2.0 - 1.0);
 			V=TBN * normalize(-FragPos);
-			L=TBN * normalize(LightPos[i]-FragPos);
+			L=TBN * normalize(-LightDir[i]);
 	 
 			vec3 H = normalize( L + V );  
 	
@@ -67,7 +68,7 @@ void main()
 		else{
 	
 			V=normalize(-FragPos);
-			L=normalize(LightPos[i]-FragPos);
+			L=normalize(-LightDir[i]);
 			
 			vec3 H = normalize( L + V );  
 	

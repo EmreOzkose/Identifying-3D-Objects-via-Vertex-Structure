@@ -6,7 +6,8 @@ void Camera::Refresh(GameObject &s,GLfloat time)
 {
 
 
-
+	yaw = Lerp(yaw, targetyaw, 0.02f);
+	pitch = Lerp(pitch, targetpitch, 0.02f);
 
 	camForward.x = cos(DegreesToRadians * (yaw)) * cos(DegreesToRadians * (pitch));
 	camForward.y = sin(DegreesToRadians * (pitch));
@@ -27,14 +28,14 @@ void Camera::Refresh(GameObject &s,GLfloat time)
 
 	if (physical_mode==Cameramode::FreeCamera)
 	{
-		eye = Lerp(eye, transform.position, 0.02f);
+		eye = Lerp(eye, transform.position, 0.02f*speed);
 		at = eye + camForward;
 		at.w = 1;
 	
 	}
 	else if (physical_mode == Cameramode::LookAtCamera)
 	{
-		eye = Lerp(eye, transform.position, 0.02f);
+		eye = Lerp(eye, transform.position, 0.02f*speed);
 		at = s.transform.position;
 		at.w = 1;
 		
@@ -42,7 +43,7 @@ void Camera::Refresh(GameObject &s,GLfloat time)
 	else if (physical_mode == Cameramode::FollowCamera)
 	{
 		transform.position = vec3(at.x, at.y, at.z) + followOffset;
-		eye = Lerp(eye, transform.position, 0.005f);
+		eye = Lerp(eye, transform.position, 0.005f*speed);
 		at = s.transform.position;
 		at.w = 1;
 		
@@ -54,7 +55,7 @@ void Camera::Refresh(GameObject &s,GLfloat time)
 		pos.y = s.transform.position.y+ followOffset.y;
 		pos.z = radius * sin(time) + s.transform.position.z;
 		transform.position = pos;
-		eye = Lerp(eye, transform.position, 0.005f);
+		eye = Lerp(eye, transform.position, 0.005f*speed);
 		at = s.transform.position;
 		at.w = 1;
 
@@ -110,6 +111,40 @@ GLfloat Lerp(GLfloat from, GLfloat to, GLfloat delta)
 	return from * (1 - delta) + to * (delta);
 	//interpolation=start*(1-t)+end*(t);
 
+}
+void Camera::cam_keyboard_cb(unsigned char key, unsigned char up, unsigned char down, unsigned char right, unsigned char left, unsigned char forward, unsigned char back)
+{
+	if (key == up ||key==tolower(up))
+		transform.Translate(vec3(0,1,0));
+	if (key == down || key == tolower(down))
+		transform.Translate(vec3(0, -1, 0));
+	if (key == right || key == tolower(right))
+		transform.Translate(camRight*.3f*speed);
+	if (key == left || key == tolower(left))
+		transform.Translate(-camRight *.3f*speed);
+	if (key == forward || key == tolower(forward))
+		transform.Translate(camForward*.3f*speed);
+	if (key == back || key == tolower(back))
+		transform.Translate(-camForward*.3f*speed);
+
+}
+void Camera::cam_mouse_cb(int x, int y)
+{
+	GLfloat speed = .25f;
+	if (x >= 0)
+		targetyaw +=  speed;
+	else
+		targetyaw -=  speed;
+	if (y >= 0)
+		targetpitch += speed;
+	else
+		targetpitch -=  speed;
+	//cout << "X: " << x << "Y: " << y << "\n";
+
+}
+void Camera::ChangeSpeed(GLfloat ns)
+{
+	speed = ns;
 }
 void Camera::ChangeFov(GLfloat nfov)
 {

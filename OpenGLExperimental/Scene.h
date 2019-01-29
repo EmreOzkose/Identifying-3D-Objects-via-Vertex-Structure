@@ -15,7 +15,6 @@
 #include <sstream>
 #include "vtoL.h"
 
-
 class Scene {
 
 public:

@@ -1,6 +1,8 @@
 #pragma once
 #include "Object.h"
+using namespace std;
 class Light: public Object {
+
 public:
 	GLfloat l_Intensity ,l_AmbientStrenght;
 	vec3 l_LightColor, l_AmbientColor;
@@ -20,7 +22,10 @@ public:
 	}
 	Light(){
 	}
-
+	vec3 l_direction = vec3(0);
+	GLfloat yaw=0, pitch = 0;
+	
+	void ComputeForwardVector();
 };
 
 
