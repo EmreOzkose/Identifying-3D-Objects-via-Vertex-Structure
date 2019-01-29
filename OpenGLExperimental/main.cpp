@@ -3,10 +3,10 @@
 
 	/*-----------------DEPENDENCIES AND MACROS----------------*/
 	#include "Scene.h"
-#include "read_weights.h"
+	#include "read_weights.h"
 	#define WINDOW_WIDTH 1920
 	#define WINDOW_HEIGHT 1080
-	#define WINDOW_NAME "OpenGL"
+	#define WINDOW_NAME "OpenGL Identfying 3D Objects"
 	#define OBJECTS_BEGIN_SIZE 1
 	#define MAX_LIGHTS_SIZE 4
 	#define CONSOLE_WIDTH 325
@@ -107,7 +107,9 @@
 	vector<string> trees_paths_all = { path_tree0 ,path_tree1,path_tree2,path_tree3,path_tree4 };
 
 
-
+	vector<string> all_models = { path_tree0 ,path_tree1,path_tree2,path_tree3,path_tree4 , path_veha ,path_van,path_car,path_lpcar,path_futcar
+	,path_deer ,path_bear,path_dog,path_wolf ,path_elephant, path_goblin ,path_skeleton,path_vampire,path_cyborg ,path_human
+	};
 
 
 	string path_ground ="Models/Ground.obj";
@@ -115,7 +117,7 @@
 	string path_cube = "Models/Cube.obj";
 	string path_sphere = "Models/SphereA.obj";
 	string path_ico = "Models/SphereB.obj";
-
+	string path_shapea = "Models/shieldA.obj";
 
 	/*-----------------DEFINE MODEL PATHS----------------*/
 
@@ -143,6 +145,10 @@
 	string normal_09 = "Textures/Albedo_09_NRM.jpg";
 	string albedo_10 = "Textures/Albedo_10.jpg";
 	string normal_10 = "Textures/Albedo_10_NRM.jpg";
+	string albedo_11 = "Textures/Albedo_11.jpg";
+	string normal_11 = "Textures/Albedo_11_NRM.jpg";
+	string albedo_12 = "Textures/Albedo_12.jpg";
+	string normal_12 = "Textures/Albedo_12_NRM.jpg";
 
 
 	GameObject texturehelper;
@@ -156,6 +162,8 @@
 	struct GameObject::Texture texture_08 = texturehelper.CreateTexture(albedo_08, normal_08);
 	struct GameObject::Texture texture_09 = texturehelper.CreateTexture(albedo_09, normal_09);
 	struct GameObject::Texture texture_10 = texturehelper.CreateTexture(albedo_10, normal_10);
+	struct GameObject::Texture texture_11 = texturehelper.CreateTexture(albedo_11, normal_11);
+	struct GameObject::Texture texture_11 = texturehelper.CreateTexture(albedo_12, normal_12);
 	
 	vector<struct GameObject::Texture> txtreList{ texture_01,texture_02,texture_03,texture_04,
 		texture_05,texture_06,texture_07,texture_08,texture_09,texture_10
@@ -241,7 +249,6 @@ int main(int argc, char **argv) {
 
 
 	/*-----------------Console Design----------------*/
-
 	
 	new GLUI_StaticText(main_console.glui_v_panel_intro, "Applied commands / features will be printed (below line): ");
 	main_console.text_command_result = new GLUI_StaticText(main_console.glui_v_panel_intro, "...");
@@ -333,8 +340,6 @@ int main(int argc, char **argv) {
 	main_console.list_color->set_alignment(GLUI_ALIGN_RIGHT);
 
 	/*-----------------Console Design----------------*/
-	/*-----------------Console Design----------------*/
-	/*-----------------SETUP CONSOLE----------------*/
 
 
 
@@ -403,7 +408,7 @@ int main(int argc, char **argv) {
 			//deletthis
 			GLfloat size = (rand()%8)/10.0;
 			//objyn2 = GameObject(name, PathCube, shader_blinnphong, material_copper, texture_10, 1);
-			objyn2 = GameObject(trees_paths_all.at(j), path_dog, shader_flat, material_copper, texturehelper.GetRandomTexture(txtreList), 2);
+			objyn2 = GameObject(all_models.at(j), "Models/PlaneLow.obj", shader_blinnphong, material_aliminum, texture_11, 1);
 			objyn2.SetupMesh();
 			//deletthis
 
@@ -426,7 +431,7 @@ int main(int argc, char **argv) {
 
 	mainScene.MainCamera.transform.position = vec3(0,1,-2);
 	mainScene.SelectedObject = &ObjectsOnScene.at(0);
-	
+//	ExportVertices(ObjectsOnScene,250);
 	
 	/*-----------------CALLBACKS----------------*/
 	
@@ -1147,6 +1152,7 @@ void ExportVertices(vector<GameObject> arr, GLuint times)
 			//outfile << "Difference is : " << to_string(difference) << "\n";
 			//outfile << "Vertex size is : " << to_string(arr[x].BaseVertices.size()) << "\n";
 			//outfile << "Index is : " << to_string(ind) << "\n";
+			mainScene.SelectedObject->Deform();
 			for (size_t j = 0; j < arr[x].EndVertexPositions.size(); j++)
 			{
 
@@ -1156,11 +1162,10 @@ void ExportVertices(vector<GameObject> arr, GLuint times)
 				GLfloat c = rand() % modulo + 1;
 
 				GLfloat x= rand() % modulo + 1;
-				mainScene.SelectedObject->Deform();
+				
 				if (Jump < difference) {
 					if (j%ind == 0)
 					{
-						j += ind-1;
 						Jump++;
 						continue;
 					}
