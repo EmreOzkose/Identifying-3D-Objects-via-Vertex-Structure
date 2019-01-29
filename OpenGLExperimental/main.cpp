@@ -7,7 +7,7 @@
 	#define WINDOW_WIDTH 1920
 	#define WINDOW_HEIGHT 1080
 	#define WINDOW_NAME "OpenGL Identfying 3D Objects"
-	#define OBJECTS_BEGIN_SIZE 1
+	#define OBJECTS_BEGIN_SIZE 3
 	#define MAX_LIGHTS_SIZE 4
 	#define CONSOLE_WIDTH 325
 	#define PI 3.14159265359
@@ -117,8 +117,10 @@
 	string path_cube = "Models/Cube.obj";
 	string path_sphere = "Models/SphereA.obj";
 	string path_ico = "Models/SphereB.obj";
-	string path_shapea = "Models/shieldA.obj";
+	string path_planel= "Models/PlaneLow.obj";
 
+
+	vector<string> some_models = { path_planel ,path_sphere ,path_cube };
 	/*-----------------DEFINE MODEL PATHS----------------*/
 
 
@@ -163,7 +165,7 @@
 	struct GameObject::Texture texture_09 = texturehelper.CreateTexture(albedo_09, normal_09);
 	struct GameObject::Texture texture_10 = texturehelper.CreateTexture(albedo_10, normal_10);
 	struct GameObject::Texture texture_11 = texturehelper.CreateTexture(albedo_11, normal_11);
-	struct GameObject::Texture texture_11 = texturehelper.CreateTexture(albedo_12, normal_12);
+	struct GameObject::Texture texture_12 = texturehelper.CreateTexture(albedo_12, normal_12);
 	
 	vector<struct GameObject::Texture> txtreList{ texture_01,texture_02,texture_03,texture_04,
 		texture_05,texture_06,texture_07,texture_08,texture_09,texture_10
@@ -408,7 +410,7 @@ int main(int argc, char **argv) {
 			//deletthis
 			GLfloat size = (rand()%8)/10.0;
 			//objyn2 = GameObject(name, PathCube, shader_blinnphong, material_copper, texture_10, 1);
-			objyn2 = GameObject(all_models.at(j), "Models/PlaneLow.obj", shader_blinnphong, material_aliminum, texture_11, 1);
+			objyn2 = GameObject(all_models.at(j), some_models.at(j), shader_blinnphong, material_aliminum, texture_12, 1);
 			objyn2.SetupMesh();
 			//deletthis
 
