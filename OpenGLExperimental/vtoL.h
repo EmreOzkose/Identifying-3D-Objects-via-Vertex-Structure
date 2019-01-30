@@ -1,5 +1,3 @@
-
-#include <string>
 #include <fstream>
 
 #include "parameters.h"
@@ -18,11 +16,21 @@ using namespace std;
 class vtoL {
 public:
 	// Constructor
-	vtoL() {
+
+	int outdim = outdim;
+
+	vtoL(int categorical) {
+		if (categorical) {
+			set_outdim(4);
+		}
+		else {
+			set_outdim(20);
+		}
+
 		// Weights
 		vector<vector<float>> fc1_layer(hidden_layer_dim_1, vector<float>(input_dim)); // Defaults to zero initial value
 		vector<vector<float>> fc2_layer(hidden_layer_dim_2, vector<float>(hidden_layer_dim_1)); // Defaults to zero initial value
-		vector<vector<float>> fc3_layer(output_dim, vector<float>(hidden_layer_dim_2)); // Defaults to zero initial value
+		vector<vector<float>> fc3_layer(outdim, vector<float>(hidden_layer_dim_2)); // Defaults to zero initial value
 
 		fc1 = fc1_layer;
 		fc2 = fc2_layer;
@@ -30,11 +38,23 @@ public:
 
 	}
 
+	void set_outdim(int set) {
+		outdim = set;
+	}
+
+	string index2label[20]{ "bear", "car", "cyborg", "deer", "dog",
+		"elephant", "futcar", "goblin", "human", "lpcar", "monster_vehicle",
+		"skeleton", "tree0", "tree1", "tree2", "tree3", "tree4", "vampire",
+		"van", "wolf" };
+
+	string index2label_category[4]{ "humanoid", "quadripedal", "tree", "vehicle" };
+
 
 	// Weights
 	vector<vector<float>> fc1;
 	vector<vector<float>> fc2;
 	vector<vector<float>> fc3;
+
 
 
 	/*
@@ -44,7 +64,7 @@ public:
 		return : probabilities | size: output_dim x 1
 		output type: float[]
 	*/
-	vector<float> forward(vector<vector<float>> input[num_of_vertex]);
+	void forward(vector<vector<float>> input[num_of_vertex], vector<float> &probs);
 
 
 	/*
@@ -70,5 +90,6 @@ public:
 
 	vector<float> ReLu(vector<float> x);
 	int getClass(vector<float> probs);
+	vector<vector<float>> normalize(vector<vector<float>> in_vector);
 
 };

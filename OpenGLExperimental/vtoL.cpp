@@ -1,18 +1,42 @@
-
 #include "vtoL.h"
+#include <limits>
 
 
-vector<float> vtoL::forward(vector<vector<float>> input[num_of_vertex])
+void vtoL::forward(vector<vector<float>> input[num_of_vertex], vector<float> &probs)
 {
 	// First flatten the given vertex array (pytorch: view(.., -1))
 	vector<float> *flattened = vtoL::flatten(*input);
 	cout << "After flattened: " << flattened->size() << endl;
 
-	vector<float> h1 = dotProduct(flattened, fc1);
+	// Normalize 
+	float max_value = -numeric_limits<double>::infinity();
+	for (int i = 0; i < 680 * 3; i++) {
+		if (flattened->at(i) < 0) {
+			if (max_value < -flattened->at(i))
+				max_value = -flattened->at(i);
+		}
+		else {
+			if (max_value < flattened->at(i))
+				max_value = flattened->at(i);
+		}
+	}
+	for (int i = 0; i < 680 * 3; i++)
+		flattened->at(i) = flattened->at(i) / max_value;
+
+	cout << "la" << endl;
+
+
+	vector<float> hhelp1 = dotProduct(flattened, fc1), h1;
+	for (size_t i = 0; i < hhelp1.size(); i++) {
+		h1.push_back(hhelp1.at(i));
+	}
+
+
 	cout << "After dot product: " << h1.size() << endl;
 
 	vector<float> z1 = ReLu(h1);
 	cout << "After Relu: " << z1.size() << endl;
+
 
 	vector<float> h2 = dotProduct(&z1, fc2);
 	cout << "After 2. dot product: " << h2.size() << endl;
@@ -23,7 +47,11 @@ vector<float> vtoL::forward(vector<vector<float>> input[num_of_vertex])
 	vector<float> h3 = dotProduct(&z2, fc3);
 	cout << "After 3. dot product: " << h3.size() << endl;
 
-	return h3;
+
+	for (size_t i = 0; i < outdim; i++)
+	{
+		probs.push_back(h3.at(i));
+	}
 
 }
 
@@ -41,6 +69,13 @@ int vtoL::getClass(vector<float> probs) {
 	int max_index = distance(probs.begin(), max_index_vec);
 	return max_index;
 }
+
+vector<vector<float>> normalize(vector<vector<float>> in_vector) {
+	cout << " " << endl;
+
+	return in_vector;
+}
+
 vector<float> vtoL::dotProduct(vector<float> *vector1, vector<vector<float>> vector2) {
 	vector<float> r;
 

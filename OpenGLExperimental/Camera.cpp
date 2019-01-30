@@ -126,7 +126,7 @@ void Camera::cam_keyboard_cb(unsigned char key, unsigned char up, unsigned char 
 		transform.Translate(camForward*.3f*speed);
 	if (key == back || key == tolower(back))
 		transform.Translate(-camForward*.3f*speed);
-
+	physical_mode = Cameramode::FreeCamera;
 }
 void Camera::cam_mouse_cb(int x, int y)
 {

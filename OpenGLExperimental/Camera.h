@@ -12,7 +12,7 @@ public:
 	mat4 ViewMatrix();
 	mat4 ProjectionMatrix();
 	vec4 eye = transform.position ,at = vec4(0,0,0,0);
-	vec3 followOffset = vec3(0,2,-2);
+	vec3 followOffset = vec3(0,3,-3);
 
 	enum Cameramode { FollowCamera = 0, LookAtCamera = 1, FreeCamera = 2, RoundCamera = 3 };
 	enum ProjectionMode { PerspectiveMode = 0, OrthoghrapicMode = 1 };

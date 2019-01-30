@@ -4,13 +4,7 @@
 	/*-----------------DEPENDENCIES AND MACROS----------------*/
 	#include "Scene.h"
 	#include "read_weights.h"
-	#define WINDOW_WIDTH 1920
-	#define WINDOW_HEIGHT 1080
-	#define WINDOW_NAME "OpenGL Identfying 3D Objects"
-	#define OBJECTS_BEGIN_SIZE 3
-	#define MAX_LIGHTS_SIZE 4
-	#define CONSOLE_WIDTH 325
-	#define PI 3.14159265359
+	#include "definitions.h"
 
 	/*-----------------DEPENDENCIES AND MACROS----------------*/
 
@@ -19,15 +13,16 @@
 	Scene mainScene;
 	Console main_console;
 	vtoL *v2l_model;
+	vtoL *v2l_model_category;
 	Light mainLight[MAX_LIGHTS_SIZE];
 	Light* chosen_light = &mainLight[0];
-	vector<GameObject> ObjectsOnScene;
+	vector<GameObject> ObjectsOnScene,Planes;
 	SoundManager sound_manager;
 	GLfloat time = 0;
-	
+	GLuint Object_INDEX = 0,OBJECT_SIZE=0;
 	
 	int mainWindow;
-	GameObject Sea,Ground,Skybox;
+	GameObject Sea,Ground,Skybox,Sphere;
 	/*-----------------GLOBAL VARIABLES----------------*/
 	GLboolean wireframeMode = GL_FALSE;
 	GLboolean reflectionIsOn = GL_FALSE;
@@ -53,128 +48,22 @@
 	/*-----------------DEFINITIONS----------------*/
 
 
-
 	/*-----------------DEFINE MODEL PATHS----------------*/
 
-
 	//class 1_humanoids
-	string humanoids_path = "Models/Humanoids";
-
-	string path_human = humanoids_path + "/Human.obj";
-	string path_cyborg = humanoids_path + "/Cyborg.obj";
-	string path_skeleton = humanoids_path + "/Skeleton.obj";
-	string path_vampire = humanoids_path + "/Vampire.obj";
-	string path_goblin = humanoids_path + "/Goblin.obj";
 	
-	vector<string> humanoids_paths_all = { path_goblin ,path_skeleton,path_vampire,path_cyborg ,path_human };
-
-	//class 2_quadripedals
-	string quadripedals_path = "Models/Quadripedals";
-
-	string path_deer = quadripedals_path + "/Deer.obj";
-	string path_bear = quadripedals_path + "/Bear.obj";
-	string path_dog = quadripedals_path + "/Dog.obj";
-	string path_wolf = quadripedals_path + "/Wolf.obj";
-	string path_elephant = quadripedals_path + "/Elephant.obj";
-
-	vector<string> quadripedal_paths_all = { path_deer ,path_bear,path_dog,path_wolf ,path_elephant };
-
-
-	//class 3_vehicles
-	string vehicles_path = "Models/Vehicles";
-
-	string path_veha = vehicles_path + "/MonsterVehicle.obj";
-	string path_van = vehicles_path + "/Van.obj";
-	string path_car = vehicles_path + "/Car.obj";
-	string path_lpcar = vehicles_path + "/LowPcar.obj";
-	string path_futcar = vehicles_path + "/FuturisticCar.obj";
-	
-
-	vector<string> vehicles_paths_all = { path_veha ,path_van,path_car,path_lpcar,path_futcar };
-
-
-
-
-	//class 4_trees
-	string trees_path = "Models/Trees";
-
-	string path_tree0 = trees_path + "/Tree_1.obj";
-	string path_tree1 = trees_path + "/Tree_2.obj";
-	string path_tree2 = trees_path + "/Tree_3.obj";
-	string path_tree3 = trees_path + "/Tree_4.obj";
-	string path_tree4 = trees_path + "/Tree_5.obj";
-
-	vector<string> trees_paths_all = { path_tree0 ,path_tree1,path_tree2,path_tree3,path_tree4 };
-
-
-	vector<string> all_models = { path_tree0 ,path_tree1,path_tree2,path_tree3,path_tree4 , path_veha ,path_van,path_car,path_lpcar,path_futcar
-	,path_deer ,path_bear,path_dog,path_wolf ,path_elephant, path_goblin ,path_skeleton,path_vampire,path_cyborg ,path_human
-	};
-
-
-	string path_ground ="Models/Ground.obj";
-	string path_sea = "Models/Plane.obj";
-	string path_cube = "Models/Cube.obj";
-	string path_sphere = "Models/SphereA.obj";
-	string path_ico = "Models/SphereB.obj";
-	string path_planel= "Models/PlaneLow.obj";
-
-
-	vector<string> some_models = { path_planel ,path_sphere ,path_cube };
 	/*-----------------DEFINE MODEL PATHS----------------*/
 
 
 
 	/*-----------------DEFINE TEXTURE PATHS----------------*/
 
-	string albedo_01 = "Textures/Albedo_01.jpg";
-	string normal_01 = "Textures/Albedo_01_NRM.jpg";
-	string albedo_02 = "Textures/Albedo_02.jpg";
-	string normal_02 = "Textures/Albedo_02_NRM.jpg";
-	string albedo_03 = "Textures/Albedo_03.jpg";
-	string normal_03 = "Textures/Albedo_03_NRM.jpg";
-	string albedo_04 = "Textures/Albedo_04.jpg";
-	string normal_04 = "Textures/Albedo_04_NRM.jpg";
-	string albedo_05 = "Textures/Albedo_05.jpg";
-	string normal_05 = "Textures/Albedo_05_NRM.jpg";
-	string albedo_06 = "Textures/Albedo_06.jpg";
-	string normal_06 = "Textures/Albedo_06_NRM.jpg";
-	string albedo_07 = "Textures/Albedo_07.jpg";
-	string normal_07 = "Textures/Albedo_07_NRM.jpg";
-	string albedo_08 = "Textures/Albedo_08.jpg";
-	string normal_08 = "Textures/Albedo_08_NRM.jpg";
-	string albedo_09 = "Textures/Albedo_09.jpg";
-	string normal_09 = "Textures/Albedo_09_NRM.jpg";
-	string albedo_10 = "Textures/Albedo_10.jpg";
-	string normal_10 = "Textures/Albedo_10_NRM.jpg";
-	string albedo_11 = "Textures/Albedo_11.jpg";
-	string normal_11 = "Textures/Albedo_11_NRM.jpg";
-	string albedo_12 = "Textures/Albedo_12.jpg";
-	string normal_12 = "Textures/Albedo_12_NRM.jpg";
-	string albedo_13 = "Textures/Albedo_13.jpg";
-	string normal_13 = "Textures/Albedo_13_NRM.jpg";
-	string albedo_14 = "Textures/Albedo_14.jpg";
-	string normal_14 = "Textures/Albedo_14_NRM.jpg";
 
-	GameObject texturehelper;
-	struct GameObject::Texture texture_01 = texturehelper.CreateTexture(albedo_01, normal_01);
-	struct GameObject::Texture texture_02 = texturehelper.CreateTexture(albedo_02, normal_02);
-	struct GameObject::Texture texture_03 = texturehelper.CreateTexture(albedo_03, normal_03);
-	struct GameObject::Texture texture_04 = texturehelper.CreateTexture(albedo_04, normal_04);
-	struct GameObject::Texture texture_05 = texturehelper.CreateTexture(albedo_05, normal_05);
-	struct GameObject::Texture texture_06 = texturehelper.CreateTexture(albedo_06, normal_06);
-	struct GameObject::Texture texture_07 = texturehelper.CreateTexture(albedo_07, normal_07);
-	struct GameObject::Texture texture_08 = texturehelper.CreateTexture(albedo_08, normal_08);
-	struct GameObject::Texture texture_09 = texturehelper.CreateTexture(albedo_09, normal_09);
-	struct GameObject::Texture texture_10 = texturehelper.CreateTexture(albedo_10, normal_10);
-	struct GameObject::Texture texture_11 = texturehelper.CreateTexture(albedo_11, normal_11);
-	struct GameObject::Texture texture_12 = texturehelper.CreateTexture(albedo_12, normal_12);
-	struct GameObject::Texture texture_13 = texturehelper.CreateTexture(albedo_13, normal_13);
-	struct GameObject::Texture texture_14 = texturehelper.CreateTexture(albedo_14, normal_14);
-	
-	vector<struct GameObject::Texture> txtreList{ texture_01,texture_02,texture_03,texture_04,
-		texture_05,texture_06,texture_07,texture_08,texture_09,texture_10
-};
+
+
+
+
+
 
 	/*-----------------DEFINE TEXTURE PATHS----------------*/
 
@@ -183,45 +72,13 @@
 	/*-----------------CREATE MATERIALS----------------*/
 
 	//main colors
-	Material material_red     = Material(vec3(1, 0, 0), vec3(1, 1, 1), 32);
-	Material material_green   = Material(vec3(0, 1, 0), vec3(1, 1, 1), 32);
-	Material material_black   = Material(vec3(0, 0, 0), vec3(1, 1, 1), 32);
-	Material material_white   = Material(vec3(1, 1, 1), vec3(1, 1, 1), 32);
-	Material material_blue    = Material(vec3(0, 0, 1), vec3(1, 1, 1), 32);
-	Material material_yellow  = Material(vec3(1, 1, 0), vec3(1, 1, 1), 32);
-	Material material_magenta = Material(vec3(1, 0, 1), vec3(1, 1, 1), 32);
-	Material material_cyan	  = Material(vec3(0, 1, 1), vec3(1, 1, 1), 32);
 
-	//metals
-	Material material_iron = Material(vec3(.560f, .570f, .580f), vec3(1, 1, 1), 128);
-	Material material_silver = Material(vec3(.972f, .960f, .915f), vec3(1, 1, 1), 128);
-	Material material_aliminum = Material(vec3(.913, .921f, .925f), vec3(1, 1, 1), 128);
-	Material material_gold = Material(vec3(1.0f, .766f, .336f), vec3(1, 1, 1), 128);
-	Material material_copper = Material(vec3(.955f, .637f, .538f), vec3(1, 1, 1), 128);
-	Material material_titanium = Material(vec3(.542f, .497f, .449f), vec3(1, 1, 1), 128);
-
-	//misc
-	Material material_mulberry = Material(vec3(.549f, 0.0f, .294f), vec3(1, 1, 1), 128);
-	Material material_skyblue = Material(vec3(.588f, .784f, .980f), vec3(1, 1, 1), 128);
-	Material material_bloodred = Material(vec3(.745f, 0.0f, 0.0f), vec3(1, 1, 1), 128);
-
-
-
-	vector<Material> selectedObj_colors_vec = { material_aliminum,material_gold,material_copper,material_iron,
-	material_silver ,material_titanium ,material_mulberry,material_skyblue,material_bloodred };
 	/*-----------------CREATE MATERIALS----------------*/
 
 
 	/*-----------------SETUP SHADERS----------------*/
 
-	Shader shader_flat		 = Shader();
-	Shader shader_blinnphong = Shader();
-	Shader shader_bphongsimp = Shader();
-	Shader shader_water		 = Shader();
-	Shader shader_toon		 = Shader();
-	Shader shader_particle	 = Shader();
-	Shader shader_skybox	 = Shader();
-	Shader shader_smoothtoon = Shader();
+	
 	
 
 	/*-----------------SETUP SHADERS----------------*/
@@ -229,9 +86,15 @@
 
 int main(int argc, char **argv) {
 	
-	v2l_model = new vtoL();
-	read_weight_matrices(v2l_model);			// Read trained weights. Model is given for hyper-parameters
+	
+	vtoL *v2l_model_category;
+	v2l_model = new vtoL(0);
+	read_weight_matrices(v2l_model, 0);			// Read trained weights. Model is given for hyper-parameters
 
+	cout << "111" << endl;
+
+	v2l_model_category = new vtoL(1);
+	read_weight_matrices(v2l_model_category, 1);
 
 	/*-----------------SETUP SCENE----------------*/
 
@@ -263,88 +126,8 @@ int main(int argc, char **argv) {
 	//main_console.text_scene = new GLUI_EditText(main_console.glui_v_panel_parameters, "Scene:", main_console.command_text, 4, &control_cb);
 	//main_console.text_num_of_light = new GLUI_EditText(main_console.glui_v_panel_parameters, "#of Light:", main_console.command_text, 5, &control_cb);
 
-
-	main_console.text_command = new GLUI_EditText(main_console.glui_v_panel_command, "", main_console.command_text, 3, &control_cb);
-	main_console.text_command->set_w(CONSOLE_WIDTH);
-
-	main_console.checkbox_wireframe = new GLUI_Checkbox(main_console.glui_v_panel_features, "Wireframe: ", &main_console.wireframe, 6, &control_cb);
-	main_console.checkbox_bumpmap = new GLUI_Checkbox(main_console.glui_v_panel_features, "Bump Map: ", &main_console.bumpmap, 7, &control_cb);
-	main_console.checkbox_reflection = new GLUI_Checkbox(main_console.glui_v_panel_features, "Reflection: ", &main_console.reflection, 8, &control_cb);
-	main_console.checkbox_texture = new GLUI_Checkbox(main_console.glui_v_panel_features, "Texturing: ", &main_console.texture, 9, &control_cb);
-
-	main_console.spinner_l_intensity = new GLUI_Spinner(main_console.glui_v_panel_features, "Light Intensity:", &main_console.spinner_value_l_intensity, 14, &control_cb);
-	main_console.spinner_l_intensity->set_int_limits(0.0, 1.0);
-
-
-	main_console.button_prev_obj = new GLUI_Button(main_console.nextprev, "Prev Obj", 23, &control_cb);
-	main_console.button_prev_obj->set_w((CONSOLE_WIDTH - 20) / 2);
-
-	new GLUI_Column(main_console.nextprev);
-
-	main_console.button_next_obj = new GLUI_Button(main_console.nextprev, "Next Object", 22, &control_cb);
-	main_console.button_next_obj->set_w((CONSOLE_WIDTH - 20) / 2);
-
-
-
-
-	main_console.button_light_color_inc = new GLUI_Button(main_console.glui_v_panel_features, "Light Color ++", 19, &control_cb);
-	main_console.button_light_color_inc->set_w(CONSOLE_WIDTH);
-
-	main_console.button_light_color_dec = new GLUI_Button(main_console.glui_v_panel_features, "Light Color --", 20, &control_cb);
-	main_console.button_light_color_dec->set_w(CONSOLE_WIDTH);
-
-	new GLUI_Separator(main_console.glui_v_panel_features);
-
-	main_console.button_selectRandom = new GLUI_Button(main_console.glui_v_panel_features, "Select an Object Randomly", 18, &control_cb);
-	main_console.button_selectRandom->set_w(CONSOLE_WIDTH);
-
-
-	// main_console.checkbox_backgroundmusic = new GLUI_Checkbox(main_console.glui_v_panel_features, "Background Music: ", &main_console.backgroundmusic, 9, &control_cb);
-
-
-
-	main_console.list_shader = new GLUI_Listbox(main_console.glui_v_panel_selectedobject, "Shader options: ", &main_console.list_current_text, 12, &control_cb);
-	for (int i = 0; i < 5; i++) main_console.list_shader->add_item(i, main_console.list_shader_txt[i]);
-
-	main_console.list_color = new GLUI_Listbox(main_console.glui_v_panel_selectedobject, "Color options: ", &main_console.list_selectedobj_color, 13, &control_cb);
-	for (int i = 0; i < 9; i++)	main_console.list_color->add_item(i, main_console.selectedObj_colors[i]);
-
-	main_console.text_command_move = main_console.text_selectedobject_translation = new GLUI_EditText(main_console.glui_v_panel_selectedobject, "Move to:", main_console.command_move_text, 10, &control_cb);
-
-	new GLUI_StaticText(main_console.glui_v_panel_selectedobject, "Selected Object is predicted as: ");
-	main_console.text_predicted = new GLUI_StaticText(main_console.glui_v_panel_selectedobject, "...");
-
-	main_console.trans_x = new GLUI_Translation(main_console.glui_v_panel_selectedobject_translate, "Translate X", GLUI_TRANSLATION_X, &main_console.obj_pos_x, 15, &control_cb);
-	new GLUI_Column(main_console.glui_v_panel_selectedobject_translate);
-	main_console.trans_y = new GLUI_Translation(main_console.glui_v_panel_selectedobject_translate, "Translate Y", GLUI_TRANSLATION_Y, &main_console.obj_pos_y, 16, &control_cb);
-	new GLUI_Column(main_console.glui_v_panel_selectedobject_translate);
-	main_console.trans_z = new GLUI_Translation(main_console.glui_v_panel_selectedobject_translate, "Translate Z", GLUI_TRANSLATION_Z, &main_console.obj_pos_z, 17, &control_cb);
-	new GLUI_Column(main_console.glui_v_panel_selectedobject_translate);
-	main_console.rotation_selectedobject = new GLUI_Rotation(main_console.glui_v_panel_selectedobject_translate, "Rotate", main_console.rotation_matrix, 11, &control_cb);
-
-
-	main_console.rot_light0 = new GLUI_Rotation(main_console.glui_v_panel_selectedobject_translate, "light 0", main_console.rotation_matrix, 24, &control_cb);
-
-
-	main_console.trans_x->set_speed(.0005);
-	main_console.trans_y->set_speed(.0005);
-	main_console.trans_z->set_speed(.0005);
-
-
-
-
-	// new GLUI_StaticText(main_console.glui_v_subwindow, "Press ESC to exit\n");
-
-
-
-	main_console.text_command->set_w(CONSOLE_WIDTH);
-	//main_console.text_num_of_light->set_w(width);
-	//main_console.text_scene->set_w(width);
-	main_console.text_command_move->set_w(CONSOLE_WIDTH);
-
-	main_console.spinner_l_intensity->set_alignment(GLUI_ALIGN_RIGHT);
-	main_console.list_shader->set_alignment(GLUI_ALIGN_RIGHT);
-	main_console.list_color->set_alignment(GLUI_ALIGN_RIGHT);
+	main_console.Design(control_cb, CONSOLE_WIDTH);
+	
 
 	/*-----------------Console Design----------------*/
 
@@ -353,17 +136,17 @@ int main(int argc, char **argv) {
 	/*-----------------SETUP LIGHTS----------------*/
 
 
-	mainLight[0] = mainScene.CreateMainLight(vec3(1), vec3(1, 1, 1), 1, 0.2);
+	mainLight[0] = mainScene.CreateMainLight(vec3(1), vec3(1, 1, 1), 3.55f, 0.2);
 	mainLight[0].l_direction =vec3 (1.43215e+09, -5.19914e+09, -2.70591e+09);
 
-	mainLight[1] = mainScene.CreateMainLight(vec3(1), vec3(1), 1, 0.2f);
-	mainLight[2].transform.position = vec3(-20, 20, 10);
+	mainLight[1] = mainScene.CreateMainLight(vec3(1,1,0), vec3(1), 3, 0.2f);
+	mainLight[1].l_direction = vec3(1.43215e+09, -5.19914e+09, -2.70591e+09);
 
-	mainLight[2] = mainScene.CreateMainLight(vec3(1), vec3(1), 1, 0.1f);
-	mainLight[2].transform.position = vec3(50, -20,10);
+	mainLight[2] = mainScene.CreateMainLight(vec3(0,1,1), vec3(1), 2.0f, 0.1f);
+	mainLight[2].l_direction = vec3(1.43215e+09, -5.19914e+09, -2.70591e+09);
 
-	mainLight[3] = mainScene.CreateMainLight(vec3(1), vec3(1), 1,.1);
-	mainLight[3].transform.position = vec3(20,-40, -20);
+	mainLight[3] = mainScene.CreateMainLight(vec3(1,0,1), vec3(1), 2.5f,.1);
+	mainLight[3].l_direction = vec3(1.43215e+09, -5.19914e+09, -2.70591e+09);
 	cout << "Scene and Light created." << endl;
 	/*-----------------SETUP LIGHTS----------------*/
 
@@ -371,22 +154,18 @@ int main(int argc, char **argv) {
 	
 	
 
-	
-
-
 
 
 
 	/*-----------------CREATE SHADERS----------------*/
 
-	shader_flat = Shader("FlatVertex.glsl", "FlatFragment.glsl");
-	shader_blinnphong = Shader("BlinnPhongVertex.glsl", "BlinnPhongFragment.glsl");
-	shader_bphongsimp = Shader("BphongSimpVertex.glsl", "BphongSimpFragment.glsl");
-	shader_water = Shader("WaterVertex.glsl", "WaterFragment.glsl");
-	shader_toon = Shader("ToonVertex.glsl", "ToonFragment.glsl");
-	shader_particle = Shader("particleVertex.glsl", "particleFragment.glsl");
-	shader_skybox = Shader("SkyboxVertex.glsl", "SkyboxFragment.glsl");
-	shader_smoothtoon = Shader("SmoothedToonVertex.glsl", "SmoothedToonFragment.glsl");
+	shader_flat = Shader("Shaders/FlatVertex.glsl", "Shaders/FlatFragment.glsl");
+	shader_blinnphong = Shader("Shaders/BlinnPhongVertex.glsl", "Shaders/BlinnPhongFragment.glsl");
+	shader_bphongsimp = Shader("Shaders/BphongSimpVertex.glsl", "Shaders/BphongSimpFragment.glsl");
+	shader_water = Shader("Shaders/WaterVertex.glsl", "Shaders/WaterFragment.glsl");
+	shader_toon = Shader("Shaders/ToonVertex.glsl", "Shaders/ToonFragment.glsl");
+	shader_skybox = Shader("Shaders/SkyboxVertex.glsl", "Shaders/SkyboxFragment.glsl");
+	shader_smoothtoon = Shader("Shaders/SmoothedToonVertex.glsl", "Shaders/SmoothedToonFragment.glsl");
 
 	/*-----------------CREATE SHADERS----------------*/
 
@@ -408,36 +187,57 @@ int main(int argc, char **argv) {
 
 
 
-	GameObject objyn2;
+/*	GameObject objyn2;
 	GLuint rowIndex = 1,modul0=2;
-		for (size_t j = 0; j < ((OBJECTS_BEGIN_SIZE)); j++)
+		for (size_t j = 0; j < OBJECTS_BEGIN_SIZE; j++)
 		{
-			//deletthis
-			GLfloat size = (rand()%8)/10.0;
-			//objyn2 = GameObject(name, PathCube, shader_blinnphong, material_copper, texture_10, 1);
-			objyn2 = GameObject(all_models.at(j), some_models.at(j), shader_blinnphong, material_aliminum, texture_14, 1);
+			objyn2 = GameObject(all_models.at(j), path_planel, shader_blinnphong, material_aliminum, txtreList.at(j), 10);
 			objyn2.SetupMesh();
-			//deletthis
-
-			//delettis
-			GLfloat zMod;
-			if (j%modul0 == 0)
-				zMod = -2;
-			else
-				zMod = 2;
-			GLuint ranZ = rand()*8;
-			GLuint ranY = rand() *10;
-			objyn2.transform.position = vec3(j * 2, 2,  j*2);
-			if (j % modul0 == 0)
-				rowIndex++;
+			
+			objyn2.transform.position = vec3(j * 20, 2,  0);
 			ObjectsOnScene.push_back(objyn2);
-			//can be deleted
 			GLfloat percantage =  j+1;
 			cout << "Model loading : %" << (percantage)*100 / OBJECTS_BEGIN_SIZE << endl;
 		}
+	*/
+
+	/*e
+	Eye: (-36.5405, 28.6184, -29.2665, 1)
+		At : (-35.911, 28.0096, -28.7836, 1)
+		Cam forward : (-35.911, 28.0096, -28.7836, 1)
+		Pithc : -37.5005
+		Yaw : 37.5005
+
+		*/
+
+	vec3 offset = vec3(-20,2,-40);
+	GLuint modulo = 5,index=1;
+	GLuint row = 0;
+	GLfloat radi = 40.0f;
+	GLfloat seperation = 5;
+	for (size_t j = 0; j < PLANES_BEGIN_SIZE; j++)
+	{
+		GLfloat angle =( 2 * PI * j*(PLANES_BEGIN_SIZE-1)) / 360.0f;
+		GameObject objyn2 = GameObject("Human", path_planel, shader_blinnphong, material_white, txtreList.at(j%10), 5);
+		objyn2.SetupMesh();
+		objyn2.transform.position = vec3(sin(angle),0, cos(angle))*radi;
+		Planes.push_back(objyn2);
+		if (index%modulo == 0)
+		{
+			row++;
+			index = 0;
+		}
+		
+		index++;
+
+	}
+
+
+	Sphere = GameObject("Game Spheruh", path_sphere, shader_blinnphong, material_aliminum, sphere_tex, 6);
+	Sphere.SetupMesh();
+	Sphere.transform.position = vec3(0,15,0);
 
 	mainScene.MainCamera.transform.position = vec3(0,1,-2);
-	mainScene.SelectedObject = &ObjectsOnScene.at(0);
 //	ExportVertices(ObjectsOnScene,250);
 	
 	/*-----------------CALLBACKS----------------*/
@@ -542,6 +342,7 @@ void KeyboardUp(unsigned char key, int x, int y)
 void Idle()
 {
 	time += 0.0167f;
+	Sphere.transform.rotY += 0.1f;
 	glutSetWindow(mainWindow);
 	glutPostRedisplay();
 }
@@ -592,13 +393,16 @@ void DrawSkybox()
 }
 void DrawModels()
 {
-	for (size_t i = 0; i < mainScene.Object_SIZE; i++)
+	for (size_t i = 0; i < OBJECT_SIZE; i++)
 		ObjectsOnScene.at(i).Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn, textureOn);
+	for (size_t i = 1; i <PLANES_BEGIN_SIZE; i++)
+		Planes.at(i).Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn, textureOn);
+	Sphere.Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn, textureOn);
 }
 
 void DrawNonScaledModels()
 {
-	for (size_t i = 0; i < mainScene.Object_SIZE; i++)
+	for (size_t i = 0; i < OBJECT_SIZE; i++)
 	{
 		ObjectsOnScene.at(i).ResetVertices();
 		ObjectsOnScene.at(i).Draw(mainScene.MainCamera.ViewMatrix(), mainScene.MainCamera.ProjectionMatrix(), time, mainLight, mainScene.MainCamera.transform.position, bumpMapOn, textureOn);
@@ -672,6 +476,10 @@ void control_cb(int control) {
 				mainScene.MainCamera.transform.Moveto(vec3(x,y,z));
 				message << "Object is moved to (" << x << ", " << y << ", " << z << ")" << endl;
 				main_console.text_command_result->set_text(message.str().c_str());
+			}
+			if (!strcmp(pch, "debug")) {
+				
+				mainScene.MainCamera.Debug();
 			}
 			else if (!strcmp(pch, "projection")) {
 				pch = strtok(NULL, " ");
@@ -823,9 +631,9 @@ void control_cb(int control) {
 			main_console.text_command_result->set_text(message.str().c_str());
 		}
 		else if (!strcmp(pch, "resetrotation")) {
-		mainScene.SelectedObject->transform.ResetRotation();
-		message << "Selected object rotation reset!"<<endl;
-		main_console.text_command_result->set_text(message.str().c_str());
+			mainScene.SelectedObject->transform.ResetRotation();
+			message << "Selected object rotation reset!"<<endl;
+			main_console.text_command_result->set_text(message.str().c_str());
 		}
 		else if (!strcmp(pch, "move")) {
 		pch = strtok(NULL, " ,");  GLfloat x = atof(pch);
@@ -929,31 +737,78 @@ void control_cb(int control) {
 		}
 
 		else if (!strcmp(pch, "predict")) {
-			if (0) { // if (mainScene.SelectedObject->vertexList.size() != 680 ) {
-				message << "Selected Object cannot be predicted" << endl;
-				main_console.text_predicted->set_text(message.str().c_str());
-			}
-			else {
-				// Create a test object
-				const GLuint num_of_vertices = num_of_vertex;
-				vector<vector<GLfloat>> test_object[num_of_vertices];
+		pch = strtok(NULL, " ");
 
+		if (!strcmp(pch, "each")) {
+			// Create a test object
+			const GLuint num_of_vertices = num_of_vertex;
+			vector<vector<GLfloat>> test_object[num_of_vertices];
 
-				for (size_t i = 0; i < num_of_vertices; i++)
-				{
-					vec4 x = mainScene.SelectedObject->VertexPositions.at(i);
-					test_object->push_back(vector<GLfloat> {x.x, x.y, x.z, 1.0f});
-	
+			GLuint difference = mainScene.SelectedObject->EndVertexPositions.size() - 680, Jump = 0;
+			GLuint ind;
+			if (difference != 0)
+				ind = mainScene.SelectedObject->EndVertexPositions.size() / difference;
+			//outfile << "Difference is : " << to_string(difference) << "\n";
+			//outfile << "Vertex size is : " << to_string(arr[x].BaseVertices.size()) << "\n";
+			//outfile << "Index is : " << to_string(ind) << "\n";
+			for (size_t j = 0; j < mainScene.SelectedObject->EndVertexPositions.size(); j++) {
+				if (Jump < difference) {
+					if (j%ind == 0) {
+						Jump++;
+						continue;
+					}
 				}
-
-				vector<GLfloat> probs = v2l_model->forward(test_object);
-
-				GLuint predicted_index = v2l_model->getClass(probs);
-
-
-				message << "Selected Object is predicted as: " << predicted_index << endl;
-				main_console.text_predicted->set_text(message.str().c_str());
+				vec4 a = mainScene.SelectedObject->EndVertexPositions.at(j);
+				test_object->push_back(vector<float> {a.x, a.y, a.z, 1.0f});
 			}
+
+			vector<GLfloat> probs;
+			v2l_model->forward(test_object, probs);
+
+			GLuint predicted_index = v2l_model->getClass(probs);
+
+			message << ">> Class " << v2l_model->index2label[predicted_index] << endl;
+			main_console.text_predicted->set_text(message.str().c_str());
+		}
+		else if (!strcmp(pch, "cat")) {
+			// Create a test object
+			const GLuint num_of_vertices = num_of_vertex;
+			vector<vector<GLfloat>> test_object[num_of_vertices];
+
+			GLuint difference = mainScene.SelectedObject->EndVertexPositions.size() - 680, Jump = 0;
+			GLuint ind;
+			if (difference != 0)
+				ind = mainScene.SelectedObject->EndVertexPositions.size() / difference;
+			//outfile << "Difference is : " << to_string(difference) << "\n";
+			//outfile << "Vertex size is : " << to_string(arr[x].BaseVertices.size()) << "\n";
+			//outfile << "Index is : " << to_string(ind) << "\n";
+			for (size_t j = 0; j < mainScene.SelectedObject->EndVertexPositions.size(); j++) {
+				if (Jump < difference) {
+					if (j%ind == 0) {
+						Jump++;
+						continue;
+					}
+				}
+				vec4 a = mainScene.SelectedObject->EndVertexPositions.at(j);
+				test_object->push_back(vector<float> {a.x, a.y, a.z, 1.0f});
+			}
+			cout << "forward öncesi" << endl;
+			vector<GLfloat> probs;
+			v2l_model_category->forward(test_object, probs);
+
+			cout << "forward sonrasý" << endl;
+
+			GLuint predicted_index = v2l_model_category->getClass(probs);
+
+			cout << "predicted_index sonrasý" << endl;
+
+			message << ">> Category " << v2l_model_category->index2label_category[predicted_index] << endl;
+			main_console.text_predicted->set_text(message.str().c_str());
+		}
+		else {
+			message << ">> Wrong prediction command !" << endl;
+			main_console.text_predicted->set_text(message.str().c_str());
+		}
 
 		}
 		else main_console.text_command_result->set_text("Wrong start command");
@@ -1090,13 +945,18 @@ void control_cb(int control) {
 		mainScene.SelectedObject->transform.Translate(vec3(0, 0, -1));
 	}
 	else if (control == 18) {
-		GLuint r = rand() % ObjectsOnScene.size();
-		mainScene.SelectedObject = &ObjectsOnScene.at(r);
+		//GLuint r = rand() % ObjectsOnScene.size();
+//		mainScene.SelectedObject = ObjectsOnScene.at(r);
 
-
-
-
-
+		GLuint randommodel = rand()%all_models.size();
+		GLuint randomtexture = rand() % txtreList.size();
+		GameObject newg = GameObject("new",all_models.at(randommodel),shader_blinnphong,material_titanium,txtreList.at(randomtexture),1.0);
+		newg.SetupMesh();
+		newg.transform.position = Planes.at(OBJECT_SIZE++).transform.position;
+	
+		ObjectsOnScene.push_back(newg);
+		mainScene.SelectedObject = &ObjectsOnScene.at(ObjectsOnScene.size()-1);
+		mainScene.MainCamera.ChangePyhsicalMode(0);
 		message << "Another object is selected" << endl;
 		main_console.text_command_result->set_text(message.str().c_str());
 	}
@@ -1113,9 +973,23 @@ void control_cb(int control) {
 
 	else if (control == 22) {
 		message << "Next object is  selected" << endl;
+		if (ObjectsOnScene.size() == 1)
+			return;
+		Object_INDEX++;
+		if (Object_INDEX == ObjectsOnScene.size())
+			Object_INDEX = 0;
+		mainScene.SelectedObject = &ObjectsOnScene.at(Object_INDEX);
+		mainScene.MainCamera.ChangePyhsicalMode(0);
 		main_console.text_command_result->set_text(message.str().c_str());
 	}
 	else if (control == 23) {
+	if (ObjectsOnScene.size() == 1)
+		return;
+	Object_INDEX--;
+	if (Object_INDEX == -1)
+		Object_INDEX = ObjectsOnScene.size()-1;
+	mainScene.SelectedObject = &ObjectsOnScene.at(Object_INDEX);
+	mainScene.MainCamera.ChangePyhsicalMode(0);
 		message << "Previous object is selected" << endl;
 		main_console.text_command_result->set_text(message.str().c_str());
 	}
@@ -1127,10 +1001,49 @@ void control_cb(int control) {
 		float y = rot_mat2[5];
 		float z = rot_mat2[10];
 
-		mainLight[0].transform.Rotate(z*360,x*360,y*360);
+		mainLight[0].transform.Rotate(x*360,y*360,z*360);
 		mainLight[0].ComputeForwardVector();
 		message << "Light 0 is rotated by (" << x << ", " << y << ", " << z << ")" << endl;
 		main_console.text_command_result->set_text(message.str().c_str());
+	}
+	else if (control == 25) {
+
+	float * rot_mat2 = main_console.rotation_matrix;
+
+	float x = rot_mat2[0];
+	float y = rot_mat2[5];
+	float z = rot_mat2[10];
+
+	mainLight[1].transform.Rotate(z * 360, x * 360, y * 360);
+	mainLight[1].ComputeForwardVector();
+	message << "Light 0 is rotated by (" << x << ", " << y << ", " << z << ")" << endl;
+	main_console.text_command_result->set_text(message.str().c_str());
+	}
+	else if (control == 26) {
+
+	float * rot_mat2 = main_console.rotation_matrix;
+
+	float x = rot_mat2[0];
+	float y = rot_mat2[5];
+	float z = rot_mat2[10];
+
+	mainLight[2].transform.Rotate(z * 360, x * 360, y * 360);
+	mainLight[2].ComputeForwardVector();
+	message << "Light 0 is rotated by (" << x << ", " << y << ", " << z << ")" << endl;
+	main_console.text_command_result->set_text(message.str().c_str());
+	}
+	else if (control == 27) {
+
+	float * rot_mat2 = main_console.rotation_matrix;
+
+	float x = rot_mat2[0];
+	float y = rot_mat2[5];
+	float z = rot_mat2[10];
+
+	mainLight[3].transform.Rotate(z * 360, x * 360, y * 360);
+	mainLight[3].ComputeForwardVector();
+	message << "Light 0 is rotated by (" << x << ", " << y << ", " << z << ")" << endl;
+	main_console.text_command_result->set_text(message.str().c_str());
 	}
 }
 

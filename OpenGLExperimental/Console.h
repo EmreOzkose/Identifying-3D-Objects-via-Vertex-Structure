@@ -71,7 +71,7 @@ public:
 
 	GLUI_EditText *text_selectedobject_translation;
 	GLUI_Rotation *rotation_selectedobject;
-	GLUI_Rotation *rot_light0;
+	GLUI_Rotation *rot_light0, *rot_light1, *rot_light2, *rot_light3;
 
 	GLUI_StaticText *text_command_result;
 	GLUI_StaticText *text_predicted;
@@ -94,4 +94,6 @@ public:
 	GLUI_Panel* nextprev;
 	GLUI_Button *button_next_obj;
 	GLUI_Button *button_prev_obj;
+
+	void Design(void func(int control), int CONSOLE_WIDTH);
 };

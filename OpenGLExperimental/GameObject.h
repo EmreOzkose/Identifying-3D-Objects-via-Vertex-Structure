@@ -86,6 +86,13 @@ public:
 		CurrentShader = shader;
 		go_material = mat;
 	}
+	GameObject(string modelPath, Shader shader, Material mat, GLfloat scale) : Object()
+	{
+		load_obj(modelPath, scale);
+		BaseShader = shader;
+		CurrentShader = shader;
+		go_material = mat;
+	}
 	GameObject(string name, string modelPath, Shader shader, Material mat,struct Texture tex, GLfloat scale) : Object(name)
 	{
 		load_obj(modelPath, scale);

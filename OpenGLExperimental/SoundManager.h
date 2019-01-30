@@ -10,8 +10,6 @@ public:
 
 	int soundCheck();
 	ISound *sound_background();
-	void sound_airplane_departure();
-	void sound_robot();
 	void stopAllSounds();
 	ISound *background_music;
 
