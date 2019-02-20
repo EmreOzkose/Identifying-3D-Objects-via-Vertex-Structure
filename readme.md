@@ -29,7 +29,7 @@ We use a complex user interface so that we can change everything about the scene
 We use flat and smooth(Phong model) shading for our project and we will be able to switch between them. Also, camera types include orthographic and perspective viewing. For lightning, we use directional lightning techniques.
 
 <h3>Hierarchy<h3>
-<img src="images/uml.png">
+<img src="images/uml.jpg">
 
 <h3>Machine Learning</h3>
 The main part of an object is vertices. Hence they are so informative features to utilize them. They consist of coordinates of the objects. A neural network model is designed to classify an object by considering its vertices. Technically, the neural network is fed with flattened vertex matrices. Of course, learning parameters such as the number of hidden layers, size of hidden layer, learning parameters are chosen while experiments are being done. 
