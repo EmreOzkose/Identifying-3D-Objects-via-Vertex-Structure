@@ -31,7 +31,7 @@ We use flat and smooth(Phong model) shading for our project and we will be able 
 <h3>Hierarchy<h3>
 <img src="images/uml.png">
 
-<h3>Machine Learning<h3>
-    The main part of an object is vertices. Hence they are so informative features to utilize them. They consist of coordinates of the objects. A neural network model is designed to classify an object by considering its vertices. Technically, the neural network is fed with flattened vertex matrices. Of course, learning parameters such as the number of hidden layers, size of hidden layer, learning parameters are chosen while experiments are being done. 
+<h3>Machine Learning</h3>
+The main part of an object is vertices. Hence they are so informative features to utilize them. They consist of coordinates of the objects. A neural network model is designed to classify an object by considering its vertices. Technically, the neural network is fed with flattened vertex matrices. Of course, learning parameters such as the number of hidden layers, size of hidden layer, learning parameters are chosen while experiments are being done. 
     
-    <img src="images/neuralnetworks.png">
+<img src="images/neuralnetworks.png">
