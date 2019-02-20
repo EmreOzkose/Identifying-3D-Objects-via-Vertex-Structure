@@ -1,4 +1,4 @@
-<h2>Project Title : Identfying objects via vertices</h2>
+<h2>Project Title : Identifying 3D Objects via Vertex Structure</h2>
 Project Members: <a href="https://github.com/furkancaglayan">Furkan Çağlayan</a> & <a href="https://github.com/EmreOzkose">Yunus Emre Özköse</a>
 
 <h3>Introduction </h3>
